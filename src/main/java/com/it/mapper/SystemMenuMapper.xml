@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.SystemMenuDao">
+
+	<!-- 根据父级菜单id查询子菜单 -->
+	<select id="findMenuByid" parameterType="Integer" resultType="Permission">
+		select * from permission t
+	      where t.pid = #{id}
+	      and t.type = 1
+	      order by t.id asc
+	</select>
+	<!-- 根据用户查询菜单 -->
+	<select id="findMenuByUser" parameterType="UserInfo" resultType="Permission">
+		select p.id, p.name, p.permission, p.url, p.pid, p.type, p.status, p.image
+		 from permission p
+		left join role_permission rp on rp.permission_id = p.id
+		left join role_info r on r.id = rp.role_id
+		left join user_role ur on ur.role_id = r.id
+		left join user_info u on u.id = ur.user_id
+		where u.id = #{user.id}
+		and p.type in (0,1)
+		order by p.sort asc
+	</select>
+
+	<!-- 查询菜单树父级菜单 -->
+	<select id="getMenuList" parameterType="Tree" resultType="com.it.po.Tree">
+		select t.id as id,
+		       t.name as text,
+		       t.pid as pid,
+		       t.url as url,
+		       t.type as type,
+		       CASE WHEN t.pid = '0'
+		            then 'closed' else NULL end as state
+		from permission t
+		where 1 = 1
+		and t.pid = '0'
+		order by t.sort asc
+	</select>
+	<!-- 查询子菜单 -->
+	<select id="getChildernList" parameterType="string" resultType="com.it.po.Tree">
+		select t.id as id,
+		       t.name as text,
+		       t.pid as pid,
+		       t.url as url,
+		       t.type as type,
+		       CASE WHEN t.pid = '0'
+		            then 'closed' else NULL end as state
+		from permission t
+		where 1 = 1
+		and t.pid = #{id}
+		order by t.sort asc
+	</select>
+	<!-- 增加菜单 -->
+	<insert id="addMenu"  parameterType="Permission">
+		insert into permission values 
+		(#{po.id,jdbcType=INTEGER}, #{po.name,jdbcType=VARCHAR}, #{po.permission,jdbcType=VARCHAR}, #{po.url,jdbcType=VARCHAR}, 
+		 #{po.pid,jdbcType=INTEGER}, #{po.type,jdbcType=INTEGER}, #{po.status,jdbcType=VARCHAR},#{po.image,jdbcType=VARCHAR},#{po.sort,jdbcType=INTEGER})
+		<selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+             SELECT PERMISSION_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey>
+	</insert>	
+	<!-- 编辑菜单 -->
+	<update id="updateMenu"  parameterType="Permission">
+	 update permission 
+	 set 
+		name=#{po.name,jdbcType=VARCHAR},
+		type=#{po.type,jdbcType=INTEGER},
+		url=#{po.url,jdbcType=VARCHAR},
+		permission=#{po.permission,jdbcType=VARCHAR},
+		image=#{po.image,jdbcType=VARCHAR}
+	 where id=#{po.id}
+	</update>
+	<!-- 删除菜单 -->
+	<delete id="deleteMenu" parameterType="Permission">
+		delete permission
+		where id = #{po.id}
+	</delete>
+	<!-- 查询所有菜单 -->
+	<select id="search" resultType="Permission">
+		select * from permission t
+		order by sort asc
+	</select>
+	<!-- 查询所有菜单 -->
+	<select id="searchMenuTree" resultType="Permission">
+		select t.id,t.name||' '||t.permission as name,t.pid,t.permission from permission t
+		order by sort asc
+	</select>
+	<!-- 查询所有菜单 -->
+	<select id="searchMenuTree1" resultType="Permission">
+		select t.id,t.name,t.pid,t.permission from permission t
+		where type != 2
+		order by sort asc
+	</select>
+	<!-- 根据角色id查询角色权限关联信息 -->
+	<select id="searchRolePermission" resultType="RolePermission">
+		select * from role_permission t
+		where t.role_id = #{po.role_id}
+	</select>
+	<!-- 根据id查询菜单 -->
+	<select id="searchMenuById" resultType="Permission">
+		select * from permission t
+		where t.id = #{po.id}
+	</select>
+	
+</mapper>

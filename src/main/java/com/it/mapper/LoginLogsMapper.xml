@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.LoginLogsDao">
+
+	<select id="search" parameterType="LoginInfo"  resultType="LoginInfo">
+		select id, userName, ip, location, browser, operatingSystem, status, message, to_char(createdate, 'yyyy-mm-dd hh24:mi:ss') createdate
+		 from loginInfo where 1 = 1 
+		<if test="po.userName != null  and po.userName !=''">
+			and userName like concat(concat('%',#{po.userName}),'%')
+		</if>
+		<if test="po.ip != null  and po.ip !=''">
+			and ip like concat(concat('%',#{po.ip}),'%')
+		</if>
+		order by id desc
+	</select>
+
+	<!-- 添加登录日志 -->
+ 	<insert id="addLoginInfo" parameterType="LoginInfo">
+	    insert into loginInfo 
+	    values(#{po.id}, #{po.userName}, #{po.ip}, #{po.location}, #{po.browser}, #{po.operatingSystem}, #{po.status}, #{po.message}, sysdate)
+	    <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+             SELECT LOGININFO_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey>
+	</insert>	
+</mapper>

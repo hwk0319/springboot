@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-table.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-table.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="layui/layer.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/jQuery.md5.js"></script>
+<title>用户管理</title>
+<style>
+</style>
+</head>
+<body>
+		<div class="row areacode" id="searchValue">
+			<div class="row">
+			  <div class="col-md-2">用户名：</div>
+			  <div class="col-md-3">
+			  	<input class="form-control" id="name" type="text"/>
+			  </div>
+			  <div class="col-md-3">
+			  	<button class="btn btn-default" onClick="refresh()"><span class="glyphicon glyphicon-search"></span> 查询</button>
+				<button class="btn btn-default" onClick="repeat()"><span class="glyphicon glyphicon-repeat"></span> 重置</button>
+			  </div>
+			</div>
+		</div>
+		<div class="areacode">
+			<div id="toolbar">
+			    <button class="btn btn-primary" id="doInsert" onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+				<button class="btn btn-warning" id="doLogout" onclick="doLogout()" disabled><span class="glyphicon glyphicon-minus"></span> 注销</button>
+				<button class="btn btn-danger" id="doBatchDelete"  onclick="doBatchDelete()" disabled><span class="glyphicon glyphicon-trash"></span> 删除</button>
+				<button class="btn btn-info" id="doUpPass"  onclick="doUpPass()" disabled><span class="glyphicon glyphicon-lock"></span> 修改密码</button>
+				<button class="btn btn-success" id="doExportExcel"  onclick="doExportExcel()"><span class="glyphicon glyphicon-save"></span> 导出Excel</button>
+            </div>
+			<table id="mytab" class="table"></table>
+		</div>
+		
+		<!-- 这里加载新增页面 -->
+		<div class="modal fade" id="mymodelAdd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>
+		<!-- 这里加载编辑页面 -->
+		<div class="modal fade" id="mymodelEdit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>
+		<!-- 这里加载角色授权页面 -->
+		<div class="modal fade" id="mymodelAccredit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>
+		<!-- 这里加载修改密码页面 -->
+		<div class="modal fade" id="mymodelUpdatePwd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>
+</body>
+<script  type="text/javascript">
+	$(function() {
+	    //根据窗口调整表格高度
+	    $(window).resize(function() {
+	        $('#mytab').bootstrapTable('resetView', {
+	            height: tableHeight()
+	        })
+	    })
+	    // 每次隐藏时，清除数据，确保不会和主页dom元素冲突。确保点击时，重新加载。
+	    $("#mymodelAdd, #mymodelEdit, #mymodelAccredit, #mymodelUpdatePwd").on("hidden.bs.modal", function() {
+	        // 这个#showModal是模态框的id
+	        $(this).removeData("bs.modal");
+	        $(this).find(".modal-content").children().remove(); 
+	    });
+	
+	    $('#mytab').bootstrapTable({
+	        url: "/user/search3",//数据源
+	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+	        height: tableHeight(),//高度调整
+			striped: true,                      //是否显示行间隔色
+			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
+			idField: "id",                     //指定主键列
+			uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+	        pagination: true,                    //是否分页
+	        paginationLoop: false,				 //设置分页条禁止循环
+	        pageNumber: 1,                       //初始化加载第一页，默认第一页
+	        pageSize: 10,//单页记录数
+	        pageList: [10, 20, 30],//分页步进值
+	        paginationPreText: '<',//指定分页条中上一页按钮的图标或文字
+	        paginationNextText: '>',//指定分页条中下一页按钮的图标或文字
+	        sidePagination: "server",//服务端分页
+	        contentType: "application/x-www-form-urlencoded",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+	        dataType: "json",//期待返回数据类型
+	        method: "post",//请求方式
+	        queryParamsType: "",//查询参数组织方式
+	        queryParams: function getParams(params) {
+	            var param = {
+	                limit: params.pageSize,   //每页多少条数据
+	                pageNo: params.pageNumber, // 页码
+	                name: $("#name").val()
+	            };
+	            return param;
+	        },
+	        showColumns: true,//是否显示 内容列下拉框
+	        showRefresh: true,//是否显示 刷新按钮
+	        showToggle: true,//是否显示 切换试图（table/card）按钮
+	        toolbar: "#toolbar",//指定工具栏
+	        toolbarAlign: "left",//工具栏对齐方式
+	        columns: [
+	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
+	            {field: 'id', title: 'ID'},
+			    {field: 'name', title: '用户名'},
+			    {field: 'role', title: '角色名称'},
+			    {field: 'phone', title: '手机号'},
+			    {field: 'email', title: '邮箱'},
+			    {field: 'sex', title: '性别',
+			    	formatter:function(value, row, index){
+				    	  if(value == "0"){
+				    		  return "男";
+				    	  }else if(value == "1"){
+				    		  return "女";
+				    	  }else{
+				    		  return "";
+				    	  }
+				      }
+			    },
+			    {field: 'status', title: '状态', formatter:function(value, row, index){
+			    	  if(value == "0"){
+			    		  return "<span class='label label-danger'>注销</span>";
+			    	  }else if(value == "1"){
+			    		  return "<span class='label label-success'>正常</span>";
+			    	  }else if(value == "2"){
+			    		  return "<span class='label label-warning'>锁定</span>";
+			    	  }
+			      }
+		        },
+		        {field: 'oper', title: '操作',width: 200,formatter:function(value, row, index){
+		        	var html = "<button class='btn btn-info btn-xs' onClick='doEdit("+row.id+")'><span class='glyphicon glyphicon-edit'></span> 编辑</button> ";
+		        		html += "<button class='btn btn-success btn-xs' onClick='doAccredit("+row.id+")'><span class='glyphicon glyphicon-user'></span> 授权</button> ";
+		        	    html += "<button class='btn btn-danger btn-xs' onClick='doDelete("+row.id+")'><span class='glyphicon glyphicon-trash'></span> 删除</button>";
+		        	return html;
+		        }}
+	        ],
+	        onClickRow: function(row, $element) {//单击row事件
+	            //$element是当前tr的jquery对象
+	            $element.css("background-color", "#f5f5f5");
+	        },
+	        onCheck: function(row){//选择row事件
+	        	$('#doLogout').prop('disabled', false);
+	        	$('#doBatchDelete').prop('disabled', false);
+	        	$('#doUpPass').prop('disabled', false);
+	        },
+	        onUncheck: function(row){//取消选择row事件
+	        	//判断是否还有选择的数据
+	        	var data= $('#mytab').bootstrapTable('getSelections');
+	        	if(data == ""){
+		        	$('#doLogout').prop('disabled', true);
+		        	$('#doBatchDelete').prop('disabled', true);
+		        	$('#doUpPass').prop('disabled', true);
+	        	}
+	        },
+	        onCheckAll: function(rows){//全选事件
+	        	$('#doLogout').prop('disabled', false);
+	        	$('#doBatchDelete').prop('disabled', false);
+	        	$('#doUpPass').prop('disabled', false);
+	        },
+	        onUncheckAll: function(rows){//取消全选事件
+	        	$('#doLogout').prop('disabled', true);
+	        	$('#doBatchDelete').prop('disabled', true);
+	        	$('#doUpPass').prop('disabled', true);
+	        },
+	        locale: "zh-CN", //中文支持
+	    });
+	})
+	
+	function tableHeight() {
+	    return $(window).height() - 110;
+	}
+	//刷新数据
+	function refresh(){
+	    $('#mytab').bootstrapTable('refresh');
+	}
+	
+	//新增
+	function doInsert() {
+		// 打开模态框
+	    $("#mymodelAdd").modal({
+	        backdrop: 'static',     // 点击空白不关闭
+	        keyboard: false,        // 按键盘esc也不会关闭
+	        remote: 'user/userAdd'    // 从远程加载内容的地址
+	    });
+	}
+	//编辑
+	function doEdit(id) {
+		// 打开模态框
+	    $("#mymodelEdit").modal({
+	        backdrop: 'static',     // 点击空白不关闭
+	        keyboard: false,        // 按键盘esc也不会关闭
+	        remote: 'commom/loadPageParam?path=system/user/userEdit&id=' + id   // 从远程加载内容的地址
+	    });
+	}
+
+//删除用户
+function doDelete(id){
+	layer.confirm("您确定要删除选择数据吗？", {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+			url : "user/deleteUser",
+			type : "post",
+			data : {
+				"id" : id
+			},
+			success : function(result) {
+				layer.msg("删除成功！");
+				refresh();
+			},
+			error : function() {
+				layer.msg("删除失败！");
+			}
+		});
+		layer.close(index);
+	});
+}
+
+//批量删除
+function doBatchDelete(){
+	var data= $('#mytab').bootstrapTable('getSelections');
+	if(data.length == 0){
+		layer.msg("请选择需要删除的数据！");
+		return;
+	}
+	var ids = "";
+	data.forEach(function(value,index){
+		ids += value.id + ",";
+	})
+	ids = ids.substring(0, ids.length-1);
+	
+	layer.confirm("您确定要删除选择数据吗？", {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+			url : "user/bacthDeleteUser",
+			type : "post",
+			data : {
+				"ids" : ids
+			},
+			success : function(result) {
+				layer.msg("删除成功！");
+				refresh();
+			},
+			error : function() {
+				layer.msg("删除失败！");
+			}
+		});
+		layer.close(index);
+	});
+}
+
+//注销
+function doLogout() {
+	var data= $('#mytab').bootstrapTable('getSelections');
+	if(data.length != 1){
+		layer.msg("请选择一个用户进行注销！");
+		return;
+	}
+	var id = data[0].id;
+	var status = data[0].status;
+	if(status == "0"){
+		layer.msg("用户已注销！");
+		return;
+	}else if(status == "2"){
+		layer.msg("用户已锁定！");
+		return;
+	}
+	layer.confirm("您确定要注销选择的用户吗？", {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+			url : "user/delete",
+			type : "post",
+			data : {
+				"id" : id,
+				"status" : 0
+			},
+			success : function(result) {
+				layer.msg("注销成功！");
+				refresh();
+			},
+			error : function() {
+				layer.msg("注销失败！");
+			}
+		});
+		layer.close(index);
+	});
+}
+
+//修改密码
+function doUpPass(){
+	var data= $('#mytab').bootstrapTable('getSelections');
+	if(data.length != 1){
+		layer.msg("请选择一个用户进行修改！");
+		return;
+	}
+	// 打开模态框
+    $("#mymodelUpdatePwd").modal({
+        backdrop: 'static',     // 点击空白不关闭
+        keyboard: false,        // 按键盘esc也不会关闭
+        remote: 'commom/loadPage?path=system/user/userModifyPass'    // 从远程加载内容的地址
+    });
+}
+
+//用户授权
+function doAccredit(id) {
+	// 打开模态框
+    $("#mymodelAccredit").modal({
+        backdrop: 'static',     // 点击空白不关闭
+        keyboard: false,        // 按键盘esc也不会关闭
+        remote: 'commom/loadPageParam?path=system/user/userAccredit&id=' + id    // 从远程加载内容的地址
+    });
+}
+//导出Excel
+function doExportExcel(){
+	layer.confirm("您确定导出要数据吗？", {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+			url : "user/exportExcel",
+			type : "post",
+			data : {
+			},
+			success : function(result) {
+				layer.msg("导出成功！");
+			},
+			error : function() {
+				layer.msg("导出失败！");
+			}
+		});
+		layer.close(index);
+	});
+}
+</script>
+</html>

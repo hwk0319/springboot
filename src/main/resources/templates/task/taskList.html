@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-table.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+<link href="jquery-1.11.3/jquery.toast.min.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="jquery-1.11.3/jquery.toast.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-table.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="layui/layer.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="js/bootstarpUtil.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<title>任务管理</title>
+<style>
+</style>
+</head>
+<body>
+		<div class="row areacode" id="searchValue">
+			<form class="form-inline" role="form">
+			  <div class="form-group col-sm-4">
+			    <label class="">名称：</label>
+			      <input class="form-control" id="name" type="text"/>
+			  </div>
+			  <div class="form-group col-sm-4">
+			    <label class="">类型：</label>
+			      <input class="form-control" id="type" type="text"/>
+			  </div>
+			</form>
+		    <button class="btn btn-default" onClick="refresh()"><span class="glyphicon glyphicon-search"></span> 查询</button>
+			<button class="btn btn-default" onClick="repeat()"><span class="glyphicon glyphicon-repeat"></span> 重置</button>
+		</div>
+		<div class="areacode">
+			<div id="toolbar">
+			    <button class="btn btn-primary"  onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+            </div>
+			<table id="mytab" class="table"></table>
+		</div>
+		
+		<!-- 这里加载新增页面 -->
+		<div class="modal fade" id="mymodelAdd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>
+		<!-- 这里加载编辑页面 -->
+		<div class="modal fade" id="mymodelEdit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    </div>
+		  </div>
+		</div>
+</body>
+<script  type="text/javascript">
+	$(function() {
+	    //根据窗口调整表格高度
+	    $(window).resize(function() {
+	        $('#mytab').bootstrapTable('resetView', {
+	            height: tableHeight()
+	        })
+	    })
+	    // 每次隐藏时，清除数据，确保不会和主页dom元素冲突。确保点击时，重新加载。
+	    $("#mymodelAdd, #mymodelEdit").on("hidden.bs.modal", function() {
+	        $(this).removeData("bs.modal");
+	        $(this).find(".modal-content").children().remove(); 
+	    });
+	
+	    $('#mytab').bootstrapTable({
+	        url: "task/selectList",//数据源
+	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+	        height: tableHeight(),//高度调整
+			striped: true,                      //是否显示行间隔色
+			clickToSelect: true,//点击勾选
+			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
+			idField: "id",                     //指定主键列
+			uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+	        pagination: true,                    //是否分页
+	        paginationLoop: false,				 //设置分页条禁止循环
+	        pageNumber: 1,                       //初始化加载第一页，默认第一页
+	        pageSize: 10,//单页记录数
+	        pageList: [10, 20, 30],//分页步进值
+	        paginationPreText: '<',//指定分页条中上一页按钮的图标或文字
+	        paginationNextText: '>',//指定分页条中下一页按钮的图标或文字
+	        sidePagination: "server",//服务端分页
+	        contentType: "application/x-www-form-urlencoded",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+	        dataType: "json",//期待返回数据类型
+	        method: "post",//请求方式
+	        queryParamsType: "",//查询参数组织方式
+	        queryParams: function getParams(params) {
+	            var param = {
+	                limit: params.pageSize,   //每页多少条数据
+	                pageNo: params.pageNumber, // 页码
+	                name: $("#name").val(),
+	                type: $("#type").val()
+	            };
+	            return param;
+	        },
+	        showColumns: true,//是否显示 内容列下拉框
+	        showRefresh: true,//是否显示 刷新按钮
+	        showToggle: true,//是否显示 切换试图（table/card）按钮
+	        toolbar: "#toolbar",//指定工具栏
+	        toolbarAlign: "left",//工具栏对齐方式
+	        columns: [
+	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
+	            {field: 'id', title: 'ID', sortable: true, order: "desc"},
+			    {field: 'name', title: '任务名称'},
+			    {field: 'beanName', title: 'Bean名称'},
+			    {field: 'methodName', title: '方法名'},
+			    {field: 'params', title: '参数'},
+			    {field: 'cronExpression', title: 'cron表达式'},
+			    {field: 'status', title: '状态', formatter:function(value, row, index){
+			    	  if(value == "0"){
+			    		  return "<span class='label label-success'>正常</span>";
+			    	  }else if(value == "1"){
+			    		  return "<span class='label label-danger'>暂停</span>";
+			    	  }
+			      }
+			    },
+			    {field: 'remark', title: '备注'},
+			    {field: 'createDate', title: '创建时间', width: 150},
+		        {field: 'oper', title: '操作',width: 250,formatter:function(value, row, index){
+		        	var html = "<button class='btn btn-default btn-xs' onClick='doList("+row.id+")'><span class='glyphicon glyphicon-search'></span> 查看</button> ";
+		        	    html += "<button class='btn btn-primary btn-xs' onClick='doExecute("+row.id+")'><span class='glyphicon glyphicon-ok-circle'></span> 执行</button> ";
+		        	    html += "<button class='btn btn-primary btn-xs' onClick='doPause("+row.id+")'><span class='glyphicon glyphicon-pause'></span> 暂停</button> ";
+		        	    html += "<button class='btn btn-info btn-xs' onClick='doEdit("+row.id+")'><span class='glyphicon glyphicon-edit'></span> 编辑</button> ";
+		        	    html += "<button class='btn btn-danger btn-xs' onClick='doDelete("+row.id+")'><span class='glyphicon glyphicon-trash'></span> 删除</button>";
+		        	return html;
+		        }}
+	        ],
+	        onClickRow: function(row, $element) {
+	            //$element是当前tr的jquery对象
+	            $element.css("background-color", "#f5f5f5");
+	        },//单击row事件
+	        locale: "zh-CN", //中文支持
+	    });
+	})
+	
+	function tableHeight() {
+	    return $(window).height() - 110;
+	}
+	//刷新数据
+	function refresh(){
+		var param = {
+	            url : 'task/selectList'
+	         }
+	    $('#mytab').bootstrapTable('refresh',param);
+	}
+	//重置
+	function repeat(){
+		$(":text").val("");
+	}
+	
+	//新增
+	function doInsert() {
+		// 打开模态框
+		var url = "commom/loadPage?path=task/taskAdd";
+		openModel("#mymodelAdd", url);
+	}
+
+	function doEdit(id) {
+		// 打开模态框
+		var url = "commom/loadPageParam?path=system/dictInfo/dictInfoAdd&id=" + id;
+		openModel("#mymodelEdit", url);
+	}
+	
+	//删除用户
+	function doDelete(id){
+		showConfirm("您确定要删除这条数据吗？", function() {
+			$.ajax({
+				url : "task/delete",
+				type : "post",
+				data : {
+					"id" : id
+				},
+				success : function(result) {
+					showMsg("删除成功！", function() {});
+					refresh();
+					$("#com-alert").modal('hide');
+				},
+				error : function() {
+					showMsg("删除失败！", function() {});
+					$("#com-alert").modal('hide');
+				}
+			});
+		});
+	}
+
+	//执行
+	function doExecute(id){
+		showConfirm("您确定要执行当前任务吗？", function() {
+			$.ajax({
+				url : "task/execute",
+				type : "post",
+				data : {
+					"id" : id
+				},
+				success : function(result) {
+					showMsg("执行成功！", function() {});
+					refresh();
+					$("#com-alert").modal('hide');
+				},
+				error : function() {
+					showMsg("执行失败！", function() {});
+					$("#com-alert").modal('hide');
+				}
+			});
+		});
+	}
+	//暂停
+	function doPause(id){
+		showConfirm("您确定要暂停当前任务吗？", function() {
+			$.ajax({
+				url : "task/pause",
+				type : "post",
+				data : {
+					"id" : id
+				},
+				success : function(result) {
+					showMsg("暂停成功！", function() {
+					});
+						refresh();
+						$("#com-alert").modal('hide');
+				},
+				error : function() {
+					showMsg("暂停失败！", function() {
+					});
+						$("#com-alert").modal('hide');
+				}
+			});
+		});
+	}
+</script>
+</html>

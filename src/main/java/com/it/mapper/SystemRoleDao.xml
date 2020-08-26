@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.SystemRoleDao">
+	<!-- 角色列表查询 -->
+	<select id="sysRoleSearch" parameterType="RoleInfo" resultType="RoleInfo">
+		select * from role_info t where 1=1
+		<if test="po.id != null  and po.id!=''">
+			and t.id = #{po.id}
+		</if>
+		<if test="po.role != null  and po.role !=''">
+			and t.role like concat(concat('%', #{po.role}),'%')
+		</if>
+		order by t.id desc
+	</select>
+	<!-- 增加角色 -->
+	<insert id="addRole" parameterType="RoleInfo">
+		insert into role_info values(#{po.id}, #{po.role}, #{po.note}, 1)
+		<selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+             SELECT roleinfo_id_seq.NEXTVAL-1 from DUAL
+        </selectKey> 
+	</insert>
+	<!-- 增加角色权限关联表 -->
+	<insert id="addRolePermission" parameterType="RolePermission">
+		insert into role_permission values(#{po.id}, #{po.role_id}, #{po.permission_id})
+		<selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+             SELECT role_permission_id_seq.NEXTVAL-1 from DUAL
+        </selectKey> 
+	</insert>
+	<!-- 编辑角色 -->
+	<update id="updateRole" parameterType="RoleInfo">
+		update role_info 
+		set
+			role = #{po.role},
+			note = #{po.note}
+		where id = #{po.id}
+	</update>
+	<!-- 根据角色id删除角色 -->
+	<delete id="deleteRole" parameterType="RoleInfo">
+		delete role_info t where t.id = #{po.id}
+	</delete>
+	<!-- 根据角色id删除角色权限关联信息 -->
+	<delete id="deleteRolePermission" parameterType="RoleInfo">
+		delete role_permission t where t.role_id = #{po.id}
+	</delete>
+	<!-- 批量删除角色 -->
+ 	<delete id="batchDeleteRole" parameterType="RoleInfo">
+		delete from role_info
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+        	#{item} 
+    	</foreach>
+	</delete>
+</mapper>

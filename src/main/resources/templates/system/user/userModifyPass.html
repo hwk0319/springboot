@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<title>修改密码</title>
+<style>
+</style>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">修改密码</h4>
+    </div>
+    <!-- 表单 -->
+	<div class="formDiv" style="margin-top:20px;margin-bottom: 20px;">
+		<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="username" class="col-sm-3 control-label"><span class="required">* </span>原密码</label>
+		    <div class="col-sm-6">
+		      <input type="password" name="password_old"  id="password_old" placeholder="请输入原密码" class="form-control"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label"><span class="required">* </span>新密码</label>
+		    <div class="col-sm-6">
+		      <input type="password" name="password_new" id="password_new" placeholder="请输入新密码" class="form-control">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="phone" class="col-sm-3 control-label"><span class="required">* </span>确认密码</label>
+		    <div class="col-sm-6">
+		      <input type="password" name="password_confirm" id="password_confirm" placeholder="请输入确认密码" class="form-control">
+		    </div>
+		  </div>
+		  <input type="hidden" id="id"/>
+		  <input type="hidden" id="modules" value=""/>
+		</form>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+	$("#from1").bootstrapValidator({
+        live: 'submitted',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+        excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+        submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+        message: '通用的验证失败消息',//好像从来没出现过
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+       	 /*指定需要校验的元素  通过name数据去指定*/
+            password_old:{
+                /*配置校验规则  规则不止一个*/
+                validators:{
+                    /*配置具体的规则*/
+                    notEmpty:{
+                        message:'请您输入原密码'
+                    },
+                    stringLength: {//检测长度
+                    	min:6,
+                        max:18,
+                        message: '密码6-18个字符'
+                    }
+                }
+            },
+            password_new:{
+                validators:{
+                    notEmpty:{
+                        message:'请您输入新密码'
+                    },
+                    regexp: {//正则验证
+                        regexp: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/,
+                        message: '密码应为字母、数字组合，且大于6位小于18位'
+                    }
+                }
+            },
+            password_confirm:{
+                validators:{
+                    notEmpty:{
+                        message:'请输入确认密码'
+                    },
+                    regexp: {//正则验证
+                        regexp: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/,
+                        message: '密码应为字母、数字组合，且大于6位小于18位'
+                    },
+                    /*自定义规则*/
+	                callback: {
+                        message: '新密码和确认密码必须相同',
+                        callback: function (value, validator) {
+                        	var pwdNew = $("#password_new").val();
+                            if(value != pwdNew){
+                            	return false;
+                            }else{
+                            	return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+    $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+   	 $("#from1").bootstrapValidator('validate');//提交验证
+        if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+       	//验证成功后的操作，如ajax
+       	 doSave();
+        }
+    });
+});
+
+function doSave() {
+	var data= $('#mytab').bootstrapTable('getSelections');
+	var id = data[0].id;
+	var password = $("#password_old").val().trim();
+	var passwordNew = $("#password_new").val().trim();
+	var passwordConfirm = $("#password_confirm").val().trim();
+	password = $.md5(pwd);
+	passwordNew = $.md5(pwd);
+
+	$.ajax({
+		url : "user/updatePass",
+		type : "post",
+		data : {
+			"id" : id,
+			"password" : password,
+			"passwordNew" : passwordNew
+		},
+		success : function(result) {
+				if(result > 0){
+					showMsg("修改成功！", function() {
+						$("#mymodelUpdatePwd").modal('hide');
+						refresh();
+					});
+				}else{
+					showMsg("修改失败，原密码错误！", function() {});
+				}
+        },
+		error : function() {
+			showMsg("修改失败！", function() {});
+		}
+	});
+}
+</script>
+</html>

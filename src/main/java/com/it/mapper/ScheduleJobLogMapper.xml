@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.ScheduleJobLogDao">
+  <resultMap id="BaseResultMap" type="ScheduleJobLog">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="JOB_ID" jdbcType="INTEGER" property="jobId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="BEAN_NAME" jdbcType="VARCHAR" property="beanName" />
+    <result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName" />
+    <result column="PARAMS" jdbcType="VARCHAR" property="params" />
+    <result column="STATUS" jdbcType="INTEGER" property="status" />
+    <result column="ERROR" jdbcType="VARCHAR" property="error" />
+    <result column="TIMES" jdbcType="INTEGER" property="times" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, JOB_ID, NAME, BEAN_NAME, METHOD_NAME, PARAMS, STATUS, ERROR, TIMES, CREATE_DATE
+  </sql>
+  
+  <select id="selectList" parameterType="ScheduleJobLog" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SCHEDULE_JOB_LOG
+    order by id desc
+  </select>
+  
+  <select id="selectById" parameterType="INTEGER" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SCHEDULE_JOB_LOG
+    where ID = #{id}
+  </select>
+  
+  <delete id="deleteById" parameterType="INTEGER">
+    delete from SCHEDULE_JOB_LOG
+    where ID = #{id}
+  </delete>
+  
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="ScheduleJobLog" useGeneratedKeys="false">
+    insert into SCHEDULE_JOB_LOG (ID, JOB_ID, NAME, BEAN_NAME, METHOD_NAME, PARAMS, STATUS, ERROR, TIMES, CREATE_DATE)
+    values (#{po.id,jdbcType=INTEGER}, #{po.jobId,jdbcType=INTEGER}, #{po.name,jdbcType=VARCHAR},#{po.beanName,jdbcType=VARCHAR}, #{po.methodName,jdbcType=VARCHAR}, 
+            #{po.params,jdbcType=VARCHAR}, #{po.status,jdbcType=INTEGER}, #{po.error,jdbcType=VARCHAR}, #{po.times,jdbcType=INTEGER}, to_date(#{po.createDate}, 'yyyy-mm-dd hh24:mi:ss'))
+     <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+        SELECT SCHEDULE_JOB_LOG_SEQ.NEXTVAL-1 from DUAL
+     </selectKey>
+  </insert>
+  
+  <update id="updateById" parameterType="ScheduleJobLog">
+    update SCHEDULE_JOB_LOG
+    set JOB_ID = #{po.jobId,jdbcType=DECIMAL},
+      NAME = #{po.name,jdbcType=VARCHAR},
+      BEAN_NAME = #{po.beanName,jdbcType=VARCHAR},
+      METHOD_NAME = #{po.methodName,jdbcType=VARCHAR},
+      PARAMS = #{po.params,jdbcType=VARCHAR},
+      STATUS = #{po.status,jdbcType=DECIMAL},
+      ERROR = #{po.error,jdbcType=VARCHAR},
+      TIMES = #{po.times,jdbcType=DECIMAL},
+      CREATE_DATE = #{po.createDate,jdbcType=TIMESTAMP}
+    where ID = #{po.id}
+  </update>
+</mapper>

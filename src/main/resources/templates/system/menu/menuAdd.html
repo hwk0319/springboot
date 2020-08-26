@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>菜单增加</title>
+<style>
+.col-md-1 {
+    margin: 10px;
+}
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+     width: 5px;
+     background-color: #e5e6e6;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-thumb {
+     border-radius: 5px;
+     background: #cac5c5;
+ }
+/* 滚动条滑块 */
+::-webkit-scrollbar-track {
+     border-radius: 5px;
+}
+.rows{
+	width: 100%;
+	height: 33px;
+}
+.col-md-1s{
+	width: calc(100% / 8);
+	float: left;
+ 	height: 100%;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menuContent i{
+	padding: 5px;
+}
+.menuContent i:hover{
+	cursor:pointer;
+	font-size: 20px;
+	background:#e2e0e0;
+	border-radius: 5px;
+}
+</style>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">新增</h4>
+    </div>
+    <!-- 表单 -->
+	<div class="formDiv" style="margin-top:20px;margin-bottom: 20px;">
+		<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="pid" class="col-sm-3 control-label"><span class="required">*</span>上级菜单</label>
+		    <div class="col-sm-6">
+		    	<input type="text" class="form-control" id="pname" name="pname" textLabel="jasontext" aria-describedby="inputSuccess2Status" readonly placeholder="请选择上级菜单"/>
+		        <span class="glyphicon glyphicon-menu-down form-control-feedback" aria-hidden="true"></span>
+		        <input type="hidden" class="form-control" id="pid" name="pid" value="0"/>
+		        <!-- 下拉树菜单 -->
+		        <div class="menuContent" id="menuContent">
+			         <ul id="treeDemo" class="ztree"></ul>
+			    </div>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="name" class="col-sm-3 control-label"><span class="required">*</span>菜单名称</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="name" name="name" placeholder="请输入菜单名称" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="type" class="col-sm-3 control-label"><span class="required">*</span>类型</label>
+		    <div class="col-sm-6">
+		    	<label class="radio-inline">
+			    	<input type="radio" name="type1" value="0"/>目录
+		    	</label>
+		    	<label class="radio-inline">
+			    	<input type="radio" name="type1" value="1"/>菜单
+		    	</label>
+		    	<label class="radio-inline">
+			    	<input type="radio" name="type1" value="2"/>按钮
+		    	</label>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="url" class="col-sm-3 control-label"><span class="required">*</span>请求地址</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="url" name="url" placeholder="请输入请求地址" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="permission" class="col-sm-3 control-label">权限标识</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="permission" name="permission" placeholder="请输入权限标识" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="image" class="col-sm-3 control-label">菜单图标</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="image" name="image" placeholder="请选择菜单图标" />
+		      <div class="menuContent" id="imageContent" style="height:100px;overflow-y:auto;overflow-x: hidden;">
+			      <!-- 加载图标页面 -->
+			  </div>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="sort" class="col-sm-3 control-label">菜单排序</label>
+		    <div class="col-sm-6">
+		      <input type="number" class="form-control" id="sort" name="sort" placeholder="请输入菜单排序"/>
+		    </div>
+		  </div>
+		  <input type="hidden" id="id" th:value="${id}"/>
+		</form>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("#pname").click(function(){
+			$("#menuContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
+		})
+		$("#imageContent").load("util/simpleLineIcon.html");
+		$("#image").click(function(){
+			$("#imageContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
+		})
+
+		 var id = $("#id").val();
+		 if(id !=""){
+			 getMenuById(id);
+			 $("#pid").val(id);
+			 $("#pname").attr("disabled","disabled");
+		 }else{
+			 getTree();
+		 }
+		 $("#from1").bootstrapValidator({
+	        live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+	        excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+	        submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+	        message: '验证失败',//好像从来没出现过
+	        feedbackIcons: {//根据验证结果显示的各种图标
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	       	 	/*指定需要校验的元素  通过name数据去指定*/
+	       	 	pname:{
+	                validators:{
+	                    notEmpty:{
+	                        message:'请选择上级菜单'
+	                    }
+	                }
+	            },
+	            name:{
+	                /*配置校验规则  规则不止一个*/
+	                validators:{
+	                    /*配置具体的规则*/
+	                    notEmpty:{
+	                        message:'请输入菜单名称'
+	                    },
+	                    stringLength: {//检测长度
+	                        min: 1,
+	                        max: 20,
+	                        message: '菜单名称1-20个字符'
+	                    }
+	                }
+	            },
+	            type:{
+	                validators:{
+	                    notEmpty:{
+	                        message:'请选择类型'
+	                    }
+	                }
+	            },
+	            url:{
+	                validators:{
+	                    notEmpty:{
+	                        message:'请输入请求地址'
+	                    },
+	                    stringLength: {//检测长度
+	                        min: 1,
+	                        max: 40,
+	                        message: '请求地址1-40个字符'
+	                    }
+	                }
+	            },
+	            permission:{
+	                validators:{
+	                    stringLength: {//检测长度
+	                        min: 0,
+	                        max: 40,
+	                        message: '权限标识0-40个字符'
+	                    }
+	                }
+	            }
+	        }
+	    });
+	    $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+	   	 	$("#from1").bootstrapValidator('validate');//提交验证
+	        if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	       	//验证成功后的操作，如ajax
+	       	 doSave();
+	        }
+	    });
+	})
+	//获取下拉菜单数据
+	/* function getData(){
+		$.ajax({
+			type: "post",
+			url: "menu/getMenu1",//对应后台的post
+			contentType:'application/json',
+			async: false,
+			data: {},
+			success:function(result){
+			    if(result!=null){
+					$("#pname").click(function() {
+						var options = {
+							levels : 3,
+							data : [result],
+							onNodeSelected : function(event, data) {
+								$("#pname").val(data.text);
+								$("#pid").val(data.id);
+								$("#tree").hide();//选中树节点后隐藏树
+							}
+						};
+						$('#tree').treeview(options);
+					});
+			    }
+			},
+			error:function(){
+				layer.msg('下拉菜单加载失败!');
+			}
+		})
+	} */
+	
+	//保存
+	function doSave() {
+		var pid = $("#pid").val();
+		var name = $("#name").val();
+		var type = $("input[name='type1']:checked").val();
+		var url = $("#url").val();
+		var permission = $("#permission").val();
+		var image = $("#image").val();
+		var sort = $("#sort").val();
+		$.ajax({
+			url : "menu/addMenu",
+			type : "post",
+			dataType : 'json',
+			data : {
+				"pid" : pid,
+				"name" : name,
+				"type" : type,
+				"url" : url,
+				"permission" : permission,
+				"image" : image,
+				"sort" : sort
+			},
+			success : function(result) {
+				if(result > 0){
+					layer.alert("保存成功！", {icon: 1, title:'提示'}, function(index){
+						$("#mymodelAdd").modal('hide');
+						refresh();
+						layer.close(index);
+					});
+				}
+			},
+			error : function() {
+				layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+	}
+
+	//根据id查询菜单
+	function getMenuById(id) {
+		$.ajax({
+			url : "menu/searchMenuById",
+			type : "post",
+			data : {
+				"id" : id
+			},
+			dataType : "json",
+			success : function(result) {
+				$("#pname").val(result[0].name)
+			},
+			error : function() {
+				layer.msg("加载失败");
+			}
+		});
+	}
+	//加载菜单树全部节点
+	function getTree(){
+		var settingss = {
+		        data: {
+			          simpleData: {
+				            enable: true,  //true 、 false 分别表示 使用 、 不使用 简单数据模式
+				            idKey: "id",  //节点数据中保存唯一标识的属性名称
+				            pIdKey: "pid",    //节点数据中保存其父节点唯一标识的属性名称 
+				            rootPId: -1  //用于修正根节点父节点数据，即 pIdKey 指定的属性值
+			          },
+			          key: {
+			            	name: "name"  //zTree 节点数据保存节点名称的属性名称  默认值："name"
+			          }
+		        },
+		        check:{
+			          enable:false,  //true 、 false 分别表示 显示 、不显示 复选框或单选框
+			          nocheckInherit:true  //当父节点设置 nocheck = true 时，设置子节点是否自动继承 nocheck = true
+		        },
+		        callback: {
+		            onClick: function (e, treeId, treeNode, clickFlag) {
+						$("#pname").val(treeNode.name);
+						$("#pid").val(treeNode.id);
+						$("#menuContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
+		            }
+		        }
+	    };
+		
+		$.ajax({
+			url : "menu/getMenuTree1",
+			type : "post",
+			data : {},
+			success : function(result) {
+				if(result.menulists != null && result.menulists != ""){
+					zTreeObj = $.fn.zTree.init($("#treeDemo"), settingss, result.menulists); //初始化树
+	                zTreeObj.expandAll(false);   //true 节点全部展开、false节点收缩
+				}
+			},
+			error : function() {
+				layer.mgs("菜单数据加载失败！");
+			}
+		});
+	}
+</script>
+</html>

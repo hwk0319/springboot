@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <base th:href="@{/}">
+  <link href="css/index.css" rel="stylesheet"/>
+  <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="icons/icons.css" rel="stylesheet">
+  <link href="icons/style.css" rel="stylesheet">
+	<style>
+		iframe{
+			width: 100%;
+			height: calc(100% - 90px);
+		}
+	</style>
+	<title>主页</title>
+</head>
+<body class="sticky-header">
+    <!--Start left side Menu-->
+    <div class="left-side sticky-left-side">
+        <!--logo-->
+        <div class="logo">
+            <a href="index.html"></a>
+        </div>
+        <!--logo-->
+        <div class="left-side-inner">
+            <!--Sidebar nav-->
+            <ul class="nav nav-pills nav-stacked custom-nav" id="left-menu">
+                <!-- left menu html -->
+            </ul>
+            <!--End sidebar nav-->
+        </div>
+    </div>
+    <!--End left side menu-->
+    
+    <!-- main content start-->
+    <div class="main-content" >
+        <!-- header section start-->
+        <div class="header-section">
+            <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+            <!--notification menu start -->
+            <div class="menu-right">
+                <ul class="notification-menu">
+                    <li>
+                        <a href="#" class="btn btn-default dropdown-toggle info-number" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="badge">4</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-head pull-right">
+                          <h5 class="title">Notifications</h5>
+                        	<ul class="dropdown-list normal-list">
+								 <li class="message-list message-scroll-list">
+		                          <a href="#">
+		                              <span class="photo"> <img src="assets/images/users/avatar-8.jpg" class="img-circle" alt="img"></span>
+		                              <span class="subject">John Doe</span>
+		                              <span class="message"> New tasks needs to be done</span>
+		                              <span class="time">15 minutes ago</span>
+		                          </a>
+								</li>
+								<li class="last"> <a  href="#">All Messages</a> </li>
+							</ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <img src="images/user2.png" alt=""><font th:text="${session.userName}"></font>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                          <li> <a href="#"> <i class="fa fa-wrench"></i> Settings </a> </li>
+                          <li> <a href="#"> <i class="fa fa-user"></i> Profile </a> </li>
+                          <li> <a href="javascript:void(0)" onClick="logOut()"> <i class="fa fa-lock"></i> Logout </a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--notification menu end -->
+        </div>
+        <!-- header section end-->
+       	<!--Start Page Title-->
+        <div class="page-title-box">
+             <span class="page-title" id="titleName">主页</span>
+             <ol class="breadcrumb">
+                 <li><a href="#" id="firstName"></a></li>
+                 <li class="active" id="secondName"></li>
+             </ol>
+             <div class="clearfix"></div>
+        </div>
+        <!--End Page Title-->
+		<iframe id="myIframe" src="static/dashboard" frameborder=0></iframe>
+        <!--Start  Footer -->
+        <footer class="footer-main">Copyright &copy; 2019 All rights reserved</footer>	
+        <!--End footer -->
+       </div>
+      <!--End main content -->
+    <!--Begin core plugin -->
+    <script src="jquery-1.11.3/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery.slimscroll.js "></script>
+    <script src="js/jquery.nicescroll.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/functions.js"></script>
+</body>
+</html>

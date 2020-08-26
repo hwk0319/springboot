@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>角色编辑</title>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">编辑</h4>
+    </div>
+	<div class="formDiv" style="margin-top:20px;margin-bottom: 20px;">
+		<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="username" class="col-sm-3 control-label"><span class="required">*</span>角色名称</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="role" name="role" placeholder="请输入角色名称"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="phone" class="col-sm-3 control-label">备注</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="note" name="note" placeholder="请输入备注" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="email" class="col-sm-3 control-label">角色权限</label>
+		    <div class="col-sm-6">
+		    	<ul id="treeDemo" class="ztree"></ul>
+		    </div>
+		  </div>
+		  <input type="hidden" id="id" th:value="${id}"/>
+		</form>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">
+	var settingss = {
+        data: {
+	          simpleData: {
+		            enable: true,  //true 、 false 分别表示 使用 、 不使用 简单数据模式
+		            idKey: "id",  //节点数据中保存唯一标识的属性名称
+		            pIdKey: "pid",    //节点数据中保存其父节点唯一标识的属性名称 
+		            rootPId: -1  //用于修正根节点父节点数据，即 pIdKey 指定的属性值
+	          },
+	          key: {
+	            	name: "name"  //zTree 节点数据保存节点名称的属性名称  默认值："name"
+	          }
+        },
+        check:{
+	          enable:true,  //true 、 false 分别表示 显示 、不显示 复选框或单选框
+	          nocheckInherit:true  //当父节点设置 nocheck = true 时，设置子节点是否自动继承 nocheck = true
+        }
+    };
+	var id = $("#id").val();
+	$(function() {
+		setDetailValue(id);
+		getTreeData();
+		$("#from1").bootstrapValidator({
+            live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+            excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+            submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+            message: '验证失败',//好像从来没出现过
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+           	 /*指定需要校验的元素  通过name数据去指定*/
+                role:{
+                    /*配置校验规则  规则不止一个*/
+                    validators:{
+                        /*配置具体的规则*/
+                        notEmpty:{
+                            message:'请输入角色名称'
+                        },
+                        stringLength: {//检测长度
+                            min: 1,
+                            max: 10,
+                            message: '角色名称1-10个字符'
+                        }
+                    }
+                },
+                note:{
+                    validators:{
+                        stringLength:{
+                            min:0,
+                            max:100,
+                            message:'备注0-100个字符'
+                        }
+                    }
+                }
+            }
+        });
+        $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+       		$("#from1").bootstrapValidator('validate');//提交验证
+            if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	           	//验证成功后的操作，如ajax
+	           	 doSave();
+            }
+        });
+	});
+
+	function doSave() {
+		var role = $("#role").val();
+		var note = $("#note").val();
+		var zTree = $.fn.zTree.getZTreeObj("treeDemo"), nodes = zTree.getCheckedNodes(true);
+		var str = "";
+		for(var i = 0; i < nodes.length; i ++){
+			str += nodes[i].id +",";
+		}
+		   str = str.substring(0, str.length - 1);
+		$.ajax({
+			url : "role/updateRole",
+			type : "post",
+			data : {
+				"id" : id,
+				"role" : role,
+				"note" : note,
+				"idArr" : str
+			},
+			success : function(result) {
+				if(result > 0){
+					layer.alert("保存成功！", {icon: 1, title:'提示'}, function(index){
+						$("#mymodelEdit").modal('hide');
+						refresh();
+						layer.close(index);
+					});
+				}
+			},
+			error : function() {
+				layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+	}
+	
+	function setDetailValue(id) {
+		var rs = load(id);//此方法为同步、阻塞式，异步实现方法见userManager.js
+		if (rs.length>0){
+			$("#role").val(rs[0].role);
+			$("#note").val(rs[0].note);
+	    }
+	} 
+	
+	function load(id) {
+		var resultvalue;
+		$.ajax({
+			url : "role/sysRoleSearch",
+			type : "post",
+			async : false,
+			data : {
+				"id":id
+			},
+			dataType : "json",
+			success : function(result) {
+				resultvalue = result;
+			},
+			error : function() {
+				layer.msg("加载失败");
+			}
+		});
+		return resultvalue;
+	}
+	
+	//加载菜单树全部节点
+	/* function getTree(){
+		$("#tree_menu").tree({
+			url : 'menu/getMenu',
+			animate : true,
+			lines : true,
+			checkbox : true,
+			onCheck: function(node, checked){
+			},
+			formatter:function(node){
+				return node.text +"&nbsp;&nbsp;&nbsp;"+ (node.permission == null ? "" : node.permission);
+			},
+			onLoadSuccess: function(node, data){
+				//加载成功后设置选中节点
+				var rpdate = getChcekData();
+				for (var i = 0; i < rpdate.length; i++) {
+					 var id = rpdate[i].permission_id;
+					 var node1 = $("#tree_menu").tree('find',id);
+					 $("#tree_menu").tree("check", node1.target);
+				}
+			}
+		});
+	} */
+	
+	function getTreeData(){
+		$.ajax({
+			url : "menu/getMenuTree",
+			type : "post",
+			data : {},
+			success : function(result) {
+				if(result.menulists != null && result.menulists != ""){
+					zTreeObj = $.fn.zTree.init($("#treeDemo"), settingss, result.menulists); //初始化树
+	                zTreeObj.expandAll(false);   //true 节点全部展开、false节点收缩
+	                //设置节点选中
+	                var rpdate = getChcekData();
+	                for (var i = 0; i < rpdate.length; i++) {
+						 var id = rpdate[i].permission_id;
+						 var node = zTreeObj.getNodeByParam("id", id);
+						 if(node != null) {
+							zTreeObj.checkNode(node, true);
+						 }
+					}
+				}
+			},
+			error : function() {
+				layer.msg("菜单数据加载数据失败！");
+			}
+		});
+	}
+	
+	function getChcekData() {
+		var resultvalue;
+		$.ajax({
+			url : "menu/getRolePermission",
+			type : "post",
+			async : false,
+			data : {
+				"role_id" : id
+			},
+			dataType : "json",
+			success : function(result) {
+				resultvalue = result;
+			},
+			error : function() {
+				layer.msg("角色权限数据加载失败");
+			}
+		});
+		return resultvalue;
+	}
+</script>
+</html>

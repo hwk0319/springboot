@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.UsersDao">
+	<select id="search" parameterType="UserInfo"  resultType="com.it.po.UserInfo">
+		select * from user_info u
+		left join user_role ur on u.id = ur.user_id
+		left join role_info r on r.id = ur.role_id
+		where 1=1 
+		<if test="po.name != null  and po.name !=''">
+			and u.name like concat(concat('%',#{po.name}),'%')
+		</if>
+		<if test="po.id != null  and po.id !=''">
+			and u.id =  #{po.id}
+		</if>
+		ORDER BY u.id desc
+	</select>
+	
+	<!-- 判断用户是否存在，用户不存在时返回null -->
+ 	<select id="findUserByName" parameterType="String" resultType="com.it.po.UserInfo">
+		select u.id, u.name, u.password, r.id as roleId, r.role
+		from user_info u
+		left join user_role ur on u.id = ur.user_id
+		left join role_info r on ur.role_id = r.id
+		where u.name = #{name}
+ 	</select>
+ 	
+ 	<!-- 根据用户id查询用户信息,查询用户信息、角色、权限-->
+ 	<select id="findUserByID" parameterType="Integer"  resultType="UserInfo">
+		select u.id, u.name, u.password,
+		      r.id, r.role,
+		      p.id, p.name, p.url
+		from user_info u
+		    left join user_role ur on u.id = ur.user_id
+		    left join role_info r on ur.role_id = r.id
+		    left join role_permission rp on r.id = rp.role_id
+		    left join permission p on rp.permission_id = p.id 
+		where r.id = #{id}
+	</select>
+ 	
+ 	<!-- 判断用户是否被注销，用户注销时返回null -->
+ 	<select id="findUserByStatus" parameterType="String" resultType="com.it.po.UserInfo">
+		select * from user_info where name=#{name} and status='0'
+ 	</select>
+ 	
+	<!-- 删除 注销 -->
+	<update id="delete" parameterType="com.it.po.UserInfo">
+	    update user_info 
+	    set status = #{po.status}
+	        where id =#{po.id}
+	</update>
+		
+	<update id="updatePass" parameterType="com.it.po.UserInfo">
+	    update user_info 
+	    set password = #{po.password}
+	    where id =#{po.id}
+	</update> 
+	
+	<!-- 密码错误次数打到上限，用户被锁定 -->
+	<update id="updateStatus" parameterType="String">
+        update user_info set 
+        	status = 2
+ 		where username=#{name}
+	</update>
+	<!-- 查询用户是否已授权 -->
+	<select id="searchUserRoleInfo" parameterType="UserRoleInfo" resultType="UserRoleInfo">
+		select * from user_role t
+		where 1=1
+		and t.user_id = #{po.user_id}
+		and t.role_id = #{po.role_id}
+ 	</select>
+	<!-- 授权 -->
+	<insert id="accredit" parameterType="UserRoleInfo">
+	    insert into user_role values(#{po.id}, #{po.user_id}, #{po.role_id})
+	    <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+             SELECT USER_ROLE_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey>
+	</insert>
+	<!-- 修改用户授权 -->
+	<update id="updateAccredit" parameterType="UserRoleInfo">
+        update user_role t 
+		set t.role_id = #{po.role_id}
+		where t.user_id = #{po.user_id}
+	</update>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="UserInfo">
+		 insert into user_info (id,name,password,status,email,phone,sex) values
+		 (#{po.id,jdbcType=INTEGER},#{po.name,jdbcType=VARCHAR},#{po.password,jdbcType=VARCHAR},
+		 #{po.status,jdbcType=VARCHAR},#{po.email,jdbcType=VARCHAR},#{po.phone,jdbcType=VARCHAR},#{po.sex,jdbcType=INTEGER})
+		<selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+             SELECT USERINFO_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey> 
+	</insert>
+	
+	<update id="update" parameterType="UserInfo">
+	    update user_info 
+	    set phone = #{po.phone},
+	        email = #{po.email},
+	        sex = #{po.sex}
+	        where id =#{po.id}
+	</update>
+	
+ 	<delete id="deleteUser" parameterType="com.it.po.UserInfo">
+		delete from user_info
+		where id = #{po.id}
+	</delete>
+ 	
+ 	<!-- 查询角色权限 -->
+ 	<select id="getPermissions" parameterType="String" resultType="String">
+        select reverse(substr(reverse(m.menuurl),instr(reverse(m.menuurl),'/'), length(reverse(m.menuurl))))
+		from system_menu m where m.menucode like substr(#{menucode},1,length(#{menucode})-3)||'%'
+ 	</select>	
+ 	<!-- 根据roleid 查询权限 -->
+ 	<select id="findPermissionByRoleid" parameterType="Integer" resultType="Permission">
+        select * from role_permission rp
+		left join permission p on rp.permission_id = p.id
+		where rp.role_id = #{roleId}
+ 	</select>	
+ 	
+ 	<!-- 批量删除用户 -->
+ 	<delete id="bacthDeleteUser" parameterType="UserInfo">
+		delete from user_info
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+        	#{item} 
+    	</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.ScheduleJobDao">
+  <resultMap id="BaseResultMap" type="ScheduleJob">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="BEAN_NAME" jdbcType="VARCHAR" property="beanName" />
+    <result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName" />
+    <result column="PARAMS" jdbcType="VARCHAR" property="params" />
+    <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cronExpression" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, NAME, BEAN_NAME, METHOD_NAME, PARAMS, CRON_EXPRESSION, STATUS, REMARK, to_char(CREATE_DATE,'yyyy-mm-dd hh24:mi:ss') CREATE_DATE
+  </sql>
+  
+  <select id="selectList" parameterType="ScheduleJob" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SCHEDULE_JOB
+    order by id desc
+  </select>
+  
+  <select id="selectById" parameterType="INTEGER" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SCHEDULE_JOB
+    where ID = #{id}
+  </select>
+  
+  <delete id="deleteById" parameterType="INTEGER">
+    delete from SCHEDULE_JOB
+    where ID = #{id}
+  </delete>
+  
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="ScheduleJob" useGeneratedKeys="false">
+    insert into SCHEDULE_JOB (ID, NAME, BEAN_NAME, METHOD_NAME, PARAMS, CRON_EXPRESSION, STATUS, REMARK, CREATE_DATE)
+    values (#{po.id,jdbcType=INTEGER}, #{po.name,jdbcType=VARCHAR}, #{po.beanName,jdbcType=VARCHAR}, #{po.methodName,jdbcType=VARCHAR}, #{po.params,jdbcType=VARCHAR}, 
+      		#{po.cronExpression,jdbcType=VARCHAR}, #{po.status,jdbcType=INTEGER}, #{po.remark,jdbcType=VARCHAR}, sysdate)
+     <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+        SELECT SCHEDULE_JOB_SEQ.NEXTVAL-1 from DUAL
+     </selectKey>
+  </insert>
+  
+  <update id="updateById" parameterType="ScheduleJob">
+    update SCHEDULE_JOB
+    set NAME = #{po.name,jdbcType=VARCHAR},
+      BEAN_NAME = #{po.beanName,jdbcType=VARCHAR},
+      METHOD_NAME = #{po.methodName,jdbcType=VARCHAR},
+      PARAMS = #{po.params,jdbcType=VARCHAR},
+      CRON_EXPRESSION = #{po.cronExpression,jdbcType=VARCHAR},
+      STATUS = #{po.status,jdbcType=DECIMAL},
+      REMARK = #{po.remark,jdbcType=VARCHAR},
+      CREATE_DATE = #{po.createDate,jdbcType=TIMESTAMP}
+    where ID = #{po.id}
+  </update>
+  
+  <update id="updateStatusById" parameterType="ScheduleJob">
+    update SCHEDULE_JOB
+    set STATUS = #{po.status}
+    where ID = #{po.id}
+  </update>
+</mapper>

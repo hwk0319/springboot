@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<title>表单</title>
+</head>
+<body>
+	<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="username" class="col-sm-3 control-label"><span class="required">*</span>角色名称</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="role" name="role" placeholder="请输入角色名称"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label">备注</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="note" name="note" placeholder="请输入备注" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label">备注</label>
+		    <div class="col-sm-6">
+		      <textarea id="editor_id" name="content" style="width:700px;height:300px;">
+				请输入内容...
+			  </textarea>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		  	<label for="password" class="col-sm-3 control-label"></label>
+		  	<div class="col-sm-6">
+				<button type="button" class="btn btn-primary" onClick="submit()" id="btn-submit">保存</button>
+		  	</div>
+		  </div>
+		</form>
+</body>
+<script src="kindeditor/kindeditor-all.js"></script>
+<script src="kindeditor/lang/zh-CN.js"></script>
+<script>
+     KindEditor.ready(function(K) {
+         window.editor = K.create('#editor_id');
+     });
+     function submit(){
+    	 editor.sync();
+    	 var html = $('#editor_id').val();
+    	 alert(html);
+     }
+</script>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.ImageInfoDao">
+  <resultMap id="BaseResultMap" type="ImageInfo">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="IMAGESIZE" jdbcType="VARCHAR" property="imagesize" />
+    <result column="HEIGTH" jdbcType="VARCHAR" property="heigth" />
+    <result column="WIDTH" jdbcType="VARCHAR" property="width" />
+    <result column="USERNAME" jdbcType="VARCHAR" property="username" />
+    <result column="CREATEDATE" jdbcType="VARCHAR" property="createdate" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, NAME, IMAGESIZE, HEIGTH, WIDTH, USERNAME, to_char(CREATEDATE,'yyyy-mm-dd hh24:mi:ss') CREATEDATE, URL
+  </sql>
+  
+  <select id="selectById" parameterType="INTEGER" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from IMAGE
+    where ID = #{id}
+  </select>
+  
+  <select id="selectList" parameterType="ImageInfo" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from IMAGE
+    where 1=1
+    order by id desc
+  </select>
+  
+  <delete id="deleteById" parameterType="INTEGER">
+    delete from IMAGE
+    where ID = #{id}
+  </delete>
+  
+  <!-- 批量删除-->
+  <delete id="bacthDeleteUser">
+	delete from IMAGE
+	where id in
+	<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+       	#{item} 
+   	</foreach>
+  </delete>
+  
+  <insert id="insert" keyColumn="ID" parameterType="ImageInfo" useGeneratedKeys="false">
+    insert into IMAGE (ID, NAME, IMAGESIZE, HEIGTH, WIDTH, USERNAME, CREATEDATE, URL)
+    values (#{po.id,jdbcType=INTEGER},#{po.name,jdbcType=VARCHAR}, #{po.imagesize,jdbcType=VARCHAR}, #{po.heigth,jdbcType=VARCHAR}, 
+      #{po.width,jdbcType=VARCHAR}, #{po.username,jdbcType=VARCHAR}, to_date(#{po.createdate},'yyyy-MM-dd HH24:mi:ss'), #{po.url,jdbcType=VARCHAR})
+      <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+	       SELECT IMAGE_ID_SEQ.NEXTVAL-1 from DUAL
+      </selectKey>
+  </insert>
+  
+  <update id="update" parameterType="ImageInfo">
+    <!-- update IMAGE
+    set NAME = #{po.name,jdbcType=VARCHAR},
+      IMAGESIZE = #{po.imagesize,jdbcType=VARCHAR},
+      HEIGTH = #{po.heigth,jdbcType=VARCHAR},
+      WIDTH = #{po.width,jdbcType=VARCHAR},
+      USERNAME = #{po.username,jdbcType=VARCHAR},
+      CREATEDATE = #{po.createdate,jdbcType=TIMESTAMP},
+      URL = #{po.url,jdbcType=VARCHAR}
+    where ID = #{po.id,jdbcType=DECIMAL} -->
+  </update>
+</mapper>

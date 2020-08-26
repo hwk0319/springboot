@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.DictDao">
+
+	<select id="search" parameterType="Dict"  resultType="Dict">
+		select id,name,type,status,remark,to_char(createDate,'yyyy-mm-dd hh24:mi:ss') createDate from dict where status = 1
+		<if test="po.id != null and po.id != ''"> and id=#{po.id}</if>
+		<if test="po.type != null and po.type != ''"> and type like concat(concat('%',#{po.type}),'%')</if>
+		<if test="po.name != null and po.name != ''" >and name like concat(concat('%',#{po.name}),'%')</if>
+		order by id desc
+	</select>
+
+	<insert id="insert"  parameterType="Dict" useGeneratedKeys="false" keyProperty="po.id">
+		 insert into dict values 
+		 (#{po.id,jdbcType=INTEGER}, #{po.name,jdbcType=VARCHAR}, #{po.type,jdbcType=VARCHAR}, 1, 
+		  #{po.remark,jdbcType=VARCHAR}, sysdate)
+        <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+	          SELECT DICT_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey> 	
+	</insert>	
+	
+	<update id="update"  parameterType="Dict">
+		 update dict 
+		 set 
+		 	name=#{po.name,jdbcType=VARCHAR},
+			type=#{po.type,jdbcType=VARCHAR},
+			remark=#{po.remark,jdbcType=VARCHAR}
+		 where id=#{po.id,jdbcType=INTEGER}
+	</update>
+	
+	<delete id="delete" parameterType="Dict">
+		delete from dict
+		where id = #{po.id}
+	</delete>
+	
+	<!-- 字典详情 -->
+	<select id="searchDictInfo" parameterType="DictInfo"  resultType="DictInfo">
+		select id,dictid,name,value,sort,status,remark,to_char(createDate,'yyyy-mm-dd hh24:mi:ss') createDate 
+		from dictinfo where status = 1
+		<if test="po.id != null and po.id != ''"> and id=#{po.id}</if>
+		<if test="po.dictid != null and po.dictid != ''"> and dictid=#{po.dictid}</if>
+		<if test="po.name != null and po.name != ''" >and name like concat(concat('%',#{po.name}),'%')</if>
+		order by sort asc
+	</select>
+	
+	<insert id="insertDictInfo"  parameterType="DictInfo" useGeneratedKeys="false" keyProperty="po.id">
+		 insert into dictinfo values 
+		 (#{po.id,jdbcType=INTEGER}, #{po.dictid,jdbcType=INTEGER}, #{po.name,jdbcType=VARCHAR}, #{po.value,jdbcType=VARCHAR}, #{po.sort,jdbcType=VARCHAR}, 1, 
+		  #{po.remark,jdbcType=VARCHAR}, sysdate)
+        <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+	          SELECT DICTINFO_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey> 	
+	</insert>
+	
+	<update id="updateDictInfo"  parameterType="DictInfo">
+		 update dictinfo 
+		 set 
+		 	name=#{po.name,jdbcType=VARCHAR},
+			value=#{po.value,jdbcType=VARCHAR},
+			sort=#{po.sort,jdbcType=VARCHAR},
+			remark=#{po.remark,jdbcType=VARCHAR}
+		 where id=#{po.id,jdbcType=INTEGER}
+	</update>
+	
+	<delete id="deleteDictInfo" parameterType="DictInfo">
+		delete from dictinfo
+		where id = #{po.id}
+	</delete>	
+	
+	<delete id="deleteDictInfoByIds" parameterType="DictInfo">
+		delete from dictinfo
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+        	#{item} 
+    	</foreach>
+	</delete>	
+	
+	<select id="searchDictByType" parameterType="Dict"  resultType="DictInfo">
+		select di.* from dict d
+		left join dictinfo di on d.id = di.dictid and di.status = 1
+		where d.status = 1 and type=#{po.type}
+		order by di.sort asc
+	</select>
+	
+</mapper>

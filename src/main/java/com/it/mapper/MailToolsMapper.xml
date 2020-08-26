@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.MailToolsMapper">
+  <resultMap id="BaseResultMap" type="com.it.po.MailTools">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="SENDEREMAIL" jdbcType="VARCHAR" property="senderEmail" />
+    <result column="SENDERUSERNAME" jdbcType="VARCHAR" property="senderUsername" />
+    <result column="EMAILPASSWORD" jdbcType="VARCHAR" property="emailPassword" />
+    <result column="SMTPADDRESS" jdbcType="VARCHAR" property="smtpAddress" />
+    <result column="SMTPPORT" jdbcType="INTEGER" property="smtpPort" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SENDEREMAIL, SENDERUSERNAME, EMAILPASSWORD, SMTPADDRESS, SMTPPORT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MAILTOOLS
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="search" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MAILTOOLS
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="Integer">
+    delete from MAILTOOLS
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ID" keyProperty="po.id" parameterType="com.it.po.MailTools">
+    insert into MAILTOOLS (ID, SENDEREMAIL, SENDERUSERNAME, EMAILPASSWORD, SMTPADDRESS, SMTPPORT)
+    values (#{po.id,jdbcType=INTEGER}, #{po.senderEmail,jdbcType=VARCHAR}, #{po.senderUsername,jdbcType=VARCHAR}, #{po.emailPassword,jdbcType=VARCHAR}, 
+      		#{po.smtpAddress,jdbcType=VARCHAR}, #{po.smtpPort,jdbcType=INTEGER})
+      	<selectKey order="BEFORE" resultType="INTEGER" keyProperty="po.id">
+      		SELECT MAILTOOLS_ID_SEQ.NEXTVAL-1 from DUAL
+      	</selectKey>
+  </insert>
+  <insert id="insertSelective" keyColumn="ID" keyProperty="po.id" parameterType="com.it.po.MailTools">
+    insert into MAILTOOLS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="senderemail != null">
+        SENDEREMAIL,
+      </if>
+      <if test="senderusername != null">
+        SENDERUSERNAME,
+      </if>
+      <if test="emailpassword != null">
+        EMAILPASSWORD,
+      </if>
+      <if test="smtpaddress != null">
+        SMTPADDRESS,
+      </if>
+      <if test="smtpport != null">
+        SMTPPORT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="senderemail != null">
+        #{po.senderEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="senderusername != null">
+        #{po.senderUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="emailpassword != null">
+        #{po.emailPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpaddress != null">
+        #{po.smtpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpport != null">
+        #{po.smtpPort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.it.po.MailTools">
+    update MAILTOOLS
+    <set>
+      <if test="senderemail != null">
+        SENDEREMAIL = #{po.senderEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="senderusername != null">
+        SENDERUSERNAME = #{po.senderUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="emailpassword != null">
+        EMAILPASSWORD = #{po.emailPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpaddress != null">
+        SMTPADDRESS = #{po.smtpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpport != null">
+        SMTPPORT = #{po.smtpPort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{po.id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.it.po.MailTools">
+    update MAILTOOLS
+    set SENDEREMAIL = #{po.senderEmail,jdbcType=VARCHAR},
+      	SENDERUSERNAME = #{po.senderUsername,jdbcType=VARCHAR},
+      	EMAILPASSWORD = #{po.emailPassword,jdbcType=VARCHAR},
+      	SMTPADDRESS = #{po.smtpAddress,jdbcType=VARCHAR},
+      	SMTPPORT = #{po.smtpPort,jdbcType=INTEGER}
+    where ID = #{po.id,jdbcType=INTEGER}
+  </update>
+</mapper>

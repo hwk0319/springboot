@@ -80,13 +80,13 @@
 				  <div class="form-group">
 				    <label for="inbox" class="col-sm-2 control-label"><span class="required">* </span>收件邮箱</label>
 				    <div class="col-sm-5">
-				      <input type="password" class="form-control" id="inbox" name="inbox" placeholder="请输入收件邮箱" />
+				      <input type="text" class="form-control" id="inbox" name="inbox" placeholder="请输入收件邮箱" />
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="password" class="col-sm-1 control-label"></label>
+				    <label for="emailContent" class="col-sm-1 control-label"></label>
 				    <div class="col-sm-5">
-				      <textarea id="editor_id" name="content" style="width:700px;height:300px;">
+				      <textarea class="form-control" id="emailContent" name="emailContent" style="width:700px;height:300px;">
 					  </textarea>
 				    </div>
 				  </div>
@@ -117,12 +117,12 @@
 <script  type="text/javascript">
 //百度富文本编辑器
 KindEditor.ready(function(K) {
-    window.editor = K.create('#editor_id');
+    window.editor = K.create('#emailContent');
 });
 $(function() {
-// 	$('#profile').tab('show');
 	setDetailValue();
 	validator();
+	validatorSenderEmail();
 })
 //表单校验
 function validator(){
@@ -268,12 +268,95 @@ function setDetailValue() {
 		}
 	});
 } 
-
+//发送邮件验证
+function validatorSenderEmail(){
+	$("#from2").bootstrapValidator({
+        live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+        excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+//         submitButtons: '#btn-submit1',//指定提交按钮，如果验证失败则变成disabled
+        message: '验证失败',//好像从来没出现过
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+       	 /*指定需要校验的元素  通过name数据去指定*/
+            emailTitle:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入邮件标题'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'发件人邮箱1-30个字符'
+                    }
+                }
+            },
+            inbox:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入收件邮箱'
+                    },
+                    emailAddress: {//验证email地址
+                        message: '收件邮箱格式错误'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'发件用户名1-30个字符'
+                    }
+                }
+            }
+        }
+    });
+	$("#btn-submit1").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+   	 	$("#from2").bootstrapValidator('validate');//提交验证
+        if($("#from2").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	       	 senderEmail();
+        }
+    });
+}
 //发送邮件
-function submit(){
+function senderEmail(){
+	 var emailTitle = $("#emailTitle").val();
+	 var inbox = $("#inbox").val();
 	 editor.sync();
-	 var html = $('#editor_id').val();
-	 alert(html);
+	 var emailContent = $("#emailContent").val();
+	 if(emailContent == ""){
+		layer.msg("请输入邮件内容");
+		return;
+	 }
+	 if(emailContent.length > 500){
+		 layer.msg("邮件内容1-500个字符");
+	  	 return;
+	 }
+	 $.ajax({
+			url : "mail/sendEmail",
+			type : "post",
+			data : {
+				"emailTitle" : emailTitle,
+				"inbox" : inbox,
+				"emailContent" : emailContent
+			},
+			success : function(result) {
+				if(result){
+					layer.alert("发送成功！", {icon: 1, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}else{
+					layer.alert("发送失败！", {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}
+			},
+			error : function() {
+				layer.alert("发送失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
 }
 </script>
 </html>

@@ -39,7 +39,7 @@ public class ShiroConfig {
 	private Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 	
 	public ShiroConfig(){
-		logger.info("ShiroConfig  init ....");
+		logger.info("ShiroConfig init ....");
     }
 
 	/**
@@ -53,7 +53,7 @@ public class ShiroConfig {
 	 */
    @Bean
    public ShiroFilterFactoryBean ShiroFilterFactoryBean (SecurityManager securityManager) {
-	   logger.info("ShiroConfiguration.shirFilter----");
+//	   logger.info("ShiroConfiguration.shirFilter----");
        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
        shiroFilterFactoryBean.setSecurityManager(securityManager);
        Map<String,String> filterChainDefinitionMap = new  LinkedHashMap<String,String>();
@@ -62,7 +62,6 @@ public class ShiroConfig {
        filterChainDefinitionMap.put("/bootstrap/**", "anon");
        filterChainDefinitionMap.put("/css/**", "anon");
        filterChainDefinitionMap.put("/images/**", "anon");
-       filterChainDefinitionMap.put("/imgs/**", "anon");
        filterChainDefinitionMap.put("/jquery-1.11.3/**", "anon");
        filterChainDefinitionMap.put("/js/**", "anon");
        filterChainDefinitionMap.put("/layui/**", "anon");
@@ -139,7 +138,7 @@ public class ShiroConfig {
        mappings.setProperty("UnauthorizedException","403");//处理shiro的认证未通过异常
        r.setExceptionMappings(mappings);  // None by default
        r.setDefaultErrorView("error");    // No default
-       r.setExceptionAttribute("ex");     // Default is "exception"
+       r.setExceptionAttribute("exception");     // Default is "exception"
        return r;
    }
    
@@ -228,7 +227,7 @@ public class ShiroConfig {
 //	    sessionManager.setCacheManager(ehCacheManager());
 
 	    //全局会话超时时间（单位毫秒），默认30分钟，设置10分钟
-//	    sessionManager.setGlobalSessionTimeout(600000);
+	    sessionManager.setGlobalSessionTimeout(600000);
 	    //是否开启删除无效的session对象  默认为true
 	    sessionManager.setDeleteInvalidSessions(true);
 	    //是否开启定时调度器进行检测过期session 默认为true

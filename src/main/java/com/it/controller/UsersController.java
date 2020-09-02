@@ -159,7 +159,7 @@ public class UsersController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/update")
-//	@RequiresPermissions(value = "userinfo:edit")
+	@RequiresPermissions(value = "userinfo:edit")
 	@OperLogs(value = "编辑用户")
 	public int update(UserInfo po,HttpServletRequest request) throws Exception{
 		int res = service.update(po, request);
@@ -226,6 +226,7 @@ public class UsersController {
 	 */
 	@RequestMapping(value="/deleteUser")
 	@OperLogs(value = "删除用户")
+	@RequiresPermissions(value="userinfo:delete")
 	public int deleteUser(UserInfo po, HttpServletRequest request){		
 		int res = service.deleteUser(po);
 		return res;

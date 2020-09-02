@@ -44,7 +44,7 @@ public class MyShiroRelam extends AuthorizingRealm {
 	 */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-    	logger.info("-->用户权限配置...");
+//    	logger.info("-->用户权限配置...");
     	Subject subject = SecurityUtils.getSubject();
         UserInfo user = (UserInfo)subject.getPrincipal();
         if(user != null){
@@ -76,7 +76,7 @@ public class MyShiroRelam extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-    	logger.info("-->验证用户登录信息...");
+//    	logger.info("-->验证用户登录信息...");
         String username = (String)token.getPrincipal();
         //从数据库查询出User信息及用户关联的角色，权限信息，以备权限分配时使用
         UserInfo user = userService.findUserByName(username);

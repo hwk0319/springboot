@@ -68,7 +68,8 @@
 		type=#{po.type,jdbcType=INTEGER},
 		url=#{po.url,jdbcType=VARCHAR},
 		permission=#{po.permission,jdbcType=VARCHAR},
-		image=#{po.image,jdbcType=VARCHAR}
+		image=#{po.image,jdbcType=VARCHAR},
+		sort=#{po.sort,jdbcType=INTEGER}
 	 where id=#{po.id}
 	</update>
 	<!-- 删除菜单 -->

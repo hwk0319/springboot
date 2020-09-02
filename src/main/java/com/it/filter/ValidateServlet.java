@@ -11,12 +11,12 @@ import com.it.util.ValidationcodeServlet;
  * @author Administrator
  *
  */
-@Configuration
+//@Configuration
 public class ValidateServlet {
 	@Bean
     public ServletRegistrationBean<ValidationcodeServlet> servletRegistration0() {
         ServletRegistrationBean<ValidationcodeServlet> registration = new ServletRegistrationBean<ValidationcodeServlet>(new ValidationcodeServlet());
-        registration.addUrlMappings("/validate.so");
+        registration.addUrlMappings("/validate.so");//验证码请求servlet
         registration.setLoadOnStartup(0);
         return registration;
     }

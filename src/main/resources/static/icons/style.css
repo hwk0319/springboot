@@ -4985,21 +4985,6 @@ ul.social-info {
   top: 40px;
 }
 
-/*--------------------------------------------*/
-/*   Footer
-/*--------------------------------------------*/
-
-footer {
-    background: #fff;
-    padding: 10px;
-    color: #7A7676;
-    position: static;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid #eff0f4;
-    text-align: center;
-    font-size: 14px;
-}
 .content{
 	background: #ECECED;
 }

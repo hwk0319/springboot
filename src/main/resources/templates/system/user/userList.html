@@ -224,8 +224,12 @@ function doDelete(id){
 				"id" : id
 			},
 			success : function(result) {
-				layer.msg("删除成功！");
-				refresh();
+				if(result > 0){
+					layer.msg("删除成功！");
+					refresh();
+				}else{
+					layer.msg("删除失败！");
+				}
 			},
 			error : function() {
 				layer.msg("删除失败！");

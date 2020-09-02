@@ -50,3 +50,14 @@ div{
     color:    #ccc;  
     font-size: 14px;
 }
+.footer-main {
+    background: #fff;
+    padding: 10px;
+    color: #7A7676;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #eff0f4;
+    text-align: left;
+    font-size: 14px;
+}

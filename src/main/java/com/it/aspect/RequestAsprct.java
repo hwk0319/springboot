@@ -43,7 +43,7 @@ public class RequestAsprct {
 	     private OperationLogsService service;
 	     
 	     /**
-	               * 记录日志,定义切入点:指定那些业务(业务对应的方法)
+	      * 记录日志,定义切入点:指定那些业务(业务对应的方法)
 	      * @Title: log 
 	      * @date 2019年7月28日
 	      * @return void
@@ -75,9 +75,7 @@ public class RequestAsprct {
 	         String className = joinPoint.getSignature().getDeclaringTypeName();//类名
 	         String methodName = joinPoint.getSignature().getName();//方法名
 	         
-	         logger.info("--->在切入点开始处(方法执行前)切入内容...");
-//	         logger.info("username=" + username + ",requestUri=" + requestUri + ",remoteAddr=" + remoteAddr
-//	                     + ",reqmethod=" + reqmethod + ",remoteHost=" + remoteHost + ",className=" + className);
+//	         logger.info("--->在切入点开始处(方法执行前)切入内容...");
 	         
 	         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	         OperationLogs bean = new OperationLogs();
@@ -100,11 +98,11 @@ public class RequestAsprct {
 	     
 	     @After("OperLogs()")
 	     public void doAfter(JoinPoint joinPoint) {
-	         logger.info("--->在切入点结尾处(方法执行后)切入内容...");
+//	         logger.info("--->在切入点结尾处(方法执行后)切入内容...");
 	     }
 	     
 	     @AfterReturning(returning = "result",pointcut = "OperLogs()")
 	     public void doAfterReturning(Object result) {
-	         logger.info("--->在切入点return内容之后切入内容...");
+//	         logger.info("--->在切入点return内容之后切入内容...");
 	     }
 }

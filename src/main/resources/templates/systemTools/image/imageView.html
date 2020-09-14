@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<style>
+</style>
+<title>图片详情</title>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">详情</h4>
+    </div>
+    <div id="showImg" style="text-align: center;">
+      
+    </div>
+	<input type="hidden" id="id" th:value="${id}"/>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">
+	var id = $("#id").val();
+	$(function() {
+		setDetailValue(id);
+	});
+	
+	function setDetailValue(id) {
+		var rs = load(id);//此方法为同步、阻塞式
+		if (rs != null){
+			$("#showImg").html("<img src='"+rs.url+"' class='img-thumbnail' style='width: 100%;'/>");
+	    }
+	} 
+	
+	function load(id) {
+		var resultvalue;
+		$.ajax({
+			url : "image/selectById",
+			type : "post",
+			async : false,
+			data : {
+				"id":id
+			},
+			dataType : "json",
+			success : function(result) {
+				resultvalue = result;
+			},
+			error : function() {
+				layer.msg("加载失败");
+			}
+		});
+		return resultvalue;
+	}
+</script>
+</html>

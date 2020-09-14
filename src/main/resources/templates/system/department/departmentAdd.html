@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>部门新增</title>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">新增</h4>
+    </div>
+    <!-- 表单 -->
+	<div class="formDiv" style="margin-top:20px;margin-bottom: 20px;">
+		<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="username" class="col-sm-3 control-label"><span class="required">*</span>上级部门</label>
+		    <div class="col-sm-6">
+		        <input type="text" class="form-control" id="pname" name="pname" aria-describedby="inputSuccess2Status" readonly  placeholder="请选择上级部门"/>
+		        <span class="glyphicon glyphicon-menu-down form-control-feedback" aria-hidden="true"></span>
+		        <input type="hidden" class="form-control" id="pid" name="pid" value=""/>
+		        <!-- 下拉树菜单 -->
+		        <div class="menuContent" id="menuContent">
+			         <ul id="treeDemo" class="ztree"></ul>
+			    </div>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="username" class="col-sm-3 control-label"><span class="required">*</span>部门名称</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="name1" name="name" placeholder="请输入部门名称"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label"><span class="required">*</span>部门编号</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="departmentNum" name="departmentNum" placeholder="请输入部门编号" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label">负责人</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="personInCharge" name="personInCharge" placeholder="负责人" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label">联系电话</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="phone" name="phone" placeholder="联系电话" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label">排序</label>
+		    <div class="col-sm-6">
+		      <input type="number" class="form-control" id="sort" name="sort" placeholder="排序" />
+		    </div>
+		  </div>
+		</form>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">	
+	$(document).ready(function () {
+		getTree();
+		$("#pname").click(function(){
+			$("#menuContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
+		})
+	});
+	$(function() {
+		$("#from1").bootstrapValidator({
+            live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+            excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+            submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+            message: '验证失败',//好像从来没出现过
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+           	 /*指定需要校验的元素  通过name数据去指定*/
+                pname:{
+                    /*配置校验规则  规则不止一个*/
+                    validators:{
+                        /*配置具体的规则*/
+                        notEmpty:{
+                            message:'请输选择上级部门'
+                        }
+                    }
+                },
+                name:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入部门名称'
+                        },
+                        stringLength:{
+                            min:1,
+                            max:20,
+                            message:'部门名称最多20个字符'
+                        }
+                    }
+                },
+                departmentNum:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入请输入部门编号'
+                        },
+                        stringLength:{
+                            min:1,
+                            max:20,
+                            message:'部门编号最多20个字符'
+                        }
+                    }
+                },
+                personInCharge:{
+                    validators:{
+                        stringLength:{
+                            min:1,
+                            max:20,
+                            message:'负责人最多20个字符'
+                        }
+                    }
+                },
+                phone:{
+                    validators:{
+                        stringLength:{
+                            min:1,
+                            max:11,
+                            message:'联系电话最多11个字符'
+                        },
+                        regexp: {//正则验证
+                            regexp: /^1[3|4|5|7|8][0-9]{9}$/,
+                            message: '所输入的手机格式错误'
+                        }
+                    }
+                }
+                
+            }
+        });
+        $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+       	 	$("#from1").bootstrapValidator('validate');//提交验证
+            if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	           	//验证成功后的操作，如ajax
+	           	 doSave();
+            }
+        });
+	});
+
+	function doSave() {
+		var pid = $("#pid").val();
+		var name = $("#name1").val();
+		var departmentNum = $("#departmentNum").val();
+		var personInCharge = $("#personInCharge").val();
+		var phone = $("#phone").val();
+		var sort = $("#sort").val();
+		   
+		$.ajax({
+			url : "department/insert",
+			type : "post",
+			data : {
+				"pid" : pid,
+				"name" : name,
+				"departmentNum" : departmentNum,
+				"personInCharge" : personInCharge,
+				"phone" : phone,
+				"sort" : sort
+			},
+			success : function(result) {
+				if(result > 0){
+					layer.alert("保存成功！", {icon: 1, title:'提示'}, function(index){
+						$("#mymodelAdd").modal('hide');
+						refresh();
+						layer.close(index);
+					});
+				}
+			},
+			error : function() {
+				layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+	}
+	
+	//加载菜单树全部节点
+	function getTree(){
+		var settingss = {
+		        data: {
+			          simpleData: {
+				            enable: true,  //true 、 false 分别表示 使用 、 不使用 简单数据模式
+				            idKey: "id",  //节点数据中保存唯一标识的属性名称
+				            pIdKey: "pId",    //节点数据中保存其父节点唯一标识的属性名称 
+				            rootPId: -1  //用于修正根节点父节点数据，即 pIdKey 指定的属性值
+			          },
+			          key: {
+			            	name: "name"  //zTree 节点数据保存节点名称的属性名称  默认值："name"
+			          }
+		        },
+		        check:{
+			          enable:false,  //true 、 false 分别表示 显示 、不显示 复选框或单选框
+			          nocheckInherit:true  //当父节点设置 nocheck = true 时，设置子节点是否自动继承 nocheck = true
+		        },
+		        callback: {
+		            onClick: function (e, treeId, treeNode, clickFlag) {
+						$("#pname").val(treeNode.name);
+						$("#pid").val(treeNode.id);
+						$("#menuContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
+		            }
+		        }
+		};
+		
+		$.ajax({
+			url : "department/getTree",
+			type : "post",
+			data : {},
+			success : function(result) {
+				if(result.length > 0){
+						zTreeObj = $.fn.zTree.init($("#treeDemo"), settingss, result); //初始化树
+		                zTreeObj.expandAll(true);   //true 节点全部展开、false节点收缩
+				}
+			},
+			error : function() {
+				layer.mgs("上级部门数据加载失败！");
+			}
+		});
+	}
+</script>
+</html>

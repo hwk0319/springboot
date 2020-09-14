@@ -1,0 +1,64 @@
+body {
+    background: #2C3B48;
+    font-family: 'Open Sans', sans-serif;
+    color: #878686;
+    line-height: 20px;
+    font-size: 14px;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+.container {
+    width: 90%;
+    max-width: 1170px;
+    margin: 0 auto;
+}
+.login-wrapper {
+    float: none;
+    margin: 0px auto;
+    max-width: 400px;
+}
+.login-inner {
+    background: #FFF;
+    float: left;
+    width: 100%;
+    padding: 33px 40px;
+    margin: 90px 0px 90px;
+    border-radius: 5px;
+}
+.header-title {
+    font-size: 20px;
+    line-height: 19px;
+    margin-top: 0;
+    text-transform: uppercase;
+}
+.form-group {
+    float: left;
+    width: 100%;
+}
+.copy-text {
+    float: left;
+    width: 100%;
+    border-top: 1px solid #e9e4e4;
+    padding: 17px 0px 0px;
+    text-align: center;
+    margin: 4px 0px 0px;
+}
+.m-0 {
+    margin: 0px !important;
+}
+.checkbox {
+    padding-left: 20px;
+}
+.msg {
+	line-height: 35px;
+	vertical-align: middle;
+	text-align: center;
+	height: 40px;
+}
+
+#username,#pwd{
+	padding-left: 40px;
+}
+.form-control-feedback {
+	left: 5px;
+} 

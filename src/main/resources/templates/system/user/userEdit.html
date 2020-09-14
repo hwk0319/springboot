@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<style>
+</style>
+<title>用户新增</title>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">编辑</h4>
+    </div>
+	<div class="formDiv" style="margin-top:20px;margin-bottom: 20px;">
+		<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="username" class="col-sm-3 control-label"><span class="required">* </span>用户名</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" disabled/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="phone" class="col-sm-3 control-label"><span class="required">* </span>手机</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="phone" name="phone" placeholder="请输入手机" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="email" class="col-sm-3 control-label">邮箱</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="email" name="email" placeholder="请输入邮箱" />
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="sex" class="col-sm-3 control-label">性别</label>
+		    <div class="col-sm-6">
+		    	<select class="form-control" id="sex" name="sex">
+			      <option value="">-- 请选择 --</option>
+			    </select>
+		    </div>
+		  </div>
+		  <input type="hidden" id="id" th:value="${id}"/>
+		</form>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">
+	getDictByType('sex_type', 'sex');
+	var id = $("#id").val();
+	$(function() {
+		setDetailValue(id);
+		$("#from1").bootstrapValidator({
+            live: 'submitted',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+            excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+            submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+            message: '通用的验证失败消息',//好像从来没出现过
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+           	 /*指定需要校验的元素  通过name数据去指定*/
+                username:{
+                    /*配置校验规则  规则不止一个*/
+                    validators:{
+                        /*配置具体的规则*/
+                        notEmpty:{
+                            message:'请输入用户名'
+                        },
+                        stringLength: {//检测长度
+                            min: 4,
+                            max: 20,
+                            message: '长度必须在4-20之间'
+                        },
+                    }
+                },
+                phone:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入手机'
+                        },
+                        regexp: {//正则验证
+                            regexp: /^1[3|4|5|7|8][0-9]{9}$/,
+                            message: '所输入的手机不符要求'
+                        }
+                    }
+                },
+                email:{
+                    validators:{
+                        emailAddress: {//验证email地址
+                            message: '不是正确的email地址'
+                        }
+                    }
+                }
+            }
+        });
+        $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+       		$("#from1").bootstrapValidator('validate');//提交验证
+            if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	           	//验证成功后的操作，如ajax
+	           	 doSave();
+            }
+        });
+	});
+
+	function doSave() {
+		var phone = $("#phone").val();
+		var email = $("#email").val();
+		var sex = $("#sex").val();
+		$.ajax({
+			url : "user/update",
+			type : "post",
+			data : {
+				"id" : id,
+				"email" : email,
+				"phone" : phone,
+				"sex" : sex
+			},
+			success : function(result) {
+				if(result > 0){
+					showMsg("保存成功！", function() {
+						$("#mymodelEdit").modal('hide');
+						refresh();
+					});
+				}
+			},
+			error : function() {
+				showMsg("保存失败！", function() {});
+			}
+		});
+	}
+	
+	function setDetailValue(id) {
+		var data = [];
+		var rs = load(id);//此方法为同步、阻塞式，异步实现方法见userManager.js
+		if (rs.length>0){
+			$("#username").val(rs[0].name);
+			$("#phone").val(rs[0].phone);
+			$("#email").val(rs[0].email);
+// 			$("#sex").find("option:contains('1')").attr("selected",true);
+// 			$("#sex").find("option:contains('"+rs[0].sex+"')").attr("selected",true);
+			$("#sex option[value='"+rs[0].sex+"']").attr("selected", true);
+	    }
+	} 
+	
+	function load(id) {
+		var resultvalue;
+		$.ajax({
+			url : "user/search",
+			type : "post",
+			data : {
+				"id":id
+			},
+			async : false,
+			dataType : "json",
+			success : function(result) {
+				if(result.length<1){
+					resultvalue = result;
+				}else{
+					resultvalue = result;
+				}
+			},
+			error : function() {
+				layer.msg("加载失败");
+			}
+		});
+		return resultvalue;
+	}
+	
+</script>
+</html>

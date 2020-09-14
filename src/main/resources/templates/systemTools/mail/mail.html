@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<link href="layui/css/layui.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="layui/layer.js"></script>
+<script src="kindeditor/kindeditor-all.js"></script>
+<script src="kindeditor/lang/zh-CN.js"></script>
+<title>邮件工具</title>
+</head>
+<body>
+	<div class="row areacode">
+		<div>
+		  <!-- Nav tabs -->
+		  <ul class="nav nav-tabs" role="tablist">
+		    <li role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">邮箱配置</a></li>
+		    <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">发送邮件</a></li>
+		    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">使用说明</a></li>
+		  </ul>
+		  <!-- Tab panes -->
+		  <div class="tab-content">
+		    <div role="tabpanel" class="tab-pane" id="home">
+		    	<!-- 邮箱配置 -->
+		    	<form class="form-horizontal" role="form" id="from1" style="margin-top: 20px;">
+				  <div class="form-group">
+				    <label for="senderEmail" class="col-sm-2 control-label"><span class="required">* </span>发件人邮箱</label>
+				    <div class="col-sm-5">
+				      <input type="text" class="form-control" id="senderEmail" name="senderEmail" placeholder="请输入发件人邮箱"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="senderUsername" class="col-sm-2 control-label"><span class="required">* </span>发件用户名</label>
+				    <div class="col-sm-5">
+				      <input type="text" class="form-control" id="senderUsername" name="senderUsername" placeholder="请输入发件用户名" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="emailPassword" class="col-sm-2 control-label"><span class="required">* </span>邮箱密码</label>
+				    <div class="col-sm-5">
+				      <input type="password" class="form-control" id="emailPassword" name="emailPassword" placeholder="请输入邮箱密码" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="smtpAddress" class="col-sm-2 control-label"><span class="required">* </span>SMTP地址</label>
+				    <div class="col-sm-5">
+				      <input type="text" class="form-control" id="smtpAddress" name="smtpAddress" placeholder="请输入SMTP地址" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="smtpPort" class="col-sm-2 control-label"><span class="required">* </span>SMTP端口</label>
+				    <div class="col-sm-5">
+				      <input type="number" class="form-control" id="smtpPort" name="smtpPort" placeholder="请输入SMTP端口" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				  	<label for="role" class="col-sm-2 control-label"></label>
+				    <div class="col-sm-5">
+				    	<button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+				    </div>
+				  </div>
+				  <input type="hidden" id="id"/>
+				</form>
+		    </div>
+		    <!-- 发送邮件 -->
+		    <div role="tabpanel" class="tab-pane active" id="profile">
+		    	<form class="form-horizontal" role="form" id="from2" style="margin-top: 20px;">
+				  <div class="form-group">
+				    <label for="emailTitle" class="col-sm-2 control-label"><span class="required">* </span>邮件标题</label>
+				    <div class="col-sm-5">
+				      <input type="text" class="form-control" id="emailTitle" name="emailTitle" placeholder="请输入邮件标题"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inbox" class="col-sm-2 control-label"><span class="required">* </span>收件邮箱</label>
+				    <div class="col-sm-5">
+				      <input type="text" class="form-control" id="inbox" name="inbox" placeholder="请输入收件邮箱" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="emailContent" class="col-sm-1 control-label"></label>
+				    <div class="col-sm-5">
+				      <textarea class="form-control" id="emailContent" name="emailContent" style="width:700px;height:300px;">
+					  </textarea>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				  	<label for="role" class="col-sm-1 control-label"></label>
+				    <div class="col-sm-5">
+				    	<button type="button" class="btn btn-primary" id="btn-submit1">发送邮件</button>
+				    </div>
+				  </div>
+				 </form>
+		    </div>
+		    <!-- 使用说明 -->
+		    <div role="tabpanel" class="tab-pane" id="messages">
+		    	<blockquote style="margin-top: 20px;">
+				  <p>邮件服务器配置</p>
+				  <footer> 邮件服务器的SMTP地址，可选，默认为smtp</footer>
+				  <footer> 邮件服务器的SMTP端口，可选，默认465或者25</footer>
+				  <footer> 发件人（必须正确，否则发送失败）</footer>
+				  <footer> 用户名，默认为发件人邮箱前缀</footer>
+				  <footer> 密码（注意，某些邮箱需要为SMTP服务单独设置密码，如QQ和163等等）</footer>
+				  <footer> 是否开启ssl，默认开启</footer>
+				</blockquote>
+			</div>
+		  </div>
+		</div>
+	</div>
+</body>
+<script  type="text/javascript">
+//百度富文本编辑器
+KindEditor.ready(function(K) {
+    window.editor = K.create('#emailContent');
+});
+$(function() {
+	setDetailValue();
+	validator();
+	validatorSenderEmail();
+})
+//表单校验
+function validator(){
+	$("#from1").bootstrapValidator({
+        live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+        excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+        submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+        message: '验证失败',//好像从来没出现过
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+       	 /*指定需要校验的元素  通过name数据去指定*/
+            senderEmail:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入发件人邮箱'
+                    },
+                    emailAddress: {//验证email地址
+                        message: '发件人邮箱地址格式错误'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'发件人邮箱1-30个字符'
+                    }
+                }
+            },
+            senderUsername:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入发件用户名'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'发件用户名1-30个字符'
+                    }
+                }
+            },
+            emailPassword:{
+                validators:{
+                    notEmpty:{
+                        message:'请输入邮箱密码'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'邮箱密码1-30个字符'
+                    }
+                }
+            },
+            smtpAddress:{
+                validators:{
+                    notEmpty:{
+                        message:'请输入SMTP地址'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'SMTP地址1-30个字符'
+                    }
+                }
+            },
+            smtpPort:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入SMTP端口'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:10,
+                        message:'SMTP端口1-10个字符'
+                    }
+                }
+            }
+        }
+    });
+    $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+   	 	$("#from1").bootstrapValidator('validate');//提交验证
+        if($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	       	//验证成功后的操作，如ajax
+	       	 doSave();
+        }
+    });
+}
+//保存邮箱配置
+function doSave(){
+	var id = $("#id").val();
+	var senderEmail = $("#senderEmail").val();
+	var senderUsername = $("#senderUsername").val();
+	var emailPassword = $("#emailPassword").val();
+	var smtpAddress = $("#smtpAddress").val();
+	var smtpPort = $("#smtpPort").val();
+	
+	$.ajax({
+		url : "mail/insert",
+		type : "post",
+		data : {
+			"id" : id,
+			"senderEmail" : senderEmail,
+			"senderUsername" : senderUsername,
+			"emailPassword" : emailPassword,
+			"smtpAddress" : smtpAddress,
+			"smtpPort" : smtpPort
+		},
+		success : function(result) {
+			if(result > 0){
+				layer.alert("保存成功！", {icon: 1, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		},
+		error : function() {
+			layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+				layer.close(index);
+			});
+		}
+	});
+}
+//查询邮箱配置并填充页面
+function setDetailValue() {
+	$.ajax({
+		url : "mail/search",
+		type : "post",
+		data : {},
+		async : true,
+		dataType : "json",
+		success : function(result) {
+			if(result.length>0){
+				$("#id").val(result[0].id);
+				$("#senderEmail").val(result[0].senderEmail);
+				$("#senderUsername").val(result[0].senderUsername);
+				$("#emailPassword").val(result[0].emailPassword);
+				$("#smtpAddress").val(result[0].smtpAddress);
+				$("#smtpPort").val(result[0].smtpPort);
+			}
+		},
+		error : function() {
+			layer.msg("数据加载失败");
+		}
+	});
+} 
+//发送邮件验证
+function validatorSenderEmail(){
+	$("#from2").bootstrapValidator({
+        live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+        excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+//         submitButtons: '#btn-submit1',//指定提交按钮，如果验证失败则变成disabled
+        message: '验证失败',//好像从来没出现过
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+       	 /*指定需要校验的元素  通过name数据去指定*/
+            emailTitle:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入邮件标题'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'发件人邮箱1-30个字符'
+                    }
+                }
+            },
+            inbox:{
+                validators:{
+                	notEmpty:{
+                        message:'请输入收件邮箱'
+                    },
+                    emailAddress: {//验证email地址
+                        message: '收件邮箱格式错误'
+                    },
+                    stringLength:{
+                        min:1,
+                        max:30,
+                        message:'发件用户名1-30个字符'
+                    }
+                }
+            }
+        }
+    });
+	$("#btn-submit1").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+   	 	$("#from2").bootstrapValidator('validate');//提交验证
+        if($("#from2").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	       	 senderEmail();
+        }
+    });
+}
+//发送邮件
+function senderEmail(){
+	 var emailTitle = $("#emailTitle").val();
+	 var inbox = $("#inbox").val();
+	 editor.sync();
+	 var emailContent = $("#emailContent").val();
+	 if(emailContent == ""){
+		layer.msg("请输入邮件内容");
+		return;
+	 }
+	 if(emailContent.length > 500){
+		 layer.msg("邮件内容1-500个字符");
+	  	 return;
+	 }
+	 $.ajax({
+			url : "mail/sendEmail",
+			type : "post",
+			data : {
+				"emailTitle" : emailTitle,
+				"inbox" : inbox,
+				"emailContent" : emailContent
+			},
+			success : function(result) {
+				if(result){
+					layer.alert("发送成功！", {icon: 1, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}else{
+					layer.alert("发送失败！", {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}
+			},
+			error : function() {
+				layer.alert("发送失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+}
+</script>
+</html>

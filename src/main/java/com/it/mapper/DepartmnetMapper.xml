@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.DepartmentDao">
+
+	<select id="search" parameterType="Department"  resultType="Department">
+		select * from department t
+		<if test="po.id != null and po.id != ''"> and id=#{po.id}</if>
+		<if test="po.name != null and po.name != ''" >and name like concat(concat('%',#{po.name}),'%')</if>
+		order by id desc
+	</select>
+	
+	<select id="findById" parameterType="INTEGER"  resultType="Department">
+		select * from department t where id = #{id}
+	</select>
+	
+	<select id="findParentById" parameterType="INTEGER"  resultType="Department">
+		select * from department 
+		where id = (select pid from department where id = #{id})
+	</select>
+
+	<insert id="insert"  parameterType="Department" useGeneratedKeys="false" keyProperty="po.id">
+		 insert into department values 
+		 (#{po.id,jdbcType=INTEGER}, #{po.name,jdbcType=VARCHAR}, #{po.departmentNum,jdbcType=VARCHAR}, #{po.personInCharge,jdbcType=VARCHAR},
+		  #{po.phone,jdbcType=VARCHAR},#{po.sort,jdbcType=INTEGER},1,sysdate,#{po.creator,jdbcType=VARCHAR},#{po.update_time,jdbcType=VARCHAR},
+		  #{po.updater,jdbcType=VARCHAR}, #{po.pid,jdbcType=INTEGER})
+        <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+	          SELECT DEPARTMNET_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey> 	
+	</insert>	
+	
+	<update id="update"  parameterType="Department">
+		 update department 
+		 set 
+		 	name=#{po.name,jdbcType=VARCHAR},
+			departmentNum=#{po.departmentNum,jdbcType=VARCHAR},
+			personInCharge=#{po.personInCharge,jdbcType=VARCHAR},
+			phone=#{po.phone,jdbcType=VARCHAR},
+			sort=#{po.sort,jdbcType=VARCHAR}
+		 where id=#{po.id,jdbcType=INTEGER}
+	</update>
+	
+	<delete id="delete" parameterType="Department">
+		delete from department
+		where id = #{po.id}
+	</delete>
+	
+	
+</mapper>

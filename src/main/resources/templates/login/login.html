@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="css/login.css"/>
+<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="layui/layer.js"></script>
+<script type="text/javascript" src="js/jQuery.md5.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+<title>用户登录</title>
+</head>
+<style>
+</style>
+<body class="sticky-header">
+ <!--Start login Section-->
+  <section class="login-section">
+       <div class="container">
+           <div class="row">
+               <div class="login-wrapper">
+                   <div class="login-inner">
+                   		<h2 class="header-title text-center">用户登录</h2>
+                   		<div class="msg">
+							<div id="msg" style="color: red;"></div>
+						</div>
+                       <form>
+                           <div class="form-group has-feedback">
+                           	   <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                               <input type="text" id="username" name="username" class="form-control" placeholder="用户名" >
+                           </div>
+                           <div class="form-group has-feedback">
+                           	   <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                               <input type="password" id="pwd" name="pwd" class="form-control"  placeholder="密码" >
+                           </div>
+						<div class="form-group">
+                           <div class="pull-left">
+                              <input  id="checkbox-2" type="checkbox">
+                              <label for="checkbox-2" style="font-weight:100;">Remember me</label>
+                           </div>
+                           <div class="pull-right">
+                           	   <a href="login/resetPwd" class="a-link">Forgot password?</a>
+                           </div>
+                         </div>
+                           <div class="form-group">
+                               <input type="button" value="Login" id="loginBtn" data-loading-text="Loading..." class="btn btn-primary btn-block">
+                           </div>
+                           <div class="form-group text-center">
+                            Don't have an account?  <a href="login/signUp">Sign Up </a>
+                           </div>
+                       </form>
+                        <div class="copy-text"> 
+                         <p class="m-0">Copyright © 2019 All rights reserved</p>
+                        </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+  </section>
+ <!--End login Section-->
+</body>
+<script type="text/javascript">
+$(function(){
+	$("#loginBtn").click(function(){
+		var name = $("input[name='username']").val();
+		var pwd = $("input[name='pwd']").val();
+// 		var identifyCode =$("#verification").val();
+		if (name == "" || name == null) {
+			layer.tips('请输入用户名', '#username');
+			return;
+		}
+		if (pwd == "" || pwd == null) {
+			layer.tips('请输入密码', '#pwd');
+			return;
+		}
+        $(this).button('loading');
+        login();
+    });
+})
+</script>
+</html>

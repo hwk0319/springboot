@@ -1,0 +1,68 @@
+body {
+    background-color: #f5f5f5;
+}
+.areacode {
+    margin: 1%;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+}
+.areacode1{
+    margin: 1%;
+    padding: 10px;
+}
+table thead{
+	background-color: #eff3f8;
+}
+.columns .btn-default{
+	height: 34px;
+}
+.modal-header {
+    padding: 10px 15px;
+}
+.modal-header .close {
+    margin-top: 0px;
+}
+.modal-footer {
+    padding: 7px 15px;
+}
+.form-group span.required {
+	color: red;
+}
+/* 文本框下拉树菜单 */
+.menuContent{
+	display:none;
+	background-color: white; 
+	position: absolute;
+	z-index:110004;
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	width:calc(100% - 30px);
+}
+.ztree{
+	border: none;
+	border-radius: 5px;
+	min-height:200px; 
+	width:100%; 
+	background-color: white
+}
+
+.col-md-1,.col-md-2{
+	line-height: 34px;
+    text-align: right;
+}
+/* 设置滚动条的样式 */
+/* ::-webkit-scrollbar { */
+/*     width: 10px; */
+/*     background-color: #e5e6e6; */
+/* } */
+/* 滚动槽 */
+/* ::-webkit-scrollbar-thumb { */
+/*     border-radius: 5px; */
+/*     background: #cac5c5; */
+/* } */
+/* 滚动条滑块 */
+/* ::-webkit-scrollbar-track { */
+/*     border-radius: 10px; */
+/* } */

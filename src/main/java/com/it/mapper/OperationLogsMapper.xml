@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.OperationLogsDao">
+
+	<select id="search" parameterType="OperationLogs"  resultType="OperationLogs">
+		select id, userName, ip, methodName, className, to_char(createdate, 'yyyy-mm-dd hh24:mi:ss') createDate, remoteHost, url, operation, requestMethod
+		from operationLogs where 1 = 1 
+		<if test="po.userName != null  and po.userName !=''">
+			and userName like concat(concat('%',#{po.userName}),'%')
+		</if>
+		<if test="po.ip != null  and po.ip !=''">
+			and ip like concat(concat('%',#{po.ip}),'%')
+		</if>
+		order by id desc
+	</select>
+
+	<insert id="addOperationLogs" parameterType="OperationLogs">
+		 insert into operationLogs (id, userName, ip, methodName, className, createDate, remoteHost, url, operation, requestMethod)
+		 values(#{po.id, jdbcType=INTEGER}, #{po.userName, jdbcType=VARCHAR}, #{po.ip, jdbcType=VARCHAR}, #{po.methodName, jdbcType=VARCHAR}, 
+		 	#{po.className, jdbcType=VARCHAR}, to_date(#{po.createDate},'yyyy-MM-dd HH24:mi:ss'), #{po.remoteHost, jdbcType=VARCHAR}, #{po.url, jdbcType=VARCHAR}, 
+		 	#{po.operation, jdbcType=VARCHAR}, #{po.requestMethod, jdbcType=VARCHAR})
+        <selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
+	          SELECT OPERATIONLOGS_ID_SEQ.NEXTVAL-1 from DUAL
+        </selectKey> 	
+	</insert>	
+</mapper>

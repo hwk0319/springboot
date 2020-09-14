@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>任务日志</title>
+<style>
+.tooltip-inner {
+    max-width: 400px;
+    padding: 3px 8px;
+    color: #fff;
+    text-align: center;
+    background-color: #000;
+    border-radius: 4px;
+}
+</style>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">日志</h4>
+    </div>
+	<div style="margin: 1%;">
+		<div id="logtoolbar">
+		    <button class="btn btn-danger btn-sm"  onclick="deleteAll()"><span class="glyphicon glyphicon-trash"></span> 清空</button>
+        </div>
+		<table id="mytabTaskLog" class="table"></table>
+		<input type="hidden" id="jobId" th:value="${id}"/>
+	</div>
+</body>
+<script  type="text/javascript">
+	$(function() {
+	    //根据窗口调整表格高度
+	    $(window).resize(function() {
+	        $('#mytabTaskLog').bootstrapTable('resetView', {
+	            height: tableHeight()
+	        })
+	    })
+	
+	    $('#mytabTaskLog').bootstrapTable({
+	        url: "task/selectTaskLog",//数据源
+	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+// 	        height: tableHeight(),//高度调整
+			striped: true,                      //是否显示行间隔色
+// 			clickToSelect: true,//点击勾选
+			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
+			idField: "id",                     //指定主键列
+			uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+	        pagination: true,                    //是否分页
+	        paginationLoop: false,				 //设置分页条禁止循环
+	        pageNumber: 1,                       //初始化加载第一页，默认第一页
+	        pageSize: 10,//单页记录数
+	        pageList: [10, 20, 30],//分页步进值
+	        paginationPreText: '<',//指定分页条中上一页按钮的图标或文字
+	        paginationNextText: '>',//指定分页条中下一页按钮的图标或文字
+	        sidePagination: "server",//服务端分页
+	        contentType: "application/x-www-form-urlencoded",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+	        dataType: "json",//期待返回数据类型
+	        method: "post",//请求方式
+	        queryParamsType: "",//查询参数组织方式
+	        queryParams: function getParams(params) {
+	            var param = {
+	                limit: params.pageSize,   //每页多少条数据
+	                pageNo: params.pageNumber, // 页码
+	                jobId: $("#jobId").val()
+	            };
+	            return param;
+	        },
+	        showColumns: true,//是否显示 内容列下拉框
+	        showRefresh: true,//是否显示 刷新按钮
+	        showToggle: true,//是否显示 切换试图（table/card）按钮
+	        toolbar: "#logtoolbar",//指定工具栏
+	        toolbarAlign: "left",//工具栏对齐方式
+	        columns: [
+			    {field: 'name', title: '任务名称', width: 100},
+			    {field: 'beanName', title: 'Bean名称', width: 100},
+			    {field: 'methodName', title: '方法名称', width: 100},
+			    {field: 'params', title: '参数', width: 100},
+			    {field: 'error', title: '异常信息', width: 150, formatter:function(value, row, index){
+			    	if(value != null){
+			    		var index = value.indexOf(":");
+			    		var str = value.substring(index+1, value.length);
+			    		var strValue = value.replace(/'/g,"");
+			    		return "<span style='color:#337ab7' title='"+strValue+"'data-toggle='tooltip' data-placement='bottom'>"+str+"</span>";
+			    	}
+			    }},
+			    {field: 'status', title: '状态', width:50, formatter:function(value, row, index){
+			    	  if(value == "0"){
+			    		  return "<span class='label label-success'>成功</span>";
+			    	  }else if(value == "1"){
+			    		  return "<span class='label label-danger'>失败</span>";
+			    	  }
+			      }
+			    },
+			    {field: 'times', title: '耗时(ms)', width:80},
+			    {field: 'createDate', title: '创建时间', width:150}
+	        ],
+	        onClickRow: function(row, $element) {//单击row事件
+	            //$element是当前tr的jquery对象
+	        },
+	        onLoadSuccess: function(data){
+			    $('[data-toggle="tooltip"]').tooltip();
+	        },
+	        locale: "zh-CN", //中文支持
+	    });
+	})
+	
+	function deleteAll(){
+		layer.confirm("您确定要清空日志吗？", {icon: 3, title:'提示'}, function(index){
+			$.ajax({
+				url : "task/deleteAll",
+				type : "post",
+				data : {},
+				success : function(result) {
+					if(result.data > 0){
+						layer.msg("清空日志成功！");
+						refresh();
+					}else{
+						layer.msg("清空日志失败！");
+					}
+				},
+				error : function() {
+					layer.msg("清空日志失败！");
+				}
+			});
+			layer.close(index);
+		});
+	}
+</script>
+</html>

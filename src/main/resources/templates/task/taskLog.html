@@ -31,16 +31,16 @@
 <script  type="text/javascript">
 	$(function() {
 	    //根据窗口调整表格高度
-	    $(window).resize(function() {
-	        $('#mytabTaskLog').bootstrapTable('resetView', {
-	            height: tableHeight()
-	        })
-	    })
+// 	    $(window).resize(function() {
+// 	        $('#mytabTaskLog').bootstrapTable('resetView', {
+// 	            height: tableHeight()
+// 	        })
+// 	    })
 	
 	    $('#mytabTaskLog').bootstrapTable({
 	        url: "task/selectTaskLog",//数据源
 	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
-// 	        height: tableHeight(),//高度调整
+// 	        height: $(window).height() - 120,//高度调整
 			striped: true,                      //是否显示行间隔色
 // 			clickToSelect: true,//点击勾选
 			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
@@ -105,16 +105,24 @@
 	    });
 	})
 	
+	//刷新数据
+	function refreshLog(){
+	    $('#mytabTaskLog').bootstrapTable('refresh');
+	}
+	
 	function deleteAll(){
+		var jobId = $("#jobId").val();
 		layer.confirm("您确定要清空日志吗？", {icon: 3, title:'提示'}, function(index){
 			$.ajax({
 				url : "task/deleteAll",
 				type : "post",
-				data : {},
+				data : {
+					jobId : jobId
+				},
 				success : function(result) {
 					if(result.data > 0){
 						layer.msg("清空日志成功！");
-						refresh();
+						refreshLog();
 					}else{
 						layer.msg("清空日志失败！");
 					}

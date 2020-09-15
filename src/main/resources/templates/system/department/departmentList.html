@@ -26,7 +26,7 @@
 <body>
 		<div class="areacode">
 			<div id="toolbar">
-			    <button class="btn btn-primary"  onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+			    <button class="btn btn-primary btn-sm"  onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
             </div>
 			<table id="mytab" class="table"></table>
 		</div>
@@ -51,7 +51,7 @@
 	    //根据窗口调整表格高度
 	    $(window).resize(function() {
 	        $('#mytab').bootstrapTable('resetView', {
-	            height: tableHeight()
+// 	            height: tableHeight()
 	        })
 	    })
 	    // 每次隐藏时，清除数据，确保不会和主页dom元素冲突。确保点击时，重新加载。
@@ -64,7 +64,7 @@
 	    var $table = $("#mytab");
 	    $table.bootstrapTable({
 	        url: "department/search2",//数据源
-	        height: tableHeight(),//高度调整
+// 	        height: tableHeight(),//高度调整
 			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 			idField: "id",                     //指定主键列
 //	 		pagination: true,

@@ -20,5 +20,5 @@ public interface ScheduleJobLogDao {
 
     int updateById(@Param("po") ScheduleJobLog po);
 
-	int deleteAll();
+	int deleteAll(@Param("jobId") Integer jobId);
 }

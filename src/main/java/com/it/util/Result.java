@@ -78,7 +78,7 @@ public class Result {
     }
  
     /**
-             * 查询成功且有数据
+             * 返回成功且有数据
      * @param data
      * @return
      */

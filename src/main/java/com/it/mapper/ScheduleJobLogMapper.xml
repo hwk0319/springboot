@@ -41,8 +41,9 @@
     where ID = #{id}
   </delete>
   
-  <delete id="deleteAll">
+  <delete id="deleteAll" parameterType="INTEGER">
     delete from SCHEDULE_JOB_LOG
+    where job_Id = #{jobId}
   </delete>
   
   <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="ScheduleJobLog" useGeneratedKeys="false">

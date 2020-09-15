@@ -12,30 +12,30 @@
 <script type="text/javascript" src="bootstrap/js/bootstrap-table.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript" src="layui/layer.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
-<script type="text/javascript" src="js/bootstarpUtil.js"></script>
 <title>登录日志</title>
 <style>
 </style>
 </head>
 <body>
 		<div class="row areacode" id="searchValue">
-			<form class="form-inline" role="form">
-			  <div class="form-group col-sm-4">
-			    <label class="">用户名：</label>
-			      <input class="form-control" id="userName" type="text"/>
+			<div class="row">
+			  <div class="col-md-1">用户名</div>
+			  <div class="col-md-3">
+			  	<input class="form-control" id="userName" type="text"/>
 			  </div>
-			  <div class="form-group col-sm-4">
-			    <label class="">IP：</label>
-			      <input class="form-control" id="ip" type="text"/>
+			  <div class="col-md-1">IP</div>
+			  <div class="col-md-3">
+			  	<input class="form-control" id="ip" type="text"/>
 			  </div>
-			</form>
-		    <button class="btn btn-default" onClick="refresh()"><span class="glyphicon glyphicon-search"></span> 查询</button>
-			<button class="btn btn-default" onClick="repeat()"><span class="glyphicon glyphicon-repeat"></span> 重置</button>
+			  <div class="col-md-2">
+			  	<button class="btn btn-default btn-sm" onClick="refresh()"><span class="glyphicon glyphicon-search"></span> 查询</button>
+				<button class="btn btn-default btn-sm" onClick="repeat()"><span class="glyphicon glyphicon-repeat"></span> 重置</button>
+			  </div>
+			</div>
 		</div>
 		<div class="areacode">
 			<div id="toolbar">
-<!-- 			    <button class="btn btn-primary"  onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button> -->
+<!-- 			    <button class="btn btn-danger btn-sm"  onclick="deleteAll()"><span class="glyphicon glyphicon-trash"></span> 清空</button> -->
             </div>
 			<table id="mytab" class="table"></table>
 		</div>
@@ -45,14 +45,14 @@
 	    //根据窗口调整表格高度
 	    $(window).resize(function() {
 	        $('#mytab').bootstrapTable('resetView', {
-	            height: tableHeight()
+// 	            height: tableHeight()
 	        })
 	    })
 	
 	    $('#mytab').bootstrapTable({
 	        url: "loginLogs/search",//数据源
 	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
-	        height: tableHeight(),//高度调整
+// 	        height: tableHeight(),//高度调整
 			striped: true,                      //是否显示行间隔色
 			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 			idField: "id",                     //指定主键列
@@ -97,7 +97,7 @@
 	        ],
 	        onClickRow: function(row, $element) {
 	            //$element是当前tr的jquery对象
-	            $element.css("background-color", "#f5f5f5");
+// 	            $element.css("background-color", "#f5f5f5");
 	        },//单击row事件
 	        locale: "zh-CN", //中文支持
 	    });
@@ -108,10 +108,7 @@
 	}
 	//刷新数据
 	function refresh(){
-		var param = {
-	            url : 'loginLogs/search'
-	         }
-	    $('#mytab').bootstrapTable('refresh',param);
+	    $('#mytab').bootstrapTable('refresh');
 	}
 	//重置
 	function repeat(){

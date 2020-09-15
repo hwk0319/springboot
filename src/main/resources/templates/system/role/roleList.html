@@ -25,20 +25,20 @@
 <body>
 		<div class="row areacode" id="searchValue">
 			<div class="row">
-			  <div class="col-md-2">角色名称：</div>
+			  <div class="col-md-2">角色名称</div>
 			  <div class="col-md-3">
 			  	<input class="form-control" id="name" type="text"/>
 			  </div>
 			  <div class="col-md-3">
-			  	<button class="btn btn-default" onClick="refresh()"><span class="glyphicon glyphicon-search"></span> 查询</button>
-				<button class="btn btn-default" onClick="repeat()"><span class="glyphicon glyphicon-repeat"></span> 重置</button>
+			  	<button class="btn btn-default btn-sm" onClick="refresh()"><span class="glyphicon glyphicon-search"></span> 查询</button>
+				<button class="btn btn-default btn-sm" onClick="repeat()"><span class="glyphicon glyphicon-repeat"></span> 重置</button>
 			  </div>
 			</div>
 		</div>
 		<div class="areacode">
 			<div id="toolbar">
-			    <button class="btn btn-primary" id="doInsert" onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
-			    <button class="btn btn-danger" id="doBatchDelete" onclick="doBatchDelete()" disabled><span class="glyphicon glyphicon-trash"></span> 删除</button>
+			    <button class="btn btn-primary btn-sm" id="doInsert" onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+			    <button class="btn btn-danger btn-sm" id="doBatchDelete" onclick="doBatchDelete()" disabled><span class="glyphicon glyphicon-trash"></span> 删除</button>
             </div>
 			<table id="mytab" class="table"></table>
 		</div>
@@ -70,7 +70,7 @@
 	    //根据窗口调整表格高度
 	    $(window).resize(function() {
 	        $('#mytab').bootstrapTable('resetView', {
-	            height: tableHeight()
+// 	            height: tableHeight()
 	        })
 	    })
 	    // 每次隐藏时，清除数据，确保不会和主页dom元素冲突。确保点击时，重新加载。
@@ -83,7 +83,7 @@
 	    $('#mytab').bootstrapTable({
 	        url: "role/search2",//数据源
 	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
-	        height: tableHeight(),//高度调整
+// 	        height: tableHeight(),//高度调整
 			striped: true,                      //是否显示行间隔色
 			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 			idField: "id",                     //指定主键列

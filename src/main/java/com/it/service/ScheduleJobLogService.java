@@ -19,8 +19,8 @@ public class ScheduleJobLogService {
 		return dao.selectList(po);
 	}
 
-	public int deleteAll() {
-		return dao.deleteAll();
+	public int deleteAll(Integer jobId) {
+		return dao.deleteAll(jobId);
 	}
 
 }

@@ -25,7 +25,6 @@ import com.github.pagehelper.PageInfo;
 import com.it.aspect.OperLogs;
 import com.it.po.ScheduleJob;
 import com.it.po.ScheduleJobLog;
-import com.it.po.UserInfo;
 import com.it.quartz.Constant;
 import com.it.service.ScheduleJobLogService;
 import com.it.service.ScheduleJobService;
@@ -247,8 +246,8 @@ public class ScheduleJobController {
 	@ResponseBody
 	@OperLogs(value="清空任务日志")
 	@RequestMapping(value="/deleteAll")
-	public Result deleteAll() {
-		int res = taskLogService.deleteAll();
+	public Result deleteAll(@RequestParam(name="jobId") Integer jobId) {
+		int res = taskLogService.deleteAll(jobId);
 		return Result.success(res);
 	}
 	
@@ -269,6 +268,12 @@ public class ScheduleJobController {
 		int res = 0;
 		try {
 			res = service.bacthDelete(array);
+			if(res > 0) {
+				for (int i = 0; i < array.length; i++) {
+					int jobId = Integer.valueOf(array[i]);
+					taskLogService.deleteAll(jobId);
+				}
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

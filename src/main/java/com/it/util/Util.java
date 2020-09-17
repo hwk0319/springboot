@@ -45,24 +45,6 @@ public class Util {
 		}
 	}
 
-	/**
-	 * 根据jwt判断是否重复提交
-	 * @param request
-	 * @param jwtStr
-	 * @return
-	 */
-	public static boolean getSessionJWT(HttpServletRequest request, String jwtStr){
-		boolean res = true;
-		String jwt = (String) request.getSession().getAttribute("jwt");
-		if(jwt != null && !"".equals(jwtStr)){
-			if(!jwt.equals(jwtStr)){
-				res = false;
-			}
-		}else{
-			res = false;
-		}
-		return res;
-	}
 	
 	/**
 	 * 文件路径检查，防止用户通过../等方式取得其他文件
@@ -201,5 +183,22 @@ public class Util {
      public static String getFormatDate() {
     	 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	 return df.format(new Date());
+     }
+     
+     /**
+      * 
+      * @Title: isAjaxRequest  
+      * @Description: TODO  判断是否是ajax请求
+      * @param @param request
+      * @param @return    参数  
+      * @return boolean    返回类型  
+      * @throws
+      */
+     public static boolean isAjaxRequest(HttpServletRequest request) {
+    	 String header = request.getHeader("X-Requested-With");
+    	 if(header != null && header.equals("XMLHttpRequest")) {
+    		 return true;
+    	 }
+    	 return false;
      }
 }

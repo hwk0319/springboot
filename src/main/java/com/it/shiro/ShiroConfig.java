@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.Filter;
+
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -56,6 +58,12 @@ public class ShiroConfig {
 //	   logger.info("ShiroConfiguration.shirFilter----");
        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
        shiroFilterFactoryBean.setSecurityManager(securityManager);
+       
+       //自定义拦截器,限制同一帐号同时在线的个数。
+       Map<String, Filter> filterMap = new LinkedHashMap<String, Filter>();
+       filterMap.put("kickout", kickoutSessionControlFilter());
+       shiroFilterFactoryBean.setFilters(filterMap);
+       
        Map<String,String> filterChainDefinitionMap = new  LinkedHashMap<String,String>();
        // 配置不会被拦截的链接 相关静态资源
        //<!-- authc:所有url都必须登录认证通过才可以访问; anon:所有url都都可以匿名访问-->
@@ -71,7 +79,8 @@ public class ShiroConfig {
        filterChainDefinitionMap.put("/login/signUp", "anon");
        filterChainDefinitionMap.put("/login/resetPwd", "anon");
        //所有url都必须认证通过才可以访问
-       filterChainDefinitionMap.put("/**", "authc");
+       filterChainDefinitionMap.put("/**", "authc,kickout");
+//       filterChainDefinitionMap.put("/**", "authc");
        // 登录的路径
        shiroFilterFactoryBean.setLoginUrl("/login");
        // 登录成功后要跳转的链接
@@ -111,7 +120,7 @@ public class ShiroConfig {
        //设置自定义realm.
        securityManager.setRealm(myShiroRealm());
        //配置 ehcache缓存管理器
-//       securityManager.setCacheManager(ehCacheManager());
+       securityManager.setCacheManager(ehCacheManager());
        //配置自定义session管理，使用ehcache 或redis
        securityManager.setSessionManager(sessionManager());
        return securityManager;
@@ -171,7 +180,7 @@ public class ShiroConfig {
    public SessionDAO sessionDAO() {
        EnterpriseCacheSessionDAO enterpriseCacheSessionDAO = new EnterpriseCacheSessionDAO();
        //使用ehCacheManager
-//       enterpriseCacheSessionDAO.setCacheManager(ehCacheManager());
+       enterpriseCacheSessionDAO.setCacheManager(ehCacheManager());
        //设置session缓存的名字 默认为 shiro-activeSessionCache
        enterpriseCacheSessionDAO.setActiveSessionsCacheName("shiro-activeSessionCache");
        //sessionId生成器
@@ -203,13 +212,12 @@ public class ShiroConfig {
     * shiro-ehcache实现
     * @return
     */
-//   @Bean
-//   public EhCacheManager ehCacheManager() {
-//       logger.info("ShiroConfiguration.getEhCacheManager()");
-//       EhCacheManager ehCacheManager = new EhCacheManager();
-//       ehCacheManager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
-//       return ehCacheManager;
-//   }
+   @Bean
+   public EhCacheManager ehCacheManager() {
+       EhCacheManager ehCacheManager = new EhCacheManager();
+       ehCacheManager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
+       return ehCacheManager;
+   }
    
    /**
     * 配置会话管理器，设定会话超时及保存
@@ -224,7 +232,7 @@ public class ShiroConfig {
 	    sessionManager.setSessionListeners(listeners);
 	    sessionManager.setSessionIdCookie(sessionIdCookie());
 	    sessionManager.setSessionDAO(sessionDAO());
-//	    sessionManager.setCacheManager(ehCacheManager());
+	    sessionManager.setCacheManager(ehCacheManager());
 
 	    //全局会话超时时间（单位毫秒），默认30分钟，设置10分钟
 	    sessionManager.setGlobalSessionTimeout(600000);
@@ -233,9 +241,30 @@ public class ShiroConfig {
 	    //是否开启定时调度器进行检测过期session 默认为true
 	    sessionManager.setSessionValidationSchedulerEnabled(true);
 	    //设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
-//	    sessionManager.setSessionValidationInterval(60000);
+	    sessionManager.setSessionValidationInterval(300000);
 	    //取消url 后面的 JSESSIONIsD
 	    sessionManager.setSessionIdUrlRewritingEnabled(false);
        return sessionManager;
    } 
+   
+   /**
+    * 限制同一账号登录同时登录人数控制
+    * @return
+    */
+   public KickoutSessionControlFilter kickoutSessionControlFilter(){
+      KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
+      //使用cacheManager获取相应的cache来缓存用户登录的会话；用于保存用户—会话之间的关系的；
+      //这里我们还是用之前shiro使用的redisManager()实现的cacheManager()缓存管理
+      //也可以重新另写一个，重新配置缓存时间之类的自定义缓存属性
+      kickoutSessionControlFilter.setCacheManager(ehCacheManager());
+      //用于根据会话ID，获取会话进行踢出操作的；
+      kickoutSessionControlFilter.setSessionManager(sessionManager());
+      //是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户；踢出顺序。
+      kickoutSessionControlFilter.setKickoutAfter(false);
+      //同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录；
+      kickoutSessionControlFilter.setMaxSession(1);
+      //被踢出后重定向到的地址；
+      kickoutSessionControlFilter.setKickoutUrl("/commom/kickout");
+       return kickoutSessionControlFilter;
+    }
 }

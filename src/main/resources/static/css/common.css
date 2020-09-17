@@ -15,6 +15,9 @@ body {
 table thead{
 	background-color: #eff3f8;
 }
+table tbody{
+    border-bottom: 1px solid #ddd;
+}
 .columns .btn-default{
 	height: 34px;
 }

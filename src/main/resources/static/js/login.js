@@ -4,7 +4,6 @@ $(function() {
 	    if(ev.keyCode==13) {
 	    	var name = $("input[name='username']").val();
 	    	var pwd = $("input[name='pwd']").val();
-	    	var identifyCode =$("#verification").val();
 	    	if (name == "" || name == null) {
 	    		layer.tips('请输入用户名', '#username');
 	    		return;
@@ -18,10 +17,6 @@ $(function() {
 	     }
 	};
 });
-
-//$(window).resize(function(){
-//
-//});
 
 //获得用户角色
 function login() {
@@ -41,7 +36,7 @@ function login() {
 			var status = result.status;
 			var msg = result.msg;
 			if(status == "success"){
-				location.href = "login/index";
+				top.location.href = "login/index";
 			}else{
 				$("#msg").html(msg);
 				$("#loginBtn").button('reset');

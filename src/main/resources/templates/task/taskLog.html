@@ -41,12 +41,13 @@
 	        url: "task/selectTaskLog",//数据源
 	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
 // 	        height: $(window).height() - 120,//高度调整
-			striped: true,                      //是否显示行间隔色
+// 			striped: true,                      //是否显示行间隔色
 // 			clickToSelect: true,//点击勾选
-			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
+			classes: 'table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 			idField: "id",                     //指定主键列
 			uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-	        pagination: true,                    //是否分页
+			undefinedText: "",
+			pagination: true,                    //是否分页
 	        paginationLoop: false,				 //设置分页条禁止循环
 	        pageNumber: 1,                       //初始化加载第一页，默认第一页
 	        pageSize: 10,//单页记录数

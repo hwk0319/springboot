@@ -51,4 +51,18 @@ public class CommonController {
 		return new ModelAndView("403");
 	}
 	
+	/**
+	 * 
+	 * @Title: kickout  
+	 * @Description: TODO  账号被踢出或在其它地方登陆跳转页面
+	 * @param @param model
+	 * @param @return    参数  
+	 * @return ModelAndView    返回类型  
+	 * @throws
+	 */
+	@RequestMapping(value="/kickout")
+	public ModelAndView kickout(Model model) {
+		return new ModelAndView("kickout");
+	}
+	
 }

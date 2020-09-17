@@ -51,9 +51,6 @@ function onClickMenu(obj){
 	//加载当前在哪一个菜单，并显示
 	var titleName = obj.textContent;
 	$("#titleName").html(titleName);
-//	debugger;
-//	var level1 = $(obj).prev();
-//	console.log(level1);
 }
 
 

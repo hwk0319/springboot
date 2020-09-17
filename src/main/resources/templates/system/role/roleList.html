@@ -84,7 +84,7 @@
 	        url: "role/search2",//数据源
 	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
 // 	        height: tableHeight(),//高度调整
-			striped: true,                      //是否显示行间隔色
+// 			striped: true,                      //是否显示行间隔色
 			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 			idField: "id",                     //指定主键列
 			uniqueId: "id",                     //每一行的唯一标识，一般为主键列
@@ -134,7 +134,7 @@
 	        ],
 	        onClickRow: function(row, $element) {//单击row事件
 	            //$element是当前tr的jquery对象
-	            $element.css("background-color", "#f5f5f5");
+// 	            $element.css("background-color", "#f5f5f5");
 	        },
 	        onCheck: function(row){//选择row事件
 	        	$('#doBatchDelete').prop('disabled', false);

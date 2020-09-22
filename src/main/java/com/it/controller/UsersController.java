@@ -90,7 +90,7 @@ public class UsersController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/search2")
+	/*@RequestMapping(value="/search2")
 	public JSONObject search1(UserInfo po, HttpServletRequest request){
 		
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
@@ -108,7 +108,7 @@ public class UsersController {
 		jsonObject.put("rows", json);//json数据
 		
 		return jsonObject;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -121,9 +121,14 @@ public class UsersController {
 	 * @throws
 	 */
 	@RequestMapping(value="/search3")
-	public Result search3(UserInfo po, HttpServletRequest request) {
+	public Result search3(UserInfo po, HttpServletRequest request){
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
-		List<UserInfo> list = service.search(po);
+		List<UserInfo> list = new ArrayList<UserInfo>();
+		try {
+			list = service.search(po);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		PageInfo<UserInfo> list1 = new PageInfo<UserInfo>(list);
 		return Result.successTotal(list, String.valueOf(list1.getTotal()));
 	}

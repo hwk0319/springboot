@@ -28,6 +28,7 @@
 		<div class="areacode">
 			<div id="toolbar">
 			    <button class="btn btn-primary btn-sm"  onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+			    <button class="btn btn-success btn-sm"  onclick="change_tree()"><span class="glyphicon glyphicon-sort"></span> 展开/折叠</button>
             </div>
 			<table id="mytab" class="table"></table>
 		</div>
@@ -170,6 +171,17 @@ function doDelete(id){
 		});
 		layer.close(index);
 	});
+}
+//折叠展开树形表格
+var flag = true;//开启还是关闭的标志位
+function change_tree(){
+	if(flag){
+    	$('#mytab').treegrid('expandAll');
+        flag = !flag;
+    }else{
+		$('#mytab').treegrid('collapseAll');
+        flag = !flag;
+    }
 }
 </script>
 </html>

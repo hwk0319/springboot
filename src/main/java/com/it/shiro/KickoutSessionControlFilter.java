@@ -65,6 +65,9 @@ public class KickoutSessionControlFilter extends AccessControlFilter{
         this.cache = cacheManager.getCache("shiro_redis_cache");
     }
 
+    /**
+             * 是否允许访问，如果允许访问返回true，否则false；
+     */
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
 			throws Exception {
@@ -72,6 +75,9 @@ public class KickoutSessionControlFilter extends AccessControlFilter{
 		return false;
 	}
 
+	/**
+	   * 当访问拒绝时是否已经处理了；如果返回true表示需要继续处理；如果返回false表示该拦截器实例已经处理了，将直接返回即可。
+	 */
 	@Override
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
 		Subject subject = getSubject(request, response);

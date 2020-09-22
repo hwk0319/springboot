@@ -23,6 +23,8 @@ public class UserInfo extends PagePo{
 	private Integer roleId;
 	private String role;
 	private Set<RoleInfo> roles = new HashSet<>();
+	private Integer departmentId;
+	private String departmentName;
 	public int getId() {
 		return id;
 	}
@@ -89,11 +91,24 @@ public class UserInfo extends PagePo{
 	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
+	public Integer getDepartmentId() {
+		return departmentId;
+	}
+	public void setDepartmentId(Integer departmentId) {
+		this.departmentId = departmentId;
+	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
 	@Override
 	public String toString() {
 		return "UserInfo [id=" + id + ", name=" + name + ", password=" + password + ", passwordNew=" + passwordNew
 				+ ", status=" + status + ", phone=" + phone + ", email=" + email + ", sex=" + sex + ", roleId=" + roleId
-				+ ", role=" + role + ", roles=" + roles + "]";
+				+ ", role=" + role + ", roles=" + roles + ", departmentId=" + departmentId + ", departmentName="
+				+ departmentName + "]";
 	}
 	
 }

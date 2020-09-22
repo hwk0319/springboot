@@ -4,14 +4,18 @@
 <mapper namespace="com.it.dao.UsersDao">
 	<select id="search" parameterType="UserInfo"  resultType="com.it.po.UserInfo">
 		select * from user_info u
-		left join user_role ur on u.id = ur.user_id
-		left join role_info r on r.id = ur.role_id
+	    left join user_role ur on u.id = ur.user_id
+	    left join role_info r on r.id = ur.role_id
+	    left join (select id, name as departmentName from department) d on d.id = u.departmentid
 		where 1=1 
 		<if test="po.name != null  and po.name !=''">
 			and u.name like concat(concat('%',#{po.name}),'%')
 		</if>
 		<if test="po.id != null  and po.id !=''">
 			and u.id =  #{po.id}
+		</if>
+		<if test="po.departmentId != null  and po.departmentId !=''">
+			and u.departmentId =  #{po.departmentId}
 		</if>
 		ORDER BY u.id desc
 	</select>
@@ -84,9 +88,9 @@
 	</update>
 	<!-- 新增 -->
 	<insert id="insert" parameterType="UserInfo">
-		 insert into user_info (id,name,password,status,email,phone,sex) values
-		 (#{po.id,jdbcType=INTEGER},#{po.name,jdbcType=VARCHAR},#{po.password,jdbcType=VARCHAR},
-		 #{po.status,jdbcType=VARCHAR},#{po.email,jdbcType=VARCHAR},#{po.phone,jdbcType=VARCHAR},#{po.sex,jdbcType=INTEGER})
+		 insert into user_info (id,name,password,status,email,phone,sex,departmentId) 
+		 values (#{po.id,jdbcType=INTEGER},#{po.name,jdbcType=VARCHAR},#{po.password,jdbcType=VARCHAR},#{po.status,jdbcType=VARCHAR},
+		 	#{po.email,jdbcType=VARCHAR},#{po.phone,jdbcType=VARCHAR},#{po.sex,jdbcType=INTEGER},#{po.departmentId,jdbcType=INTEGER})
 		<selectKey order="BEFORE" resultType="java.lang.Integer" keyProperty="po.id">
              SELECT USERINFO_ID_SEQ.NEXTVAL-1 from DUAL
         </selectKey> 
@@ -94,7 +98,8 @@
 	
 	<update id="update" parameterType="UserInfo">
 	    update user_info 
-	    set phone = #{po.phone},
+	    set departmentId = #{po.departmentId},
+	    	phone = #{po.phone},
 	        email = #{po.email},
 	        sex = #{po.sex}
 	        where id =#{po.id}

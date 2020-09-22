@@ -56,7 +56,7 @@
 		  <div class="form-group">
 		    <label for="pid" class="col-sm-3 control-label"><span class="required">*</span>上级菜单</label>
 		    <div class="col-sm-6">
-		    	<input type="text" class="form-control" id="pname" name="pname" textLabel="jasontext" aria-describedby="inputSuccess2Status" readonly placeholder="请选择上级菜单"/>
+		    	<input type="text" class="form-control" id="pname" name="pname" textLabel="jasontext" readonly placeholder="请选择上级菜单"/>
 		        <span class="glyphicon glyphicon-menu-down form-control-feedback" aria-hidden="true"></span>
 		        <input type="hidden" class="form-control" id="pid" name="pid" value="0"/>
 		        <!-- 下拉树菜单 -->
@@ -151,6 +151,7 @@
 	        fields: {
 	       	 	/*指定需要校验的元素  通过name数据去指定*/
 	       	 	pname:{
+	       	 		trigger: "change", //监听change动作
 	                validators:{
 	                    notEmpty:{
 	                        message:'请选择上级菜单'
@@ -315,7 +316,7 @@
 		        },
 		        callback: {
 		            onClick: function (e, treeId, treeNode, clickFlag) {
-						$("#pname").val(treeNode.name);
+						$("#pname").val(treeNode.name).change();
 						$("#pid").val(treeNode.id);
 						$("#menuContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
 		            }

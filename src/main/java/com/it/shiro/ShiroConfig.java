@@ -127,7 +127,7 @@ public class ShiroConfig {
    }
 
    /**
-    * 开启@RequirePermission注解的配置，要结合DefaultAdvisorAutoProxyCreator一起使用，或者导入aop的依赖
+           * 开启@RequirePermission注解的配置，要结合DefaultAdvisorAutoProxyCreator一起使用，或者导入aop的依赖
     */
    @Bean
    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
@@ -137,7 +137,7 @@ public class ShiroConfig {
    }
 
    /**
-    * 定义Spring MVC的异常处理器
+           * 定义Spring MVC的异常处理器
     */
    @Bean
    public SimpleMappingExceptionResolver createSimpleMappingExceptionResolver() {
@@ -152,7 +152,7 @@ public class ShiroConfig {
    }
    
    /**
-    * 配置session监听
+          * 配置session监听
     * @return
     */
    @Bean("sessionListener")
@@ -189,8 +189,8 @@ public class ShiroConfig {
    }
    
    /**
-    * 配置保存sessionId的cookie 
-    * 注意：这里的cookie 不是上面的记住我 cookie 记住我需要一个cookie session管理 也需要自己的cookie
+          * 配置保存sessionId的cookie 
+          * 注意：这里的cookie 不是上面的记住我 cookie 记住我需要一个cookie session管理 也需要自己的cookie
     * @return
     */
    @Bean("sessionIdCookie")
@@ -208,7 +208,7 @@ public class ShiroConfig {
    }
    
    /**
-    * 开启缓存
+          * 开启缓存
     * shiro-ehcache实现
     * @return
     */
@@ -220,7 +220,7 @@ public class ShiroConfig {
    }
    
    /**
-    * 配置会话管理器，设定会话超时及保存
+           * 配置会话管理器，设定会话超时及保存
     * @return
     */
    @Bean("sessionManager")
@@ -242,7 +242,7 @@ public class ShiroConfig {
 	    sessionManager.setSessionValidationSchedulerEnabled(true);
 	    //设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
 	    sessionManager.setSessionValidationInterval(300000);
-	    //取消url 后面的 JSESSIONIsD
+	    //取消url 后面的 JSESSIONID
 	    sessionManager.setSessionIdUrlRewritingEnabled(false);
        return sessionManager;
    } 
@@ -254,8 +254,7 @@ public class ShiroConfig {
    public KickoutSessionControlFilter kickoutSessionControlFilter(){
       KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
       //使用cacheManager获取相应的cache来缓存用户登录的会话；用于保存用户—会话之间的关系的；
-      //这里我们还是用之前shiro使用的redisManager()实现的cacheManager()缓存管理
-      //也可以重新另写一个，重新配置缓存时间之类的自定义缓存属性
+      //shiro使用的redisManager()实现的cacheManager()缓存管理
       kickoutSessionControlFilter.setCacheManager(ehCacheManager());
       //用于根据会话ID，获取会话进行踢出操作的；
       kickoutSessionControlFilter.setSessionManager(sessionManager());

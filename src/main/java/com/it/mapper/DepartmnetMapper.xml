@@ -7,7 +7,7 @@
 		select * from department t
 		<if test="po.id != null and po.id != ''"> and id=#{po.id}</if>
 		<if test="po.name != null and po.name != ''" >and name like concat(concat('%',#{po.name}),'%')</if>
-		order by id desc
+		order by sort, id asc
 	</select>
 	
 	<select id="findById" parameterType="INTEGER"  resultType="Department">

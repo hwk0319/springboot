@@ -62,7 +62,7 @@
 		var id = $("#id").val();
 		setDetailValue(id);
 		$("#from1").bootstrapValidator({
-            live: 'submitted',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+            live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
             excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
             submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
             message: '通用的验证失败消息',//好像从来没出现过
@@ -108,11 +108,10 @@
                 },
                 phone:{
                     validators:{
-                        stringLength:{
-                            min:1,
-                            max:11,
-                            message:'联系电话最多11个字符'
-                        }
+                    	 regexp: {//正则验证
+                             regexp: /^1[3|4|5|7|8][0-9]{9}$/,
+                             message: '联系电话格式错误'
+                         }
                     }
                 }
                 

@@ -27,6 +27,7 @@
 		<div class="areacode">
 			<div id="toolbar">
 			    <button class="btn btn-primary btn-sm"  onclick="doInsert()"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+			    <button class="btn btn-success btn-sm"  onclick="change_tree()"><span class="glyphicon glyphicon-sort"></span> 展开/折叠</button>
             </div>
 			<table id="mytab" class="table"></table>
 		</div>
@@ -56,7 +57,6 @@
 	    })
 	    // 每次隐藏时，清除数据，确保不会和主页dom元素冲突。确保点击时，重新加载。
 	    $("#mymodelAdd, #mymodelEdit").on("hidden.bs.modal", function() {
-	        // 这个#showModal是模态框的id
 	        $(this).removeData("bs.modal");
 	        $(this).find(".modal-content").children().remove(); 
 	    });
@@ -93,7 +93,7 @@
 	        ],
 	        locale: "zh-CN", //中文支持
 	        //定义哪一列作为展开项  定义父级标志 这里是pid
-	        //定义的列一定是要在表格中展现的  换言之就是上方有这个列 不然报错
+	        //定义的列一定是要在表格中展现的
 	        treeShowField: 'name',
 	        parentIdField: 'pid',
 	        onLoadSuccess: function(data) {
@@ -138,7 +138,7 @@
 	    });
 	}
 
-	//删除用户
+	//删除
 	function doDelete(id){
 		layer.confirm("您确定要删除这条数据吗？", {icon: 3, title:'提示'}, function(index){
 			$.ajax({
@@ -159,5 +159,16 @@
 		});
 	}
 
+	//折叠展开树形表格
+	var flag = true;//开启还是关闭的标志位
+    function change_tree(){
+    	if(flag){
+    		$('#mytab').treegrid('collapseAll');
+            flag = !flag;
+        }else{
+        	$('#mytab').treegrid('expandAll');
+            flag = !flag;
+        }
+    }
 </script>
 </html>

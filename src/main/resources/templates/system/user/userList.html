@@ -7,6 +7,7 @@
 <link href="bootstrap/css/bootstrap-table.css" rel="stylesheet">
 <link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
+<link href="zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
 <script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap-table.js"></script>
@@ -15,11 +16,26 @@
 <script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/jQuery.md5.js"></script>
+<script type="text/javascript" src="zTree/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="zTree/js/MultipleTreeSelect.js"></script>
 <title>用户管理</title>
 <style>
+html,body{
+	height:100%;
+}
 </style>
 </head>
 <body>
+	<div style="width:200px;height:100%;float:left;background: #fff;">
+		<div style="border-bottom: 1px solid #eee;padding: 15px;">
+			<span style="font-size:15px;margin-left: 15px;">组织机构</span>
+<!-- 			<div style="float: right;cursor: pointer;" onClick="getTree()"><span class="glyphicon glyphicon-refresh" title="刷新" style="top:3px;"></span></div> -->
+		</div>
+		<div class="dpContent" id="dpContent" style="margin: 20px;">
+	         <ul id="treeDemo" class="ztree"></ul>
+	    </div>
+	</div>
+	<div style="float:left;width: calc(100% - 200px);">
 		<div class="row areacode" id="searchValue">
 			<div class="row">
 			  <div class="col-md-2">用户名</div>
@@ -42,6 +58,7 @@
             </div>
 			<table id="mytab" class="table"></table>
 		</div>
+	</div>
 		
 		<!-- 这里加载新增页面 -->
 		<div class="modal fade" id="mymodelAdd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
@@ -71,9 +88,11 @@
 		    </div>
 		  </div>
 		</div>
+		<input type="hidden" id="departmentId"/>
 </body>
 <script  type="text/javascript">
 	$(function() {
+		getTree();
 	    //根据窗口调整表格高度
 	    $(window).resize(function() {
 	        $('#mytab').bootstrapTable('resetView', {
@@ -111,7 +130,8 @@
 	            var param = {
 	                limit: params.pageSize,   //每页多少条数据
 	                pageNo: params.pageNumber, // 页码
-	                name: $("#name").val()
+	                name: $("#name").val(),
+	                departmentId: $("#departmentId").val()
 	            };
 	            return param;
 	        },
@@ -122,9 +142,10 @@
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
 	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-	            {field: 'id', title: 'ID'},
+// 	            {field: 'id', title: 'ID'},
 			    {field: 'name', title: '用户名'},
 			    {field: 'role', title: '角色名称'},
+			    {field: 'departmentName', title: '部门'},
 			    {field: 'phone', title: '手机号'},
 			    {field: 'email', title: '邮箱'},
 			    {field: 'sex', title: '性别',
@@ -148,7 +169,7 @@
 			    	  }
 			      }
 		        },
-		        {field: 'oper', title: '操作',width: 200,formatter:function(value, row, index){
+		        {field: 'oper', title: '操作',width: 180,formatter:function(value, row, index){
 		        	var html = "<button class='btn btn-info btn-xs' onClick='doEdit("+row.id+")'><span class='glyphicon glyphicon-edit'></span> 编辑</button> ";
 		        		html += "<button class='btn btn-success btn-xs' onClick='doAccredit("+row.id+")'><span class='glyphicon glyphicon-user'></span> 授权</button> ";
 		        	    html += "<button class='btn btn-danger btn-xs' onClick='doDelete("+row.id+")'><span class='glyphicon glyphicon-trash'></span> 删除</button>";
@@ -347,6 +368,53 @@ function doExportExcel(){
 			}
 		});
 		layer.close(index);
+	});
+}
+
+//加载菜单树全部节点
+function getTree(){
+	var settingss = {
+	        data: {
+		          simpleData: {
+			            enable: true,  //true 、 false 分别表示 使用 、 不使用 简单数据模式
+			            idKey: "id",  //节点数据中保存唯一标识的属性名称
+			            pIdKey: "pId",    //节点数据中保存其父节点唯一标识的属性名称 
+			            rootPId: -1  //用于修正根节点父节点数据，即 pIdKey 指定的属性值
+		          },
+		          key: {
+		            	name: "name"  //zTree 节点数据保存节点名称的属性名称  默认值："name"
+		          }
+	        },
+	        check:{
+		          enable:false,  //true 、 false 分别表示 显示 、不显示 复选框或单选框
+		          nocheckInherit:true  //当父节点设置 nocheck = true 时，设置子节点是否自动继承 nocheck = true
+	        },
+	        callback: {
+	            onClick: function (e, treeId, treeNode, clickFlag) {
+	            	var departmentId = treeNode.id;
+	            	if(departmentId == 1){//查询所有
+	            		$("#departmentId").val("");
+	            	}else{
+	            		$("#departmentId").val(departmentId);
+	            	}
+	            	refresh();
+	            }
+	        }
+	};
+	
+	$.ajax({
+		url : "department/getTree",
+		type : "post",
+		data : {},
+		success : function(result) {
+			if(result.length > 0){
+					zTreeObj = $.fn.zTree.init($("#treeDemo"), settingss, result); //初始化树
+	                zTreeObj.expandAll(true);   //true 节点全部展开、false节点收缩
+			}
+		},
+		error : function() {
+			layer.mgs("部门数据加载失败！");
+		}
 	});
 }
 </script>

@@ -24,7 +24,8 @@
     <div class="left-side sticky-left-side">
         <!--logo-->
         <div class="logo">
-            <a href="index.html"></a>
+<!--         	<img src="images/logo.png" style="width: 50px;"/> -->
+<!--             <a href="index.html"></a> -->
         </div>
         <!--logo-->
         <div class="left-side-inner">
@@ -56,31 +57,36 @@
             <div class="menu-right">
                 <ul class="notification-menu">
                     <li>
-                        <a href="#" class="btn btn-default dropdown-toggle info-number" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="badge">4</span>
+                        <a href="#" id="notices" class="btn btn-default dropdown-toggle info-number" data-toggle="dropdown" data-hover="dropdown">
+                            <i class="fa fa-bell-o"></i><span class="badge">2</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-head pull-right">
-                          <h5 class="title">Notifications</h5>
+                        <div id="noticesDownmenu" class="dropdown-menu dropdown-menu-head pull-right" aria-labelledby="notices">
+                          	<h5 class="title">Notifications</h5>
                         	<ul class="dropdown-list normal-list">
-								 <li class="message-list message-scroll-list">
+								<li class="message-list">
 		                          <a href="#">
-		                              <span class="photo"></span>
+		                              <span class="subject">John Doe</span>
+		                              <span class="message"> New tasks needs to be done</span>
+		                              <span class="time">13 minutes ago</span>
+		                          </a>
+								</li>
+								<li class="message-list">
+		                          <a href="#">
 		                              <span class="subject">John Doe</span>
 		                              <span class="message"> New tasks needs to be done</span>
 		                              <span class="time">15 minutes ago</span>
 		                          </a>
 								</li>
-								<li class="last"> <a  href="#">All Messages</a> </li>
+								<li class="last"> <a href="#">All Messages</a> </li>
 							</ul>
                         </div>
                     </li>
                     <li>
-                        <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <a href="#" id="userMenu" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
                             <img src="images/user2.png" alt=""><font th:text="${session.userName}"></font>
                             <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                        <ul id="userDownMenu" class="dropdown-menu dropdown-menu-usermenu pull-right" aria-labelledby="userMenu">
                           <li> <a href="#"> <i class="fa fa-wrench"></i> Settings </a> </li>
                           <li> <a href="#"> <i class="fa fa-user"></i> Profile </a> </li>
                           <li> <a href="javascript:void(0)" onClick="logOut()"> <i class="fa fa-lock"></i> Logout </a> </li>
@@ -94,11 +100,6 @@
        	<!--Start Page Title-->
         <div class="page-title-box">
              <span class="page-title" id="titleName">主页</span>
-<!-- 			<ol class="breadcrumb"> -->
-<!-- 			  <li><a href="#">Home</a></li> -->
-<!-- 			  <li><a href="#">Library</a></li> -->
-<!-- 			  <li class="active">Data</li> -->
-<!-- 			</ol> -->
              <div class="clearfix"></div>
         </div>
         <!--End Page Title-->
@@ -108,14 +109,63 @@
         	Copyright &copy; 2019 All rights reserved
         </footer>	
         <!--End footer -->
+        <input type="hidden" id="userId" th:value="${session.userId}"/>
+        <input type="hidden" id="userName" th:value="${session.userName}"/>
        </div>
       <!--End main content -->
     <!--Begin core plugin -->
     <script src="jquery-1.11.3/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-hover-dropdown.js"></script>
     <script src="js/jquery.slimscroll.js "></script>
     <script src="js/jquery.nicescroll.js"></script>
     <script src="js/index.js"></script>
     <script src="js/functions.js"></script>
+    <script>
+    $(function(){
+//     	openSocket();
+    })
+    var socket;
+    function openSocket() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            if(socket != null){
+                socket.close();
+                socket = null;
+            }
+            //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+            //等同于socket = new WebSocket("ws://localhost:8888/xxxx/im/25");
+            var userId = $("#userId").val();
+            var socketUrl="ws://localhost:8080/websocket/ID="+userId;
+            console.log(socketUrl);
+            socket = new WebSocket(socketUrl);
+            //打开事件
+            socket.onopen = function() {
+                console.log("websocket已打开");
+            };
+            //获得消息事件
+            socket.onmessage = function(msg) {
+                console.log(msg.data);
+            };
+            //关闭事件
+            socket.onclose = function() {
+                console.log("websocket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                console.log("websocket发生了错误");
+            }
+        }
+    }
+    function sendMessage() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+        	var userName = $("#userName").val();
+        	socket.send("{'来自客户端的消息':'用户名=" + userName +", "+ new Date()+"'}");
+        }
+    }
+    </script>
 </body>
 </html>

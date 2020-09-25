@@ -934,19 +934,16 @@ h5.left-nav-title {
 
 .message-list span.subject {
 	display: block;
-	margin-left: 60px;
 	font-weight: 600;
 	font-size: 13px;
 }
 
 .message-list span.message {
 	display: block;
-	margin-left: 60px;
 	white-space: initial;
 }
 
 .message-list span.time {
-	margin-left: 60px;
 	color: #aeaaaa;
 	display: block;
 }

@@ -13,10 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 拦截器
  * @author Administrator
  *
  */
@@ -25,8 +25,13 @@ public class WebConfig implements WebMvcConfigurer{
 	private Logger logger = LoggerFactory.getLogger(WebConfig.class);
 	
 	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+//		registry.addViewController("").setViewName("");
+	}
+	
+	@Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration interceptorRegistration = registry.addInterceptor(new MyInterceptor());
+//        InterceptorRegistration interceptorRegistration = registry.addInterceptor(new MyInterceptor());
         //添加需要拦截的路径和不需要拦截的路径
 //        interceptorRegistration.excludePathPatterns("/error");
 //        interceptorRegistration.excludePathPatterns("/login/login");

@@ -15,23 +15,24 @@
          jQuery('body').css({left: '', marginRight: ''});
       }
     });
+    
+    //header right downmenu
+    /*$("#notices,#noticesDownmenu").hover(function(){
+    	$("#notices").css("background","#f3f3f3");
+    	$("#noticesDownmenu").css("display","block");
+    },function(){
+    	$("#notices").css("background","#fff");
+    	$("#noticesDownmenu").css("display","none");
+    });
+    $("#userMenu,#userDownMenu").hover(function(){
+    	$("#userMenu").css("background","#f3f3f3");
+    	$("#userDownMenu").css("display","block");
+    },function(){
+    	$("#userMenu").css("background","#fff");
+    	$("#userDownMenu").css("display","none");
+    });*/
+    
 })(jQuery);
-
-$(function(){
-	$('.notification-scroll-list').slimScroll({
-		height: '220px',
-	 	allowPageScroll: true,
-	    alwaysVisible: true
-	});
-});
-
-$(function(){
-	$('.message-scroll-list').slimScroll({
-		height: '220px',
-		allowPageScroll: true,
-		alwaysVisible: true
-	});
-});
 
 $(".inbox-scroll-list").niceScroll({styler:"fb",cursorcolor:"#ccc", cursorwidth: '5', cursorborderradius: '0px', background: '#ccc', spacebarenabled:false, cursorborder: '2'});
 $(".chat-scroll-list").niceScroll({styler:"fb",cursorcolor:"#ccc", cursorwidth: '5', cursorborderradius: '0px', background: '#ccc', spacebarenabled:false, cursorborder: '2'});

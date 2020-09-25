@@ -77,7 +77,7 @@ function logOut(){
 //				}
 			},
 			error : function(){
-				window.location.href = "login";
+				layer.msg("操作失败！");
 			}
 		});
 //	}, function(){

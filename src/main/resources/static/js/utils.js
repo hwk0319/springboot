@@ -100,9 +100,10 @@ function echartnum(){
 function slideToggle(id){
 	$(id).slideToggle();
 }
-//重置
+//重置搜索框
 function repeat(){
 	$(":text").val("");
+	 $("select").val("").trigger("change");
 }
 /**
  * 显示系统提示，需要引入jquery.toast.min.js,jquery.toast.min.css

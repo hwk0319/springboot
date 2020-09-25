@@ -113,11 +113,6 @@
 		    <artifactId>ojdbc6</artifactId>
 		    <version>11.1.0.7.0</version>
 		</dependency>
-	    <!-- <dependency>
-		    <groupId>com.rsa</groupId>
-		    <artifactId>Rsa-De-1</artifactId>
-		    <version>1.0</version>
-		</dependency> -->
 		<dependency>
 			<groupId>eu.bitwalker</groupId>
 		 	<artifactId>UserAgentUtils</artifactId> 
@@ -159,6 +154,10 @@
 		<dependency>
 		    <groupId>javax.mail</groupId>
 		    <artifactId>javax.mail-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 	</dependencies>
 

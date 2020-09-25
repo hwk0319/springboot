@@ -150,7 +150,9 @@ public class LoginController {
         try{
         	// 3.执行登录方法
             subject.login(token);
-            req.getSession().setAttribute("userName", name);
+            UserInfo user = (UserInfo) subject.getPrincipal();
+            req.getSession().setAttribute("userName", user.getName());
+            req.getSession().setAttribute("userId", user.getId());
             json.put("status", "success");
             json.put("msg", "登录成功！");
         } catch (UnknownAccountException e){

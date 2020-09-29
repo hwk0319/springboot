@@ -86,7 +86,7 @@ public class ShiroConfig {
        // 登录成功后要跳转的链接
        shiroFilterFactoryBean.setSuccessUrl("/login/index");
        //未授权界面;
-       shiroFilterFactoryBean.setUnauthorizedUrl("/commom/403");
+       shiroFilterFactoryBean.setUnauthorizedUrl("/common/403");
        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
        return shiroFilterFactoryBean;
    }
@@ -263,7 +263,7 @@ public class ShiroConfig {
       //同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录；
       kickoutSessionControlFilter.setMaxSession(1);
       //被踢出后重定向到的地址；
-      kickoutSessionControlFilter.setKickoutUrl("/commom/kickout");
+      kickoutSessionControlFilter.setKickoutUrl("/common/kickout");
        return kickoutSessionControlFilter;
     }
 }

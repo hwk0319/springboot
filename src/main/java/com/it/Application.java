@@ -8,6 +8,14 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 
 
+/**
+ * 
+ * @ClassName: Application  
+ * @Description: TODO  启动类
+ * @author Administrator  
+ * @date 2019年5月22日  
+ *
+ */
 @MapperScan("com.it.dao")
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class,DruidDataSourceAutoConfigure.class})
 public class Application {

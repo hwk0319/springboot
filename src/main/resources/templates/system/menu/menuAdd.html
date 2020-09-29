@@ -85,31 +85,31 @@
 		    	</label>
 		    </div>
 		  </div>
-		  <div class="form-group">
-		    <label for="url" class="col-sm-3 control-label"><span class="required">*</span>请求地址</label>
+		  <div class="form-group url">
+		    <label for="url" class="col-sm-3 control-label">请求地址</label>
 		    <div class="col-sm-6">
 		      <input type="text" class="form-control" id="url" name="url" placeholder="请输入请求地址" />
 		    </div>
 		  </div>
-		  <div class="form-group">
+		  <div class="form-group permission">
 		    <label for="permission" class="col-sm-3 control-label">权限标识</label>
 		    <div class="col-sm-6">
 		      <input type="text" class="form-control" id="permission" name="permission" placeholder="请输入权限标识" />
 		    </div>
 		  </div>
-		  <div class="form-group">
-		    <label for="image" class="col-sm-3 control-label">菜单图标</label>
+		  <div class="form-group image">
+		    <label for="image" class="col-sm-3 control-label">图标</label>
 		    <div class="col-sm-6">
-		      <input type="text" class="form-control" id="image" name="image" placeholder="请选择菜单图标" />
+		      <input type="text" class="form-control" id="image" name="image" placeholder="请选择图标" />
 		      <div class="menuContent" id="imageContent" style="height:100px;overflow-y:auto;overflow-x: hidden;">
 			      <!-- 加载图标页面 -->
 			  </div>
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="sort" class="col-sm-3 control-label">菜单排序</label>
+		    <label for="sort" class="col-sm-3 control-label">排序</label>
 		    <div class="col-sm-6">
-		      <input type="number" class="form-control" id="sort" name="sort" placeholder="请输入菜单排序"/>
+		      <input type="number" class="form-control" id="sort" name="sort" placeholder="请输入排序"/>
 		    </div>
 		  </div>
 		  <input type="hidden" id="id" th:value="${id}"/>
@@ -122,6 +122,22 @@
 </body>
 <script type="text/javascript">
 	$(function() {
+		$('input[type=radio][name=type1]').change(function() {
+			if(this.value == 0){
+// 				$(".url").show();
+				$(".permission").hide();
+				$(".image").show();
+			}else if(this.value == 1){
+// 				$(".url").show();
+				$(".permission").show();
+				$(".image").hide();
+			}else if(this.value == 2){
+				$(".permission").show();
+// 				$(".url").hide();
+				$(".image").hide();
+			}
+		});
+		
 		$("#pname").click(function(){
 			$("#menuContent").animate({height: 'toggle', opacity: 'toggle'}, "fast");
 		})
@@ -149,7 +165,6 @@
 	            validating: 'glyphicon glyphicon-refresh'
 	        },
 	        fields: {
-	       	 	/*指定需要校验的元素  通过name数据去指定*/
 	       	 	pname:{
 	       	 		trigger: "change", //监听change动作
 	                validators:{
@@ -159,9 +174,7 @@
 	                }
 	            },
 	            name:{
-	                /*配置校验规则  规则不止一个*/
 	                validators:{
-	                    /*配置具体的规则*/
 	                    notEmpty:{
 	                        message:'请输入菜单名称'
 	                    },
@@ -181,9 +194,6 @@
 	            },
 	            url:{
 	                validators:{
-	                    notEmpty:{
-	                        message:'请输入请求地址'
-	                    },
 	                    stringLength: {//检测长度
 	                        min: 1,
 	                        max: 40,
@@ -210,35 +220,6 @@
 	        }
 	    });
 	})
-	//获取下拉菜单数据
-	/* function getData(){
-		$.ajax({
-			type: "post",
-			url: "menu/getMenu1",//对应后台的post
-			contentType:'application/json',
-			async: false,
-			data: {},
-			success:function(result){
-			    if(result!=null){
-					$("#pname").click(function() {
-						var options = {
-							levels : 3,
-							data : [result],
-							onNodeSelected : function(event, data) {
-								$("#pname").val(data.text);
-								$("#pid").val(data.id);
-								$("#tree").hide();//选中树节点后隐藏树
-							}
-						};
-						$('#tree').treeview(options);
-					});
-			    }
-			},
-			error:function(){
-				layer.msg('下拉菜单加载失败!');
-			}
-		})
-	} */
 	
 	//保存
 	function doSave() {

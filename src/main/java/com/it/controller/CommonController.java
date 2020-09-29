@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
  *
  */
 @RestController
-@RequestMapping("/commom")
+@RequestMapping("/common")
 public class CommonController {
 	
 	/**

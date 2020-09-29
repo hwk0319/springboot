@@ -193,7 +193,7 @@
 	    $("#mymodelAdd").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPage?path=system/dict/dictAdd'// 从远程加载内容的地址
+	        remote: 'common/loadPage?path=system/dict/dictAdd'// 从远程加载内容的地址
 	    });
 	}
 	//编辑字典数据
@@ -208,7 +208,7 @@
 	    $("#mymodelEdit").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPageParam?path=system/dict/dictEdit&id=' + id   // 从远程加载内容的地址
+	        remote: 'common/loadPageParam?path=system/dict/dictEdit&id=' + id   // 从远程加载内容的地址
 	    });
 	}
 
@@ -220,7 +220,7 @@
 			return;
 		}
 		var id = row[0].id;
-		var url = "commom/loadPageParam?path=system/dictInfo/dictInfoAdd&id=" + id;
+		var url = "common/loadPageParam?path=system/dictInfo/dictInfoAdd&id=" + id;
 		openModel("#mymodelDictInfoAdd", url);
 	}
 	//删除字典

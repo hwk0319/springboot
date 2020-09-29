@@ -8,7 +8,7 @@
 <link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
 <link href="bootstrap/css/bootstrap-treeview.css" rel="stylesheet">
 <link href="bootstrap/css/jquery.treegrid.css" rel="stylesheet">
-<link href="zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
+<link href="plugins/zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
 <script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
@@ -19,8 +19,8 @@
 <script type="text/javascript" src="bootstrap/js/bootstrap-table-treegrid.js"></script>
 <script type="text/javascript" src="bootstrap/js/jquery.treegrid.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap-treeview.js"></script>
-<script type="text/javascript" src="zTree/js/jquery.ztree.all.js"></script>
-<script type="text/javascript" src="zTree/js/MultipleTreeSelect.js"></script>
+<script type="text/javascript" src="plugins/zTree/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="plugins/zTree/js/MultipleTreeSelect.js"></script>
 <title>部门管理</title>
 </head>
 <body>
@@ -125,7 +125,7 @@
 	    $("#mymodelAdd").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPage?path=system/department/departmentAdd'    // 从远程加载内容的地址
+	        remote: 'common/loadPage?path=system/department/departmentAdd'    // 从远程加载内容的地址
 	    });
 	}
 
@@ -134,7 +134,7 @@
 	    $("#mymodelEdit").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPageParam?path=system/department/departmentEdit&id=' + id   // 从远程加载内容的地址
+	        remote: 'common/loadPageParam?path=system/department/departmentEdit&id=' + id   // 从远程加载内容的地址
 	    });
 	}
 

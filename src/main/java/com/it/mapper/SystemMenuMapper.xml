@@ -75,7 +75,7 @@
 	<!-- 删除菜单 -->
 	<delete id="deleteMenu" parameterType="Permission">
 		delete permission
-		where id = #{po.id}
+		where id = #{po.id} or pid = #{po.id}
 	</delete>
 	<!-- 查询所有菜单 -->
 	<select id="search" resultType="Permission">

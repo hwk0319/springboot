@@ -189,7 +189,6 @@ hr {
     padding: 20px;
     float: left;
     width: 100%;
-	margin-bottom:30px;
 }
 
 .popover-content {
@@ -312,7 +311,7 @@ hr {
 }
 
 .custom-nav > li > a:hover, .custom-nav > li > a:active, .custom-nav > li > a:focus {
-	background-color: #353f4f !important;
+	background-color: #5badff!important;
 	color: #FFF;
 	border-radius: 0;
 	-webkit-border-radius: 0;
@@ -368,17 +367,16 @@ hr {
 	color: #fff;
 	font-size: 13px;
 	display: block;
-	padding: 10px 5px 10px 50px;
+	padding: 10px 5px 10px 70px;
 	-moz-transition: all 0.2s ease-out 0s;
 	-webkit-transition: all 0.2s ease-out 0s;
 	transition: all 0.2s ease-out 0s;
-	margin-left: 20px;
 }
 
 .custom-nav .sub-menu-list > li > a:hover, .custom-nav .sub-menu-list > li > a:active, .custom-nav .sub-menu-list > li > a:focus {
 	text-decoration: none;
 	color: #fff;
-	background: #2a323f;
+	background: #5badff;
 }
 
 .custom-nav .sub-menu-list > li .fa {
@@ -1026,14 +1024,6 @@ h5.left-nav-title {
 /*--------------------------------------------*/
 /*  White Panel & Popover
 /*--------------------------------------------*/
-
-.white-box {
-    background: #FFF;
-    padding: 20px;
-    float: left;
-    width: 100%;
-	margin-bottom:30px;
-}
 
 .popover-content {
     display: inline-block;

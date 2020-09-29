@@ -19,8 +19,8 @@
 <script type="text/javascript" src="bootstrap/js/jquery.treegrid.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap-treeview.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<link href="zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
-<script type="text/javascript" src="zTree/js/jquery.ztree.all.js"></script>
+<link href="plugins/zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
+<script type="text/javascript" src="plugins/zTree/js/jquery.ztree.all.js"></script>
 <link href="icons/simple-line-icon/simple-line-icons.css" rel="stylesheet">
 <title>菜单管理</title>
 </head>
@@ -83,10 +83,12 @@ $(function() {
 		    		  return "<span class='label label-warning'>按钮</span>";
 		    	  }
 		      }},
+		    {field: 'image', title: '图标', width:'120', formatter:function(value, row, index){
+		    	return "<i class='"+value+"'></i>";
+		    }},
 		    {field: 'url', title: '请求地址', width:'150'},
 		    {field: 'permission', title: '权限标识', width:'150'},
-		    {field: 'image', title: '菜单图片', width:'120'},
-		    {field: 'sort', title: '菜单排序', width:'100'},
+		    {field: 'sort', title: '排序', width:'100'},
 	        {field: 'oper', title: '操作', width:170, formatter:function(value, row, index){
 	        	var html = "<button class='btn btn-success btn-xs' onClick='doInsert1("+row.id+")'><span class='glyphicon glyphicon-plus-sign'></span> 新增</button> ";
 	        		html += "<button class='btn btn-info btn-xs' onClick='doEdit("+row.id+")'><span class='glyphicon glyphicon-edit'></span> 编辑</button> ";
@@ -138,7 +140,7 @@ function doInsert1(id) {
     $("#mymodelAdd").modal({
         backdrop: 'static',     // 点击空白不关闭
         keyboard: false,        // 按键盘esc也不会关闭
-        remote: 'commom/loadPageParam?path=system/menu/menuAdd&id='+id    // 从远程加载内容的地址
+        remote: 'common/loadPageParam?path=system/menu/menuAdd&id='+id    // 从远程加载内容的地址
     });
 }
 
@@ -148,7 +150,7 @@ function doEdit(id) {
     $("#mymodelEdit").modal({
         backdrop: 'static',     // 点击空白不关闭
         keyboard: false,        // 按键盘esc也不会关闭
-        remote: 'commom/loadPageParam?path=system/menu/menuEdit&id='+id   // 从远程加载内容的地址
+        remote: 'common/loadPageParam?path=system/menu/menuEdit&id='+id   // 从远程加载内容的地址
     });
 }
 

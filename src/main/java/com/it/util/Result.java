@@ -88,7 +88,7 @@ public class Result {
         Result.setCode(ReturnCode.SUCCESS.getCode());
         Result.setMsg(ReturnCode.SUCCESS.getMsg());
         Result.setData(data);
-        return  Result;
+        return Result;
     }
     
     /**

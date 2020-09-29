@@ -7,7 +7,7 @@
 <link href="bootstrap/css/bootstrap-table.css" rel="stylesheet">
 <link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
-<link href="zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
+<link href="plugins/zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
 <script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap-table.js"></script>
@@ -16,8 +16,8 @@
 <script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/jQuery.md5.js"></script>
-<script type="text/javascript" src="zTree/js/jquery.ztree.all.js"></script>
-<script type="text/javascript" src="zTree/js/MultipleTreeSelect.js"></script>
+<script type="text/javascript" src="plugins/zTree/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="plugins/zTree/js/MultipleTreeSelect.js"></script>
 <title>用户管理</title>
 <style>
 html,body{
@@ -231,7 +231,7 @@ html,body{
 	    $("#mymodelEdit").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPageParam?path=system/user/userEdit&id=' + id   // 从远程加载内容的地址
+	        remote: 'common/loadPageParam?path=system/user/userEdit&id=' + id   // 从远程加载内容的地址
 	    });
 	}
 
@@ -339,7 +339,7 @@ function doUpPass(){
     $("#mymodelUpdatePwd").modal({
         backdrop: 'static',     // 点击空白不关闭
         keyboard: false,        // 按键盘esc也不会关闭
-        remote: 'commom/loadPage?path=system/user/userModifyPass'    // 从远程加载内容的地址
+        remote: 'common/loadPage?path=system/user/userModifyPass'    // 从远程加载内容的地址
     });
 }
 
@@ -349,7 +349,7 @@ function doAccredit(id) {
     $("#mymodelAccredit").modal({
         backdrop: 'static',     // 点击空白不关闭
         keyboard: false,        // 按键盘esc也不会关闭
-        remote: 'commom/loadPageParam?path=system/user/userAccredit&id=' + id    // 从远程加载内容的地址
+        remote: 'common/loadPageParam?path=system/user/userAccredit&id=' + id    // 从远程加载内容的地址
     });
 }
 //导出Excel

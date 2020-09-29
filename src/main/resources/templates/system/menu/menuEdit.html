@@ -74,7 +74,7 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="url" class="col-sm-3 control-label"><span class="required">*</span>请求地址</label>
+		    <label for="url" class="col-sm-3 control-label">请求地址</label>
 		    <div class="col-sm-6">
 		      <input type="text" class="form-control" id="url" name="url" placeholder="请输入请求地址" />
 		    </div>
@@ -150,9 +150,6 @@
 	            },
 	            url:{
 	                validators:{
-	                    notEmpty:{
-	                        message:'请输入请求地址'
-	                    },
 	                    stringLength: {//检测长度
 	                        min: 1,
 	                        max: 40,

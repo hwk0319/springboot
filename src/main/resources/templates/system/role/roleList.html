@@ -16,8 +16,8 @@
 <script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap-treeview.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<link href="zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
-<script type="text/javascript" src="zTree/js/jquery.ztree.all.js"></script>
+<link href="plugins/zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
+<script type="text/javascript" src="plugins/zTree/js/jquery.ztree.all.js"></script>
 <title>角色管理</title>
 <style>
 </style>
@@ -170,7 +170,7 @@
 	    $("#mymodelAdd").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPage?path=system/role/roleAdd'    // 从远程加载内容的地址
+	        remote: 'common/loadPage?path=system/role/roleAdd'    // 从远程加载内容的地址
 	    });
 	}
 
@@ -179,13 +179,13 @@
 	    $("#mymodelEdit").modal({
 	        backdrop: 'static',     // 点击空白不关闭
 	        keyboard: false,        // 按键盘esc也不会关闭
-	        remote: 'commom/loadPageParam?path=system/role/roleEdit&id=' + id   // 从远程加载内容的地址
+	        remote: 'common/loadPageParam?path=system/role/roleEdit&id=' + id   // 从远程加载内容的地址
 	    });
 	}
 	//授权
 	function doAccredit(id) {
 		// 打开模态框
-		var url = "commom/loadPageParam?path=system/role/roleAccredit&id=" + id;
+		var url = "common/loadPageParam?path=system/role/roleAccredit&id=" + id;
 		openModel("#mymodelAccredit", url);
 	}
 

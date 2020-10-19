@@ -7,6 +7,7 @@
 <link href="bootstrap/css/bootstrap-table.css" rel="stylesheet">
 <link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
+<link href="icons/icons.css" rel="stylesheet">
 <link href="plugins/zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
 <script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
@@ -28,7 +29,7 @@ html,body{
 <body>
 	<div style="width:200px;height:100%;float:left;background: #fff;">
 		<div style="border-bottom: 1px solid #eee;padding: 15px;">
-			<span style="font-size:15px;margin-left: 15px;">组织机构</span>
+			<i class="fa fa-group"></i><span style="font-size:15px;margin-left: 5px;">组织机构</span>
 <!-- 			<div style="float: right;cursor: pointer;" onClick="getTree()"><span class="glyphicon glyphicon-refresh" title="刷新" style="top:3px;"></span></div> -->
 		</div>
 		<div class="dpContent" id="dpContent" style="margin: 20px;">
@@ -54,6 +55,7 @@ html,body{
 				<button class="btn btn-warning btn-sm" id="doLogout" onclick="doLogout()" disabled><span class="glyphicon glyphicon-minus"></span> 注销</button>
 				<button class="btn btn-danger btn-sm" id="doBatchDelete"  onclick="doBatchDelete()" disabled><span class="glyphicon glyphicon-trash"></span> 删除</button>
 				<button class="btn btn-info btn-sm" id="doUpPass"  onclick="doUpPass()" disabled><span class="glyphicon glyphicon-lock"></span> 修改密码</button>
+				<button class="btn btn-success btn-sm" id="doReset"  onclick="doReset()" disabled><span class="glyphicon glyphicon-repeat"></span> 重置密码</button>
 				<button class="btn btn-success btn-sm" id="doExportExcel"  onclick="doExportExcel()"><span class="glyphicon glyphicon-save"></span> 导出Excel</button>
             </div>
 			<table id="mytab" class="table"></table>
@@ -142,7 +144,6 @@ html,body{
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
 	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-// 	            {field: 'id', title: 'ID'},
 			    {field: 'name', title: '用户名'},
 			    {field: 'role', title: '角色名称'},
 			    {field: 'departmentName', title: '部门'},
@@ -184,6 +185,7 @@ html,body{
 	        	$('#doLogout').prop('disabled', false);
 	        	$('#doBatchDelete').prop('disabled', false);
 	        	$('#doUpPass').prop('disabled', false);
+	        	$('#doReset').prop('disabled', false);
 	        },
 	        onUncheck: function(row){//取消选择row事件
 	        	//判断是否还有选择的数据
@@ -192,17 +194,20 @@ html,body{
 		        	$('#doLogout').prop('disabled', true);
 		        	$('#doBatchDelete').prop('disabled', true);
 		        	$('#doUpPass').prop('disabled', true);
+		        	$('#doReset').prop('disabled', true);
 	        	}
 	        },
 	        onCheckAll: function(rows){//全选事件
 	        	$('#doLogout').prop('disabled', false);
 	        	$('#doBatchDelete').prop('disabled', false);
 	        	$('#doUpPass').prop('disabled', false);
+	        	$('#doReset').prop('disabled', false);
 	        },
 	        onUncheckAll: function(rows){//取消全选事件
 	        	$('#doLogout').prop('disabled', true);
 	        	$('#doBatchDelete').prop('disabled', true);
 	        	$('#doUpPass').prop('disabled', true);
+	        	$('#doReset').prop('disabled', true);
 	        },
 	        locale: "zh-CN", //中文支持
 	    });
@@ -335,12 +340,48 @@ function doUpPass(){
 		layer.msg("请选择一个用户进行修改！");
 		return;
 	}
+	var id = data[0].id;
 	// 打开模态框
     $("#mymodelUpdatePwd").modal({
         backdrop: 'static',     // 点击空白不关闭
         keyboard: false,        // 按键盘esc也不会关闭
-        remote: 'common/loadPage?path=system/user/userModifyPass'    // 从远程加载内容的地址
+        remote: 'common/loadPageParam?path=system/user/userModifyPass&id=' + id    // 从远程加载内容的地址
     });
+}
+//重置密码
+function doReset(){
+	var data= $('#mytab').bootstrapTable('getSelections');
+	if(data.length != 1){
+		layer.msg("请选择一个用户进行重置！");
+		return;
+	}
+	var id = data[0].id;
+	layer.confirm("您确定要重置用户密码吗？", {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+			url : "user/resetPwd",
+			type : "post",
+			data : {
+				"id" : id,
+			},
+			success : function(result) {
+				if(result > 0){
+					layer.alert("重置成功，密码为： xtgl1234", {icon: 1, title:'提示'}, function(index){
+						layer.close(index);
+						refresh();
+					});
+				}else if(result.msg != null){
+					layer.alert(result.msg, {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+						refresh();
+					});
+				}
+			},
+			error : function() {
+				layer.msg("请求失败！");
+			}
+		});
+		layer.close(index);
+	});
 }
 
 //用户授权
@@ -354,19 +395,10 @@ function doAccredit(id) {
 }
 //导出Excel
 function doExportExcel(){
-	layer.confirm("您确定导出要数据吗？", {icon: 3, title:'提示'}, function(index){
-		$.ajax({
-			url : "user/exportExcel",
-			type : "post",
-			data : {
-			},
-			success : function(result) {
-				layer.msg("导出成功！");
-			},
-			error : function() {
-				layer.msg("导出失败！");
-			}
-		});
+	var name = $("#name").val();
+    var departmentId = $("#departmentId").val();
+	layer.confirm("您确定要导出数据吗？", {icon: 3, title:'提示'}, function(index){
+		window.location.href="user/exportExcel?name="+name+"&departmentId="+departmentId;
 		layer.close(index);
 	});
 }

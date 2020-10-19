@@ -567,7 +567,6 @@ h5.left-nav-title {
 
 .menu-right {
 	float: right;
-	margin-right: 15px;
 }
 
 .notification-menu {
@@ -623,7 +622,7 @@ h5.left-nav-title {
 	border-radius: 2px 0 2px 2px;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
-	box-shadow: none;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .175);
 	padding: 5px;
 }
 
@@ -656,7 +655,6 @@ h5.left-nav-title {
 }
 
 .notification-menu .dropdown-menu li i {
-	font-size: 11px;
 	margin-right: 5px;
 }
 
@@ -951,29 +949,10 @@ h5.left-nav-title {
 /*--------------------------------------------*/
 
 .sticky-header .header-section {
-	position: fixed;
 	top: 0;
-	left: 200px;
 	width: 100%;
 	z-index: 100;
 }
-
-.sticky-header .main-content {
-	padding-top: 50px;
-}
-
-.sticky-header .menu-right {
-	margin-right: 255px;
-}
-
-.sticky-header.left-side-collapsed .header-section {
-	left: 53px;
-}
-
-.sticky-header.left-side-collapsed .menu-right {
-	margin-right: 67px;
-}
-
 .dropdown-menu-head {
 	background: #fff
 }

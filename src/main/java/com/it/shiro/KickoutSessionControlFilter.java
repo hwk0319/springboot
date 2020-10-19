@@ -140,7 +140,6 @@ public class KickoutSessionControlFilter extends AccessControlFilter{
 			//判断是不是Ajax请求
 			if (Util.isAjaxRequest((HttpServletRequest) request)) {
 				String result = "<script>alert('您已被踢出或账号在其它地方登录，请重新登录！');top.location.href='login';</script>";
-//				String result = "<script>layer.alert('您已被踢出或账号在其它地方登录，请重新登录！', function(index){top.location.href='login';layer.close(index)})</script>";
 				//输出内容
 				out(response, result);
 			}else{

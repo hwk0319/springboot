@@ -2,7 +2,20 @@
  * ajax 请求错误
  */
 //$(document).ajaxError(function(e,xhr,opt){
+//	
 //});
+//全局的ajax访问，处理ajax清求时session超时
+/*$.ajaxSetup({
+     contentType:"application/x-www-form-urlencoded;charset=utf-8",
+     complete:function(XMLHttpRequest,textStatus){
+     //通过XMLHttpRequest取得响应头，sessionstatus，
+     var sessionstatus=XMLHttpRequest.getResponseHeader("sessionstatus");
+     	if(sessionstatus=="timeout"){
+	         //如果超时就处理 ，指定要跳转的页面(比如登陆页)
+    	 	 top.location.href='login';
+        }
+      }
+});*/
 
 /**
  * 获取应用路路径，后面不带/
@@ -103,7 +116,7 @@ function slideToggle(id){
 //重置搜索框
 function repeat(){
 	$(":text").val("");
-	 $("select").val("").trigger("change");
+	$("select").val("").trigger("change");
 }
 /**
  * 显示系统提示，需要引入jquery.toast.min.js,jquery.toast.min.css

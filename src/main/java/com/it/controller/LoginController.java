@@ -27,6 +27,7 @@ import com.it.po.UserInfo;
 import com.it.service.LoginLogsService;
 import com.it.service.LoginService;
 import com.it.service.SystemMenuService;
+import com.it.util.SysConstant;
 
 import eu.bitwalker.useragentutils.UserAgent;
 import net.sf.json.JSONObject;
@@ -44,7 +45,6 @@ public class LoginController {
 	private LoginLogsService loginLogsService;
 	@Resource
 	private SystemMenuService menuservice;
-//	private static String publicKeyString = null;
 	
 	/**
 	 * 登录页面
@@ -181,7 +181,7 @@ public class LoginController {
         	//不为空，执行一次logout的操作，将session全部清空
             subject.logout();
         }
-        return "login";
+        return "success";
 	}
 	
 	/**
@@ -225,5 +225,21 @@ public class LoginController {
 		loginInfo.setStatus(status);
 		loginInfo.setMessage(msg);
 		loginLogsService.addLoginInfo(loginInfo);
+	}
+	
+	/**
+	 * 验证码比对
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping(value="/verfify")
+	@ResponseBody
+	public String verifyCode(String code,HttpServletRequest request ){
+		String code_sess = request.getSession().getAttribute(SysConstant.IDENTIFY_CODE).toString();
+		if(code_sess.equalsIgnoreCase(code)){
+			return "success";
+		}else{
+			return "false";
+		}
 	}
 }

@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.util.StringUtils;
 
@@ -200,5 +202,27 @@ public class Util {
     		 return true;
     	 }
     	 return false;
+     }
+     
+     /**
+      * 
+      * @Title: outObject  
+      * @Description: TODO  向页面输出内容
+      * @param @param response
+      * @param @param object    参数  
+      * @return void    返回类型  
+      * @throws
+      */
+     public static void outObject(HttpServletResponse response, String object) {
+    	try {
+    		 response.setCharacterEncoding("UTF-8");
+    		 response.setContentType("application/json; charset=utf-8");
+			 PrintWriter writer = response.getWriter();
+			 writer.write(object);
+			 writer.flush();
+			 writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
      }
 }

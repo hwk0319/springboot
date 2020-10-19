@@ -10,6 +10,7 @@ import javax.servlet.Filter;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -17,8 +18,10 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
@@ -69,10 +72,13 @@ public class ShiroConfig {
        //<!-- authc:所有url都必须登录认证通过才可以访问; anon:所有url都都可以匿名访问-->
        filterChainDefinitionMap.put("/bootstrap/**", "anon");
        filterChainDefinitionMap.put("/css/**", "anon");
+       filterChainDefinitionMap.put("/icons/**", "anon");
        filterChainDefinitionMap.put("/images/**", "anon");
        filterChainDefinitionMap.put("/jquery-1.11.3/**", "anon");
        filterChainDefinitionMap.put("/js/**", "anon");
        filterChainDefinitionMap.put("/layui/**", "anon");
+       filterChainDefinitionMap.put("/validate.so", "anon");
+       filterChainDefinitionMap.put("/login/verfify", "anon");
        //登录、退出匿名访问
        filterChainDefinitionMap.put("/login/login", "anon");
        filterChainDefinitionMap.put("/login/logout", "anon");
@@ -125,17 +131,18 @@ public class ShiroConfig {
        securityManager.setSessionManager(sessionManager());
        return securityManager;
    }
-
+   
    /**
            * 开启@RequirePermission注解的配置，要结合DefaultAdvisorAutoProxyCreator一起使用，或者导入aop的依赖
     */
+   
    @Bean
    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
        return authorizationAttributeSourceAdvisor;
    }
-
+   
    /**
            * 定义Spring MVC的异常处理器
     */
@@ -235,7 +242,7 @@ public class ShiroConfig {
 	    sessionManager.setCacheManager(ehCacheManager());
 
 	    //全局会话超时时间（单位毫秒），默认30分钟，设置10分钟
-	    sessionManager.setGlobalSessionTimeout(600000);
+//	    sessionManager.setGlobalSessionTimeout(600000);
 	    //是否开启删除无效的session对象  默认为true
 	    sessionManager.setDeleteInvalidSessions(true);
 	    //是否开启定时调度器进行检测过期session 默认为true

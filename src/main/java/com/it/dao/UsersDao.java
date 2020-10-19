@@ -6,7 +6,6 @@ import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.it.po.LoginInfo;
 import com.it.po.Permission;
 import com.it.po.UserInfo;
 import com.it.po.UserRoleInfo;

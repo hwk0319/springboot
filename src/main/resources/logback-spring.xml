@@ -83,6 +83,7 @@
     <logger name="org.springframework" level="ERROR"/>
     <logger name="org.apache.commons" level="DEBUG"/>
     <logger name="org.apache.zookeeper" level="ERROR"/>
+    <logger name="org.apache.shiro" level="ERROR"/>
     <logger name="com.it" level="DEBUG"/>
 
     <!-- ${LOG_ROOT_LEVEL} 日志级别 -->

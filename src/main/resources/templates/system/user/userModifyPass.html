@@ -34,8 +34,7 @@
 		      <input type="password" name="password_confirm" id="password_confirm" placeholder="请输入确认密码" class="form-control">
 		    </div>
 		  </div>
-		  <input type="hidden" id="id"/>
-		  <input type="hidden" id="modules" value=""/>
+		  <input type="hidden" id="id" th:value="${id}"/>
 		</form>
 	</div>
 	<div class="modal-footer">
@@ -46,7 +45,7 @@
 <script type="text/javascript">
 $(function() {
 	$("#from1").bootstrapValidator({
-        live: 'submitted',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+        live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
         excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
         submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
         message: '通用的验证失败消息',//好像从来没出现过
@@ -56,11 +55,8 @@ $(function() {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-       	 /*指定需要校验的元素  通过name数据去指定*/
             password_old:{
-                /*配置校验规则  规则不止一个*/
                 validators:{
-                    /*配置具体的规则*/
                     notEmpty:{
                         message:'请您输入原密码'
                     },
@@ -91,39 +87,26 @@ $(function() {
                         regexp: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/,
                         message: '密码应为字母、数字组合，且大于6位小于18位'
                     },
-                    /*自定义规则*/
-	                callback: {
-                        message: '新密码和确认密码必须相同',
-                        callback: function (value, validator) {
-                        	var pwdNew = $("#password_new").val();
-                            if(value != pwdNew){
-                            	return false;
-                            }else{
-                            	return true;
-                            }
-                        }
-                    }
+                    identical: {
+                        field: 'password_new',
+                        message: '确认密码和新密码必须相同'
+                    },
                 }
             }
         }
     });
     $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
-   	 $("#from1").bootstrapValidator('validate');//提交验证
+   		$("#from1").bootstrapValidator('validate');//提交验证
         if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
-       	//验证成功后的操作，如ajax
-       	 doSave();
+	       	doSave();
         }
     });
 });
 
 function doSave() {
-	var data= $('#mytab').bootstrapTable('getSelections');
-	var id = data[0].id;
-	var password = $("#password_old").val().trim();
-	var passwordNew = $("#password_new").val().trim();
-	var passwordConfirm = $("#password_confirm").val().trim();
-	password = $.md5(pwd);
-	passwordNew = $.md5(pwd);
+	var id = $("#id").val();
+	var password = $.md5($("#password_old").val());
+	var passwordNew = $.md5($("#password_new").val());
 
 	$.ajax({
 		url : "user/updatePass",
@@ -134,17 +117,26 @@ function doSave() {
 			"passwordNew" : passwordNew
 		},
 		success : function(result) {
-				if(result > 0){
-					showMsg("修改成功！", function() {
-						$("#mymodelUpdatePwd").modal('hide');
-						refresh();
-					});
-				}else{
-					showMsg("修改失败，原密码错误！", function() {});
-				}
+			debugger;
+			if(result > 0){
+				layer.alert("修改成功！", {icon: 1, title:'提示'}, function(index){
+					$("#mymodelUpdatePwd").modal('hide');
+					layer.close(index);
+				});
+			}else if(result == -1){
+				layer.alert("修改失败，原密码错误！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}else{
+				layer.alert("修改失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
         },
 		error : function() {
-			showMsg("修改失败！", function() {});
+			layer.alert("修改失败！", {icon: 2, title:'提示'}, function(index){
+				layer.close(index);
+			});
 		}
 	});
 }

@@ -50,14 +50,23 @@ body {
     padding-left: 20px;
 }
 .msg {
-	line-height: 35px;
+	line-height: 30px;
 	vertical-align: middle;
 	text-align: center;
-	height: 40px;
+	height: 30px;
 }
-
-#username,#pwd{
+#verification{
+	width: 60%;
+	float: left;
+}
+#vertity_img{
+    margin-left: 10px;
+}
+#username,#pwd,#verification{
 	padding-left: 40px;
+}
+.login-inner i{
+	line-height: 34px !important;
 }
 .form-control-feedback {
 	left: 5px;

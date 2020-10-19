@@ -3,6 +3,14 @@ package com.it.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * 
+ * @ClassName: MD5加密
+ * @Description: TODO  
+ * @author Administrator  
+ * @date 2020年10月12日  
+ *
+ */
 public class MD5 {
 	 // 全局数组
     private final static String[] strDigits = { "0", "1", "2", "3", "4", "5",
@@ -40,6 +48,15 @@ public class MD5 {
         return sBuffer.toString();
     }
 
+    /**
+     * 
+     * @Title: GetMD5Code  
+     * @Description: TODO  md5加密
+     * @param @param strObj
+     * @param @return    参数  
+     * @return String    返回类型  
+     * @throws
+     */
     public static String GetMD5Code(String strObj) {
         String resultString = null;
         try {

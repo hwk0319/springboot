@@ -11,7 +11,7 @@ import com.it.util.ValidationcodeServlet;
  * @author Administrator
  *
  */
-//@Configuration
+@Configuration
 public class ValidateServlet {
 	@Bean
     public ServletRegistrationBean<ValidationcodeServlet> servletRegistration0() {

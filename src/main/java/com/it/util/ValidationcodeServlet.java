@@ -30,13 +30,13 @@ public class ValidationcodeServlet extends HttpServlet{
      * 验证码图片的宽度
      * 
      */
-    private int width = 60;
+    private int width = 110;
      
     /**
      * 验证码图片的高度
      * 
      */
-    private int height = 28;
+    private int height = 35;
      
     /**
      * 验证码字符个数
@@ -74,44 +74,17 @@ public class ValidationcodeServlet extends HttpServlet{
      * （重写方法）
      * init方法<br>
      * 初始化验证图片属性
-     * 
-     *
      * @throws ServletException
      */
     public void init() throws ServletException {
-        // 从web.xml中获取初始信息
-        // 宽度
-        String strWidth = this.getInitParameter("width");
-        // 高度
-        String strHeight = this.getInitParameter("height");
-        // 字符个数
-        String strCodeCount = this.getInitParameter("codeCount");
- 
-        // 将配置的信息转换成数值
-        try {
-            if (strWidth != null && strWidth.length() != 0) {
-                width = Integer.parseInt(strWidth);
-            }
-            if (strHeight != null && strHeight.length() != 0) {
-                height = Integer.parseInt(strHeight);
-            }
-            if (strCodeCount != null && strCodeCount.length() != 0) {
-                codeCount = Integer.parseInt(strCodeCount);
-            }
-        } catch (NumberFormatException e) {
-        }
- 
-        x = width / (codeCount + 1);
-        fontHeight = height - 8;
-        codeY = height - 4;
- 
+        x = width / (codeCount + 2);
+        fontHeight = height - 3;
+        codeY = height - 5;
     }
  
     /** 
      * （重写方法）
      * doGet方法
-     * 
-     *
      * @param request
      * @param response
      * @throws ServletException
@@ -123,10 +96,8 @@ public class ValidationcodeServlet extends HttpServlet{
         HttpSession session = request.getSession();
          
         // 定义图像buffer
-        BufferedImage buffImg = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+        BufferedImage buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics2D = buffImg.createGraphics();
- 
  
         // 将图像填充为白色
         graphics2D.setColor(new Color(233, 240, 186));
@@ -182,7 +153,6 @@ public class ValidationcodeServlet extends HttpServlet{
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
- 
         response.setContentType("image/jpeg");
  
         //清空缓存

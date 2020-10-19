@@ -1,9 +1,8 @@
 package com.it.controller;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +11,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -33,15 +33,9 @@ import com.it.aspect.OperLogs;
 import com.it.po.UserInfo;
 import com.it.po.UserRoleInfo;
 import com.it.service.UserService;
-import com.it.util.ExcelUtil;
-import com.it.util.JsonDateValueProcessor;
-import com.it.util.JsonDefaultValueProcessor;
+import com.it.util.MD5;
 import com.it.util.Result;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-
+import com.it.util.SysConstant;
 
 @RestController
 @RequestMapping(value="user")
@@ -277,10 +271,29 @@ public class UsersController {
 		String dbpass = users.get(0).getPassword();
 		//判断密码是否一致
 		if(!dbpass.equals(pass_old)){
-			  return 0;
+			  return -1;
 		}
 		//修改密码
 		po.setPassword(po.getPasswordNew());
+		int res = service.updatePass(po);
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @Title: resetPwd  
+	 * @Description: TODO  重置用户密码,默认密码为xtgl1234
+	 * @param @param po
+	 * @param @param request
+	 * @param @return    参数  
+	 * @return int    返回类型  
+	 * @throws
+	 */
+	@RequestMapping(value="/resetPwd")
+	@OperLogs(value = "重置用户密码")
+	@RequiresPermissions(value="userinfo:resetPwd")
+	public int resetPwd(UserInfo po, HttpServletRequest request) throws Exception{	
+		po.setPassword(MD5.GetMD5Code(SysConstant.DEFAULT_PASSWORD));
 		int res = service.updatePass(po);
 		return res;
 	}
@@ -298,62 +311,84 @@ public class UsersController {
 	@OperLogs(value="导出Excel")
 	public void exportExcel(HttpServletResponse response, UserInfo po) throws Exception {
 		List<UserInfo> classmateList = service.search(po);
-//		List<List<String>> list1 = new ArrayList<List<String>>();
-		
-//		for (int i = 0; i < list.size(); i++) {
-//			List<String> list2 = new ArrayList<String>();
-//			list2.add(list.get(i).getName());
-//			list2.add(list.get(i).getRole());
-//			list2.add(list.get(i).getPhone());
-//			list2.add(list.get(i).getEmail());
-//			list2.add(list.get(i).getSex().toString());
-//			list2.add(list.get(i).getStatus());
-//			list1.add(list2);
-//		}
-		
-//		String[] array = {"用户名","角色名称","手机号","邮箱","性别","状态"};
-//		List<String> columnList = Arrays.asList(array);
-//		String fileName = "用户信息表";
-//		ExcelUtil.uploadExcel(response, fileName, columnList, list1);
+		String name = "用户信息表";
+		String fileName = name + ".xls";//设置要导出的文件的名字
+        String[] headers = {"用户名","角色名称","手机号","邮箱","性别","状态"};//excel表中第一行的表头
+
+		//创建Excel文档
 		HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet("用户信息表");
+		//创建一个Excel表单,参数为sheet的名字
+        HSSFSheet sheet = workbook.createSheet(name);
+        sheet.setDefaultColumnWidth(20);
+        
+        //设置格式
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 居中
+        
+        //设置字体
+    	HSSFFont font = workbook.createFont();
+    	font.setFontName("黑体");
+    	font.setFontHeightInPoints((short) 14);//设置字体大小
 
-//        List<Teacher> classmateList = teacherservice.teacherinfor();
+    	HSSFFont font2 = workbook.createFont();
+    	font2.setFontName("仿宋_GB2312");
+    	font2.setFontHeightInPoints((short) 12);
 
-        String fileName = "用户信息表"  + ".xls";//设置要导出的文件的名字
-        //新增数据行，并且设置单元格数据
-
-        int rowNum = 1;
-
-        String[] headers = {"用户名","角色名称","手机号","邮箱","性别","状态"};
-        //headers表示excel表中第一行的表头
-
+    	style.setFont(font2);//选择需要用到的字体格式
+    	
+        //创建一行,0表示第一行
         HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) 400);//设置行高
         //在excel表中添加表头
-
-        for(int i=0;i<headers.length;i++){
+        for(int i=0; i<headers.length; i++){
             HSSFCell cell = row.createCell(i);
             HSSFRichTextString text = new HSSFRichTextString(headers[i]);
             cell.setCellValue(text);
+            cell.setCellStyle(style);
         }
 
+        //新增数据行，并且设置单元格数据
         //在表中存放查询到的数据放入对应的列
-        for (UserInfo teacher : classmateList) {
+        int rowNum = 1;
+        for (UserInfo user : classmateList) {
             HSSFRow row1 = sheet.createRow(rowNum);
-            row1.createCell(0).setCellValue(teacher.getName());
-            row1.createCell(1).setCellValue(teacher.getRole());
-            row1.createCell(2).setCellValue(teacher.getPhone());
-            row1.createCell(3).setCellValue(teacher.getEmail());
-            row1.createCell(4).setCellValue(teacher.getSex());
-            row1.createCell(5).setCellValue(teacher.getStatus());
+            row1.setHeight((short) 400);
+            HSSFCell cell = row1.createCell(0);
+            cell.setCellValue(user.getName());
+            cell.setCellStyle(style);
+            HSSFCell cell1 = row1.createCell(1);
+            cell1.setCellValue(user.getRole());
+            cell1.setCellStyle(style);
+            HSSFCell cell2 = row1.createCell(2);
+            cell2.setCellValue(user.getPhone());
+            cell2.setCellStyle(style);
+            HSSFCell cell3 = row1.createCell(3);
+            cell3.setCellValue(user.getEmail());
+            cell3.setCellStyle(style);
+            HSSFCell cell4 = row1.createCell(4);
+            cell4.setCellValue(user.getSex());
+            cell4.setCellStyle(style);
+            HSSFCell cell5 = row1.createCell(5);
+            cell5.setCellValue(user.getStatus());
+            cell5.setCellStyle(style);
             rowNum++;
         }
 
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        //输出Excel文件
         try {
-			response.flushBuffer();
-			workbook.write(response.getOutputStream());
+        	fileName = new String(fileName.getBytes("UTF-8"),"ISO8859-1");
+        	response.setContentType("application/vnd.ms-excel; charset=utf-8");
+        	response.setHeader("Content-Disposition","attachment;filename="+fileName);
+        	response.setCharacterEncoding("utf-8");
+        	OutputStream os=response.getOutputStream();
+			workbook.write(os);
+			os.flush();
+			os.close();
+			workbook.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

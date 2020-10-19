@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.dao.operations.ServerMapper">
+  <resultMap id="BaseResultMap" type="Server">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="PORT" jdbcType="INTEGER" property="port" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+    <result column="CREATEDATE" jdbcType="VARCHAR" property="createdate" />
+    <result column="UPDATOR" jdbcType="VARCHAR" property="updator" />
+    <result column="UPDATEDATE" jdbcType="VARCHAR" property="updatedate" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, NAME, ACCOUNT, PASSWORD, PORT, IP, CREATOR, to_char(CREATEDATE, 'yyyy-mm-dd hh24:mi:ss') CREATEDATE, UPDATOR, UPDATEDATE
+  </sql>
+  
+  <select id="select" parameterType="Server" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SERVER where 1=1
+    <if test="name != '' and name != null">
+    	and name like concat(concat('%',#{name}),'%')
+    </if>
+    <if test="ip != '' and ip != null">
+    	and ip like concat(concat('%',#{ip}),'%')
+    </if>
+    order by id desc
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SERVER
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from SERVER
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="batchDelete" parameterType="Integer">
+	delete from SERVER
+	where id in
+	<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+       	#{item} 
+   	</foreach>
+  </delete>
+  
+  <insert id="insert"  parameterType="Server" >
+    insert into SERVER (ID, NAME, ACCOUNT, PASSWORD, PORT, IP, CREATOR, CREATEDATE)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      		#{port,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, sysdate)
+      <selectKey order="BEFORE" resultType="Integer" keyProperty="id">
+      	SELECT server_id_seq.NEXTVAL-1 from DUAL
+      </selectKey>
+  </insert>
+  
+  <insert id="insertSelective" keyColumn="ID" keyProperty="id" parameterType="Server" useGeneratedKeys="true">
+    insert into SERVER
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="account != null">
+        ACCOUNT,
+      </if>
+      <if test="password != null">
+        PASSWORD,
+      </if>
+      <if test="port != null">
+        PORT,
+      </if>
+      <if test="ip != null">
+        IP,
+      </if>
+      <if test="creator != null">
+        CREATOR,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="updator != null">
+        UPDATOR,
+      </if>
+      <if test="updatedate != null">
+        UPDATEDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null">
+        #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="Server">
+    update SERVER
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        ACCOUNT = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        PORT = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null">
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="updator != null">
+        UPDATOR = #{updator,jdbcType=VARCHAR},
+      </if>
+        UPDATEDATE = sysdate,
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="Server">
+    update SERVER
+    set NAME = #{name,jdbcType=VARCHAR},
+      ACCOUNT = #{account,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      PORT = #{port,jdbcType=INTEGER},
+      IP = #{ip,jdbcType=VARCHAR},
+      UPDATOR = #{updator,jdbcType=VARCHAR},
+      UPDATEDATE = sysdate
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>yaml</title>
+<base th:href="@{/}">
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="plugins/CodeMirror-5.54.0/lib/codemirror.css"/>
+<!--引入css文件，用以支持主题-->
+<link rel="stylesheet" href="plugins/CodeMirror-5.54.0/theme/dracula.css"/>
+<!--支持代码折叠-->
+<link rel="stylesheet" href="plugins/CodeMirror-5.54.0/addon/fold/foldgutter.css"/>
+<!-- <script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script> -->
+<!-- <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script> -->
+
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/src/codemirror.js"></script>
+<!--groovy代码高亮-->
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/mode/groovy/groovy.js"></script>
+<!--Java代码高亮必须引入-->
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/mode/clike/clike.js"></script>
+
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/addon/fold/foldcode.js"></script>
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/addon/fold/foldgutter.js"></script>
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/addon/fold/brace-fold.js"></script>
+<script type="text/javascript" src="plugins/CodeMirror-5.54.0/addon/fold/comment-fold.js"></script>
+</head>
+<body>
+	<textarea class="form-control" id="code" name="code"></textarea>
+</body>
+<script>
+	//根据DOM元素的id构造出一个编辑器
+	var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+		mode: 'yaml',
+		lineNumbers: true,        //是否在编辑器左侧显示行号
+	    matchBrackets: true,      // 括号匹配
+	    indentUnit:4,             // 缩进单位为4
+	    indentWithTabs: true,     //
+	    smartIndent: true,        //自动缩进，设置是否根据上下文自动缩进（和上一行相同的缩进量）。默认为true。
+	    styleActiveLine: true,       // 当前行背景高亮
+	    lineWrapping: true,    // 自动换行
+	    theme: 'dracula',         // 编辑器主题
+	});
+	editor.setSize('600px','400px'); //设置代码框大小
+
+</script>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>数据库编辑</title>
+</head>
+<body>
+	<!-- 页面标题 -->
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">编辑</h4>
+    </div>
+	<div class="formDiv">
+		<form class="form-horizontal" role="form" id="from1">
+		  <div class="form-group">
+		    <label for="name" class="col-sm-3 control-label"><span class="required">*</span>名称</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="name1" name="name1" placeholder="请输入名称"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="ip" class="col-sm-3 control-label"><span class="required">*</span>IP</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="ip1" name="ip1" placeholder="请输入IP"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="port" class="col-sm-3 control-label"><span class="required">*</span>端口</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="port" name="port" placeholder="请输入端口"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="url" class="col-sm-3 control-label"><span class="required">*</span>连接地址</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="url" name="url" placeholder="请输入连接地址"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="account" class="col-sm-3 control-label"><span class="required">*</span>账号</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="account" name="account" placeholder="请输入账号"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label"><span class="required">*</span>密码</label>
+		    <div class="col-sm-6">
+		      <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码"/>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="password" class="col-sm-3 control-label"></label>
+		    <div class="col-sm-6">
+		      <button class="btn btn-success btn-sm" id="doInsert" onclick="testConnect()">测试连接</button>
+		    </div>
+		  </div>
+		  <input type="hidden" id="id" th:value="${id}"/>
+		</form>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-submit">保存</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    </div>
+</body>
+<script type="text/javascript">
+	var id = $("#id").val();
+	$(function() {
+		setDetailValue(id);
+		$("#from1").bootstrapValidator({
+            live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+            excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+            submitButtons: '#btn-submit',//指定提交按钮，如果验证失败则变成disabled
+            message: '验证失败',//好像从来没出现过
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            	name1:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入名称'
+                        },
+                        stringLength: {//检测长度
+                            min: 1,
+                            max: 30,
+                            message: '名称长度30个字符'
+                        }
+                    }
+                },
+                ip1:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入IP'
+                        },
+                        regexp: {
+                        	regexp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+                        	message: 'IP格式不正确'
+                        }
+                    }
+                },
+                port:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入端口'
+                        },
+                        digits: {
+                        	message: '端口只能为数字'
+                        },
+                        stringLength: {//检测长度
+                            min: 1,
+                            max: 10,
+                            message: '端口长度10个字符'
+                        }
+                    }
+                },
+                url:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入连接地址'
+                        },
+                        stringLength: {//检测长度
+                            min: 1,
+                            max: 50,
+                            message: '连接地址长度50个字符'
+                        }
+                    }
+                },
+                account:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入账号'
+                        },
+                        stringLength: {//检测长度
+                            min: 1,
+                            max: 20,
+                            message: '账号长度20个字符'
+                        }
+                    }
+                },
+                password:{
+                    validators:{
+                        notEmpty:{
+                            message:'请输入密码'
+                        },
+                        stringLength: {//检测长度
+                            min: 1,
+                            max: 20,
+                            message: '密码长度20个字符'
+                        }
+                    }
+                }
+            }
+        });
+        $("#btn-submit").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+       		$("#from1").bootstrapValidator('validate');//提交验证
+            if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	           	 doSave();
+            }
+        });
+	});
+	
+	function doSave() {
+		var name = $("#name1").val();
+		var ip = $("#ip1").val();
+		var port = $("#port").val();
+		var url = $("#url").val();
+		var account = $("#account").val();
+		var password = $("#password").val();
+		
+		$.ajax({
+			url : "database/update",
+			type : "post",
+			data : {
+				"id" : id,
+				"name" : name,
+				"ip" : ip,
+				"port" : port,
+				"url" : url,
+				"account" : account,
+				"password" : password
+			},
+			success : function(result) {
+				if(result.data > 0){
+					layer.alert("保存成功！", {icon: 1, title:'提示'}, function(index){
+						$("#mymodelEdit").modal('hide');
+						refresh();
+						layer.close(index);
+					});
+				}else{
+					layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}
+			},
+			error : function() {
+				layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+	}
+	
+	function testConnect(){
+		$("#from1").bootstrapValidator('validate');//提交验证
+        if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+        	var url = $("#url").val();
+			var account = $("#account").val();
+			var password = $("#password").val();
+			
+			$.ajax({
+				url : "database/testConnect",
+				type : "post",
+				async : false,
+				data : {
+					"url" : url,
+					"account" : account,
+					"password" : password
+				},
+				success : function(result) {
+					if(result){
+						layer.alert("测试连接成功！", {icon: 1, title:'提示'}, function(index){
+							layer.close(index);
+						});
+					}else{
+						layer.alert("测试连接失败！", {icon: 2, title:'提示'}, function(index){
+							layer.close(index);
+						});
+					}
+				},
+				error : function() {
+					layer.alert("测试连接失败！", {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}
+			});
+        }
+	}
+	
+	function setDetailValue(id) {
+		$.ajax({
+			url : "database/selectById",
+			type : "post",
+			async : true,
+			data : {
+				"id":id
+			},
+			dataType : "json",
+			success : function(result) {
+				if (result.data != null){
+					$("#name1").val(result.data.name);
+					$("#ip1").val(result.data.ip);
+					$("#port").val(result.data.port);
+					$("#url").val(result.data.url);
+					$("#account").val(result.data.account);
+					$("#password").val(result.data.password);
+			    }else{
+			    	layer.msg("数据加载失败");
+			    }
+			},
+			error : function() {
+				layer.msg("数据加载失败");
+			}
+		});
+	}
+</script>
+</html>

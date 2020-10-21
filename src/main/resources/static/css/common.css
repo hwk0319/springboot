@@ -57,6 +57,44 @@ table tbody{
 	line-height: 34px;
     text-align: right;
 }
+/* user menu */
+.content {
+	width: 25%;
+    margin: 1% 0 1% 1%;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+    float: left;
+}
+.card-profile2 {
+    background: #FFF;
+    padding: 20px;
+    text-align: center;
+}
+.card-profile2 .profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+.feature-list {
+    padding: 15px;
+}
+.feature-list ul {
+    list-style: none outside none;
+    padding: 0px;
+    text-align: left;
+}
+ .feature-list ul li {
+    font-size: 14px;
+    padding: 10px 0px;
+    border-bottom: 1px solid rgb(239, 239, 239);
+}
+.title{
+    font-weight: 700;
+    border-radius: 2px 2px 0 0;
+    padding: 10px !important;
+    border-bottom: 1px solid #eee;
+}
 /* 设置滚动条的样式 */
 /* ::-webkit-scrollbar { */
 /*     width: 10px; */

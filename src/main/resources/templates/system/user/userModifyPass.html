@@ -117,7 +117,6 @@ function doSave() {
 			"passwordNew" : passwordNew
 		},
 		success : function(result) {
-			debugger;
 			if(result > 0){
 				layer.alert("修改成功！", {icon: 1, title:'提示'}, function(index){
 					$("#mymodelUpdatePwd").modal('hide');

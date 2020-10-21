@@ -42,14 +42,10 @@
             </ul>
         </div>
     </div>
-    <!--End left side menu-->
-    
-    <!-- main content start-->
     <div class="main-content" >
         <!-- header section start-->
         <div class="header-section">
             <a class="toggle-btn"><i class="fa fa-bars"></i></a>
-            <!--notification menu start -->
             <div class="menu-right">
                 <ul class="notification-menu">
                     <li>
@@ -63,7 +59,12 @@
 		                          <a href="#">
 		                              <span class="subject">John Doe</span>
 		                              <span class="message"> New tasks needs to be done</span>
-		                              <span class="time">13 minutes ago</span>
+		                          </a>
+								</li>
+								<li class="message-list">
+		                          <a href="#">
+		                              <span class="subject">John Doe</span>
+		                              <span class="message"> New tasks needs to be done</span>
 		                          </a>
 								</li>
 								<li class="last"> <a href="#">All Messages</a> </li>
@@ -81,23 +82,19 @@
                             <span class="caret"></span>
                         </a>
                         <ul id="userDownMenu" class="dropdown-menu dropdown-menu-usermenu pull-right" aria-labelledby="userMenu" style="min-width: 120px;">
-                          <li> <a href="javascript:void(0)"> <i class="fa fa-user"></i> 个人中心 </a> </li>
-                          <li> <a href="javascript:void(0)" onClick="updatePwd()"> <i class="fa fa-lock"></i> &nbsp;修改密码 </a> </li>
+                          <li> <a href="javascript:void(0)" onClick="userCenter()"> <i class="fa fa-user"></i> 个人中心 </a> </li>
+<!--                           <li> <a href="javascript:void(0)" onClick="updatePwd()"> <i class="fa fa-lock"></i> &nbsp;修改密码 </a> </li> -->
                           <li> <a href="javascript:void(0)"> <i class="fa fa-wrench"></i> 系统设置 </a> </li>
                           <li> <a href="javascript:void(0)" onClick="logOut()"> <i class="fa fa-power-off"></i> 退出登录 </a> </li>
                         </ul>
                     </li>
                 </ul>
             </div>
-            <!--notification menu end -->
         </div>
-        <!-- header section end-->
-       	<!--Start Page Title-->
         <div class="page-title-box">
              <span class="page-title" id="titleName">主页</span>
              <div class="clearfix"></div>
         </div>
-        <!--End Page Title-->
 		<iframe id="myIframe" name="myIframe" src="static/dashboard" frameborder=0></iframe>
         <footer class="footer-main">
         	Copyright &copy; 2019 All rights reserved.
@@ -105,7 +102,6 @@
         <input type="hidden" id="userId" th:value="${session.userId}"/>
         <input type="hidden" id="userName" th:value="${session.userName}"/>
        </div>
-      <!--End main content -->
     <script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap-hover-dropdown.js"></script>
@@ -115,51 +111,46 @@
     <script type="text/javascript" src="js/functions.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script>
-//     $(function(){
-
-//     })
-    var socket;
-    function openSocket() {
-        if(typeof(WebSocket) == "undefined") {
-            console.log("您的浏览器不支持WebSocket");
-        }else{
-            if(socket != null){
-                socket.close();
-                socket = null;
-            }
-            //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
-            //等同于socket = new WebSocket("ws://localhost:8888/xxxx/im/25");
-            var userId = $("#userId").val();
-            var socketUrl="ws://localhost:8080/websocket/ID="+userId;
-            console.log(socketUrl);
-            socket = new WebSocket(socketUrl);
-            //打开事件
-            socket.onopen = function() {
-                console.log("websocket已打开");
-            };
-            //获得消息事件
-            socket.onmessage = function(msg) {
-                console.log(msg.data);
-            };
-            //关闭事件
-            socket.onclose = function() {
-                console.log("websocket已关闭");
-            };
-            //发生了错误事件
-            socket.onerror = function() {
-                console.log("websocket发生了错误");
-            }
-        }
-    }
-    function sendMessage() {
-        if(typeof(WebSocket) == "undefined") {
-            console.log("您的浏览器不支持WebSocket");
+    var websocket;
+    window.onload=function (){
+    	var address = "localhost:8080"
+      	var url = "ws://"+address+"/ws/admin_hl-ceshi";     
+        //判断浏览器是否支持websocket
+        if('WebSocket' in window) {
+            //如果支持，创建websocket对象，注意url格式
+            websocket = new WebSocket(url);
+        	websocket.debug=true;
+        	//websocket.timeoutInterval=2000;重连的最长等待时间
         }else {
-        	var userName = $("#userName").val();
-        	socket.send("{'来自客户端的消息':'用户名=" + userName +", "+ new Date()+"'}");
+            alert('浏览器版本不支持websocket！');
+        }
+        //定义连接错误的回调方法
+        websocket.onerror = function() {
+            console.log('websocket连接出错！');
+        }
+        //定义连接成功的回调方法
+        websocket.onopen = function() {
+        	console.log('websocket连接成功！');
+        }
+        //定义websocket关闭的回调方法
+        websocket.onclose = function() {
+        	console.log('websocket已关闭！')
+        }
+        //当窗口关闭时，主动去关闭websocket连接
+        window.onbeforeunload = function() {
+        	websocket.close();
+        }
+        //接收到消息的回调方法
+        websocket.onmessage = function(event) {
+        	var arr = event.data;
+        	console.log(arr);
         }
     }
     
+    function userCenter(){
+    	$("#titleName").html("个人中心");
+    	$('#myIframe').attr('src', "userMenu/userCenter");
+    }
     </script>
 </body>
 </html>

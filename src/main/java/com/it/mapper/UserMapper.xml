@@ -30,7 +30,7 @@
  	</select>
  	
  	<!-- 根据用户id查询用户信息,查询用户信息、角色、权限-->
- 	<select id="findUserByID" parameterType="Integer"  resultType="UserInfo">
+ 	<!-- <select id="findUserByID" parameterType="Integer"  resultType="UserInfo">
 		select u.id, u.name, u.password,
 		      r.id, r.role,
 		      p.id, p.name, p.url
@@ -40,7 +40,7 @@
 		    left join role_permission rp on r.id = rp.role_id
 		    left join permission p on rp.permission_id = p.id 
 		where r.id = #{id}
-	</select>
+	</select> -->
  	
  	<!-- 判断用户是否被注销，用户注销时返回null -->
  	<select id="findUserByStatus" parameterType="String" resultType="com.it.po.UserInfo">
@@ -98,11 +98,27 @@
 	
 	<update id="update" parameterType="UserInfo">
 	    update user_info 
+	    <set>
+	    	<if test="po.departmentId != null">
+	    		departmentId = #{po.departmentId},
+	    	</if>
+	    	<if test="po.phone != null">
+	    		phone = #{po.phone},
+	    	</if>
+	    	<if test="po.email != null">
+	    		email = #{po.email},
+	    	</if>
+	    	<if test="po.sex != null">
+	    		sex = #{po.sex}
+	    	</if>
+	    </set>
+	    where id =#{po.id}
+<!-- 	    update user_info 
 	    set departmentId = #{po.departmentId},
 	    	phone = #{po.phone},
 	        email = #{po.email},
 	        sex = #{po.sex}
-	        where id =#{po.id}
+	        where id =#{po.id} -->
 	</update>
 	
  	<delete id="deleteUser" parameterType="com.it.po.UserInfo">

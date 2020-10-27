@@ -1,27 +1,28 @@
-$(function() {
-	document.onkeydown = function(e){ //添加回车登录事件
-	    var ev = document.all ? window.event : e;
-	    if(ev.keyCode==13) {
-	    	var name = $("input[name='username']").val();
-	    	var pwd = $("input[name='pwd']").val();
-	    	var identifyCode =$("#verification").val();
-	    	if (name == "" || name == null) {
-	    		layer.tips('请输入用户名', '#username');
-	    		return;
-	    	}
-	    	if (pwd == "" || pwd == null) {
-	    		layer.tips('请输入密码', '#pwd');
-	    		return;
-	    	}
-	    	if (identifyCode == "" || identifyCode == null) {
-				layer.tips('请输入验证码', '#verification');
-				return;
-			}
-	    	$("#loginBtn").button('loading');
-	    	login();
-	     }
-	};
-});
+function validator(){
+	var name = $("input[name='username']").val();
+	var pwd = $("input[name='pwd']").val();
+	var identifyCode =$("#verification").val();
+	if (name == "" || name == null) {
+		$("#usernameWarn").html("请输入用户名");
+		return;
+	}
+	if (pwd == "" || pwd == null) {
+		$("#pwdWarn").html("请输入密码");
+		return;
+	}
+	if (identifyCode == "" || identifyCode == null) {
+		$("#verificationWarn").html("请输入验证码");
+		return;
+	}else{
+		var result = checkCode();
+		if(!result){
+			$("#verificationWarn").html("验证码输入错误");
+			return;
+		}
+	}
+    $(this).button('loading');
+    login();
+}
 
 //登录
 function login() {
@@ -57,22 +58,23 @@ function login() {
 //验证码触发事件
 function checkCode(){
 	var code = $("#verification").val();
+	var res;
 	if(code.length == 4){
-		verfify(code);
-	}
-}
-//校验验证码
-function verfify(code){
-	$.ajax({
-		url : "login/verfify",
-		type : "post",
-		data : {code:code},
-		success : function(result){
-			if(result != "success"){
-				layer.tips('验证码输入错误', '#verification');
-				$("#verification").val("");
-				$("#vertity_img").click();
+		$.ajax({
+			url : "login/verfify",
+			type : "post",
+			async: false,
+			data : {code:code},
+			success : function(result){
+				if(result != "success"){
+					$("#verificationWarn").html("验证码输入错误");
+					res = false;
+				}else{
+					$("#verificationWarn").html("");
+					res = true;
+				}
 			}
-		}
-	});
+		});
+		return res;
+	}
 }

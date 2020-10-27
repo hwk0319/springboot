@@ -12,9 +12,13 @@
 <script type="text/javascript" src="js/jQuery.md5.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
 <title>用户登录</title>
-</head>
 <style>
+.form-group .warn{
+	position: absolute;
+    color: red;
+}
 </style>
+</head>
 <body class="sticky-header">
  <!--Start login Section-->
   <section class="login-section">
@@ -33,15 +37,18 @@
                            <div class="form-group has-feedback">
                            		<i class="icon-user form-control-feedback"></i>
                                <input type="text" id="username" name="username" class="form-control" placeholder="用户名" >
+                               <span class="warn" id="usernameWarn"></span>
                            </div>
                            <div class="form-group has-feedback">
                            		<i class=" icon-lock form-control-feedback"></i>
                                <input type="password" id="pwd" name="pwd" class="form-control"  placeholder="密码" >
+                               <span class="warn" id="pwdWarn"></span>
                            </div>
                            <div class="form-group has-feedback">
                            		<i class="icon-shield form-control-feedback"></i>
                                <input type="text" id="verification" name="verification" class="form-control" onkeyup="checkCode()" maxlength=4  placeholder="验证码" >
                                <img id="vertity_img" src="../../validate.so" onclick="this.src='../../validate.so?'+new Date().getTime()"/>
+                               <div class="warn" id="verificationWarn"></div>
                            </div>
                            <div class="form-group">
                                <input type="button" value="Login" id="loginBtn" data-loading-text="Loading..." class="btn btn-primary btn-block">
@@ -62,25 +69,40 @@
 </body>
 <script type="text/javascript">
 $(function(){
-	$("#loginBtn").click(function(){
-		var name = $("input[name='username']").val();
-		var pwd = $("input[name='pwd']").val();
-		var identifyCode =$("#verification").val();
-		if (name == "" || name == null) {
-			layer.tips('请输入用户名', '#username');
-			return;
+	$("#username").blur(function(){
+		var username =$("#username").val();
+		if (username == "" || username == null) {
+			$("#usernameWarn").html("请输入用户名");
+		}else{
+			$("#usernameWarn").html("");
 		}
+	});
+	$("#pwd").blur(function(){
+		var pwd =$("#pwd").val();
 		if (pwd == "" || pwd == null) {
-			layer.tips('请输入密码', '#pwd');
-			return;
+			$("#pwdWarn").html("请输入密码");
+		}else{
+			$("#pwdWarn").html("");
 		}
+	});
+	$("#verification").blur(function(){
+		var identifyCode =$("#verification").val();
 		if (identifyCode == "" || identifyCode == null) {
-			layer.tips('请输入验证码', '#verification');
-			return;
+			$("#verificationWarn").html("请输入验证码");
+		}else{
+			$("#verificationWarn").html("");
 		}
-        $(this).button('loading');
-        login();
+	});
+	$("#loginBtn").click(function(){
+		validator();
     });
+	//添加回车登录事件
+	document.onkeydown = function(e){
+	    var ev = document.all ? window.event : e;
+	    if(ev.keyCode==13) {
+	    	validator();
+	    }
+	};
 })
 </script>
 </html>

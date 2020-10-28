@@ -109,7 +109,7 @@ html,body{
 	    });
 	
 	    $('#mytab').bootstrapTable({
-	        url: "/user/search3",//数据源
+	        url: "/user/selectList",//数据源
 	        dataField: "data",//服务端返回数据键值，分页时使用总记录数的键值为total
 // 	        height: tableHeight(),//高度调整
 			striped: true,                      //是否显示行间隔色
@@ -143,8 +143,15 @@ html,body{
 	        toolbar: "#toolbar",//指定工具栏
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
-	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-			    {field: 'name', title: '用户名'},
+	            {field: "select",title: "全选",checkbox: true, width: 10,align: "center", valign: "middle"},
+	            {field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
+	            {field: 'name', title: '用户名'},
 			    {field: 'role', title: '角色名称'},
 			    {field: 'departmentName', title: '部门'},
 			    {field: 'phone', title: '手机号'},
@@ -315,7 +322,7 @@ function doLogout() {
 	}
 	layer.confirm("您确定要注销选择的用户吗？", {icon: 3, title:'提示'}, function(index){
 		$.ajax({
-			url : "user/delete",
+			url : "user/cancel",
 			type : "post",
 			data : {
 				"id" : id,

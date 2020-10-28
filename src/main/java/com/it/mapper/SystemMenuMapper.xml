@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.dao.SystemMenuDao">
+<mapper namespace="com.it.dao.systemManagement.SystemMenuDao">
 
 	<!-- 根据父级菜单id查询子菜单 -->
 	<select id="findMenuByid" parameterType="Integer" resultType="Permission">
@@ -24,7 +24,7 @@
 	</select>
 
 	<!-- 查询菜单树父级菜单 -->
-	<select id="getMenuList" parameterType="Tree" resultType="com.it.po.Tree">
+	<!-- <select id="getMenuList" parameterType="Tree" resultType="com.it.po.Tree">
 		select t.id as id,
 		       t.name as text,
 		       t.pid as pid,
@@ -36,9 +36,9 @@
 		where 1 = 1
 		and t.pid = '0'
 		order by t.sort asc
-	</select>
+	</select> -->
 	<!-- 查询子菜单 -->
-	<select id="getChildernList" parameterType="string" resultType="com.it.po.Tree">
+	<!-- <select id="getChildernList" parameterType="string" resultType="com.it.po.Tree">
 		select t.id as id,
 		       t.name as text,
 		       t.pid as pid,
@@ -50,7 +50,7 @@
 		where 1 = 1
 		and t.pid = #{id}
 		order by t.sort asc
-	</select>
+	</select> -->
 	<!-- 增加菜单 -->
 	<insert id="addMenu"  parameterType="Permission">
 		insert into permission values 

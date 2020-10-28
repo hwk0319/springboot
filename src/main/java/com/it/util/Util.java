@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.util.StringUtils;
 
+import com.github.pagehelper.PageHelper;
+
 import net.sf.json.JSONObject;
 
 
@@ -224,5 +226,18 @@ public class Util {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+     }
+     
+     /**
+      * 
+      * @Title: startPage  
+      * @Description: TODO  开启分页查询
+      * @param @param pageNum 
+      * @param @param pageSize    参数  
+      * @return void    返回类型  
+      * @throws
+      */
+     public static void startPage(int pageNum, int pageSize) {
+    	 PageHelper.startPage(pageNum, pageSize);
      }
 }

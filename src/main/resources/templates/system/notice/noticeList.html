@@ -111,8 +111,15 @@
 	        toolbar: "#toolbar",//指定工具栏
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
-	            {field: "select",title: "全选", checkbox: true, width: 20,align: "center", valign: "middle"},
-			    {field: 'title', title: '标题', sort:true},
+	            {field: "select",title: "全选", checkbox: true, width: 10,align: "center", valign: "middle"},
+	            {field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
+	            {field: 'title', title: '标题', sort:true},
 			    {field: 'type', title: '类型',formatter:function(value, row, index){
 			    	if(value == 1){
 			    		return "通知";
@@ -129,7 +136,7 @@
 			    	}
 			    }},
 			    {field: 'creator', title: '创建者'},
-			    {field: 'createDate', title: '创建时间'},
+			    {field: 'createDate', title: '创建时间',width: 150},
 		        {field: 'oper', title: '操作',width: 200,formatter:function(value, row, index){
 		        	var html = "<button class='btn btn-info btn-xs' onClick='doEdit("+row.id+")'><span class='glyphicon glyphicon-edit'></span> 编辑</button> ";
 		        	    html += "<button class='btn btn-danger btn-xs' onClick='doDelete("+row.id+")'><span class='glyphicon glyphicon-trash'></span> 删除</button>";

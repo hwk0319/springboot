@@ -11,7 +11,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import com.it.dao.ScheduleJobLogDao;
+import com.it.dao.taskManagement.ScheduleJobLogDao;
 import com.it.po.ScheduleJob;
 import com.it.po.ScheduleJobLog;
 import com.it.util.Util;

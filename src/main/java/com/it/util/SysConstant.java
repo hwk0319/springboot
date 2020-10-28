@@ -18,4 +18,9 @@ public class SysConstant {
 	//系统默认密码
 	public static final String DEFAULT_PASSWORD = "xtgl1234";
 	
+	//用户状态
+	public static final String USER_CANCEL = "0";//注销
+	public static final String USER_NORMAL = "1";//正常
+	public static final String USER_LOCK = "2";//锁定
+	
 }

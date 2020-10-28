@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.dao.MailToolsMapper">
+<mapper namespace="com.it.dao.systemTools.MailToolsMapper">
   <resultMap id="BaseResultMap" type="com.it.po.MailTools">
     <id column="ID" jdbcType="INTEGER" property="id" />
     <result column="SENDEREMAIL" jdbcType="VARCHAR" property="senderEmail" />

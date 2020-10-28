@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<base th:href="@{/}">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-table.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-table.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="layui/layer.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/jQuery.md5.js"></script>
+<title>个人中心</title>
+<style>
+</style>
+</head>
+<body>
+		<div class="content">
+           	<div class="title">个人信息</div>
+            <div class="card-profile2">
+                <img src="images/avatar-1.png" class="profile-photo"/>
+<!--                 <h4 th:text="${name}"></h4> -->
+                <div class="feature-list">
+                  <ul>
+                    <li>用户： <font th:text="${name}"></font></li>
+                    <li>角色： <font th:text="${role}"></font></li>
+	                <li>部门： <font th:text="${departmentName}"></font></li>
+	                <li>手机： <font th:text="${phone}"></font></li>
+	                <li>邮箱： <font th:text="${email}"></font></li>
+	                <li>性别： <font th:text="${sex == 0 ? '男' : '女'}"></font></li>
+                  </ul>                        
+                </div>
+            </div>
+        </div>
+        <div  class="content" style="float: left;width: calc(100% - 25% - 3%);">
+          <div class="title">基本资料</div>
+		  <ul class="nav nav-tabs" role="tablist" style="margin: 3%;">
+		    <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">基本资料</a></li>
+		    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">修改密码</a></li>
+		  </ul>
+		  <div class="tab-content">
+		    <div role="tabpanel" class="tab-pane active" id="profile">
+		    	<form class="form-horizontal" role="form" id="from1" style="margin-top: 20px;">
+				  <div class="form-group">
+				    <label for="phone" class="col-sm-3 control-label">手机</label>
+				    <div class="col-sm-6">
+				      <input type="text" class="form-control" id="phone" name="phone" th:value="${phone}" placeholder="请输入手机" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="email" class="col-sm-3 control-label">邮箱</label>
+				    <div class="col-sm-6">
+				      <input type="text" class="form-control" id="email" name="email" th:value="${email}" placeholder="请输入邮箱" />
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="sex" class="col-sm-3 control-label">性别</label>
+				    <div class="col-sm-6">
+				    	<input type="hidden" id="sexhid" th:value="${sex}"/>
+				    	<select class="form-control" id="sex" name="sex">
+					      <option value="">-- 请选择 --</option>
+					    </select>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				  	<label for="role" class="col-sm-3 control-label"></label>
+				    <div class="col-sm-6">
+				    	<button type="button" class="btn btn-primary" id="btn-submit1">保存</button>
+				    </div>
+				  </div>
+				 </form>
+		    </div>
+		    <!-- 使用说明 -->
+		    <div role="tabpanel" class="tab-pane" id="messages">
+		      <form class="form-horizontal" role="form" id="from2">
+				  <div class="form-group">
+				    <label for="username" class="col-sm-3 control-label"><span class="required">* </span>原密码</label>
+				    <div class="col-sm-6">
+				      <input type="password" name="password_old"  id="password_old" placeholder="请输入原密码" class="form-control"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="password" class="col-sm-3 control-label"><span class="required">* </span>新密码</label>
+				    <div class="col-sm-6">
+				      <input type="password" name="password_new" id="password_new" placeholder="请输入新密码" class="form-control">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="phone" class="col-sm-3 control-label"><span class="required">* </span>确认密码</label>
+				    <div class="col-sm-6">
+				      <input type="password" name="password_confirm" id="password_confirm" placeholder="请输入确认密码" class="form-control">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				  	<label for="role" class="col-sm-3 control-label"></label>
+				    <div class="col-sm-6">
+				    	<button type="button" class="btn btn-primary" id="btn-submit2">保存</button>
+				    </div>
+				  </div>
+				</form>
+			</div>
+				  <input type="hidden" id="uid" th:value="${id}"/>
+		  </div>
+        </div>
+</body>
+<script  type="text/javascript">
+	$(function() {
+		 getDictByType('sex_type', '#sex');
+		 var sex = $("#sexhid").val();
+		 $("#sex option[value='"+sex+"']").attr("selected", true);
+		 validator();
+		 validatorUpdatePwd();
+	})
+	
+	function validator(){
+		$("#from1").bootstrapValidator({
+            live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+            excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+            submitButtons: '#btn-submit1',//指定提交按钮，如果验证失败则变成disabled
+            message: '验证失败',//好像从来没出现过
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                phone:{
+                    validators:{
+                        regexp: {//正则验证
+                            regexp: /^1[3|4|5|7|8][0-9]{9}$/,
+                            message: '手机格式不符合要求'
+                        }
+                    }
+                },
+                email:{
+                    validators:{
+                        emailAddress: {//验证email地址
+                            message: '邮箱格式不符合要求'
+                        }
+                    }
+                }
+            }
+        });
+        $("#btn-submit1").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+        	$("#from1").bootstrapValidator('validate');//提交验证
+            if ($("#from1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+	           	 doSave();
+            }
+        });
+	}
+	function doSave() {
+		var id = $("#uid").val();
+		var phone = $("#phone").val();
+		var email = $("#email").val();
+		var sex = $("#sex").val();
+		$.ajax({
+			url : "user/update",
+			type : "post",
+			data : {
+				"id" : id,
+				"email" : email,
+				"phone" : phone,
+				"sex" : sex
+			},
+			success : function(result) {
+				if(result > 0){
+					if(result > 0){
+						layer.alert("保存成功！", {icon: 1, title:'提示'}, function(index){
+							layer.close(index);
+						});
+					}
+				}
+			},
+			error : function() {
+				layer.alert("保存失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+	}
+	
+	function validatorUpdatePwd(){
+		$("#from2").bootstrapValidator({
+	        live: 'enabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+	        excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+	        submitButtons: '#btn-submit2',//指定提交按钮，如果验证失败则变成disabled
+	        message: '通用的验证失败消息',//好像从来没出现过
+	        feedbackIcons: {//根据验证结果显示的各种图标
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	            password_old:{
+	                validators:{
+	                    notEmpty:{
+	                        message:'请输入原密码'
+	                    },
+	                    stringLength: {//检测长度
+	                    	min:6,
+	                        max:18,
+	                        message: '密码6-18个字符'
+	                    }
+	                }
+	            },
+	            password_new:{
+	                validators:{
+	                    notEmpty:{
+	                        message:'请输入新密码'
+	                    },
+	                    regexp: {//正则验证
+	                        regexp: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/,
+	                        message: '密码应为字母、数字组合，且大于6位小于18位'
+	                    }
+	                }
+	            },
+	            password_confirm:{
+	                validators:{
+	                    notEmpty:{
+	                        message:'请输入确认密码'
+	                    },
+	                    regexp: {//正则验证
+	                        regexp: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/,
+	                        message: '密码应为字母、数字组合，且大于6位小于18位'
+	                    },
+	                    identical: {
+	                        field: 'password_new',
+	                        message: '确认密码和新密码必须相同'
+	                    },
+	                }
+	            }
+	        }
+	    });
+	    $("#btn-submit2").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+	   		$("#from2").bootstrapValidator('validate');//提交验证
+	        if ($("#from2").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+		       	doSave2();
+	        }
+	    });
+	}
+	function doSave2() {
+		var id = $("#uid").val();
+		var password = $.md5($("#password_old").val());
+		var passwordNew = $.md5($("#password_new").val());
+
+		$.ajax({
+			url : "user/updatePass",
+			type : "post",
+			data : {
+				"id" : id,
+				"password" : password,
+				"passwordNew" : passwordNew
+			},
+			success : function(result) {
+				if(result > 0){
+					layer.alert("修改成功！", {icon: 1, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}else if(result == -1){
+					layer.alert("修改失败，原密码错误！", {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}else{
+					layer.alert("修改失败！", {icon: 2, title:'提示'}, function(index){
+						layer.close(index);
+					});
+				}
+	        },
+			error : function() {
+				layer.alert("修改失败！", {icon: 2, title:'提示'}, function(index){
+					layer.close(index);
+				});
+			}
+		});
+	}
+</script>
+</html>

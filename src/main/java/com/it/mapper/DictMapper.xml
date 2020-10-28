@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.dao.DictDao">
+<mapper namespace="com.it.dao.systemManagement.DictDao">
 
 	<select id="search" parameterType="Dict"  resultType="Dict">
 		select id,name,type,status,remark,to_char(createDate,'yyyy-mm-dd hh24:mi:ss') createDate from dict where status = 1

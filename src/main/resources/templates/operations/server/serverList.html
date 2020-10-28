@@ -107,8 +107,15 @@
 	        toolbar: "#toolbar",//指定工具栏
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
-	            {field: "select",title: "全选", checkbox: true, width: 20,align: "center", valign: "middle"},
-			    {field: 'name', title: '名称', sort:true, width: 180},
+	            {field: "select",title: "全选", checkbox: true, width: 10,align: "center", valign: "middle"},
+	            {field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
+	            {field: 'name', title: '名称', sort:true, width: 180},
 			    {field: 'ip', title: 'IP', sort:true, width: 150},
 			    {field: 'port', title: '端口'},
 			    {field: 'account', title: '账号'},

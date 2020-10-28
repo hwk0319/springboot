@@ -85,7 +85,13 @@
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
 // 	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-	            {field: 'id', title: 'ID', order: "desc"},
+				{field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
 			    {field: 'userName', title: '用户名'},
 			    {field: 'ip', title: 'IP'},
 			    {field: 'location', title: '位置'},

@@ -85,16 +85,22 @@
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
 // 	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-	            {field: 'id', title: 'ID', order: "desc"},
+			    {field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
 			    {field: 'userName', title: '用户名'},
 			    {field: 'operation', title: '操作'},
 			    {field: 'ip', title: 'IP'},
 // 			    {field: 'remoteHost', title: '主机名'},
 			    {field: 'requestMethod', title: '请求方式'},
 			    {field: 'url', title: '请求地址'},
-			    {field: 'className', title: '请求类'},
+			    {field: 'className', title: '请求类', width:250},
 			    {field: 'methodName', title: '请求方法'},
-			    {field: 'createDate', title: '时间'}
+			    {field: 'createDate', title: '时间',width:150}
 	        ],
 	        onClickRow: function(row, $element) {
 	            //$element是当前tr的jquery对象

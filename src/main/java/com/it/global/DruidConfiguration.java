@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 
@@ -29,10 +30,11 @@ public class DruidConfiguration {
         return new DruidDataSource();
     }
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
     public ServletRegistrationBean druidStatViewServlet() {
         //ServletRegistrationBean提供类的进行注册
-        ServletRegistrationBean servletRegistrationBean =
+		ServletRegistrationBean servletRegistrationBean =
                 new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
         //添加初始化参数：initParams
         //白名单：
@@ -48,16 +50,14 @@ public class DruidConfiguration {
         return servletRegistrationBean;
     }
 
-
-    @Bean
-    public FilterRegistrationBean druidStatFilter() {
-        FilterRegistrationBean filterRegistrationBean =
-                new FilterRegistrationBean(new WebStatFilter());
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Bean
+    public FilterRegistrationBean druidStatFilter(DruidStatProperties properties) {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
         //添加过滤规则
         filterRegistrationBean.addUrlPatterns("/*");
         //添加需要忽略的格式信息
-        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif," +
-                "*.jpg,*.png, *.css,*.ico,/druid/*");
+        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png, *.css,*.ico,/druid/*");
         return filterRegistrationBean;
 
     }

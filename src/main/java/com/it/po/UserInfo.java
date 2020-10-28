@@ -24,6 +24,7 @@ public class UserInfo extends PagePo{
 	private String role;
 	private Set<RoleInfo> roles = new HashSet<>();
 	private Integer departmentId;
+	private Integer departmentPid;
 	private String departmentName;
 	public int getId() {
 		return id;
@@ -103,12 +104,18 @@ public class UserInfo extends PagePo{
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
 	}
+	public Integer getDepartmentPid() {
+		return departmentPid;
+	}
+	public void setDepartmentPid(Integer departmentPid) {
+		this.departmentPid = departmentPid;
+	}
 	@Override
 	public String toString() {
 		return "UserInfo [id=" + id + ", name=" + name + ", password=" + password + ", passwordNew=" + passwordNew
 				+ ", status=" + status + ", phone=" + phone + ", email=" + email + ", sex=" + sex + ", roleId=" + roleId
-				+ ", role=" + role + ", roles=" + roles + ", departmentId=" + departmentId + ", departmentName="
-				+ departmentName + "]";
+				+ ", role=" + role + ", roles=" + roles + ", departmentId=" + departmentId + ", departmentPid="
+				+ departmentPid + ", departmentName=" + departmentName + "]";
 	}
 	
 }

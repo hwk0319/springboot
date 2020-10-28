@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 					"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.dao.OperationLogsDao">
+<mapper namespace="com.it.dao.logManagement.OperationLogsDao">
 
 	<select id="search" parameterType="OperationLogs"  resultType="OperationLogs">
 		select id, userName, ip, methodName, className, to_char(createdate, 'yyyy-mm-dd hh24:mi:ss') createDate, remoteHost, url, operation, requestMethod

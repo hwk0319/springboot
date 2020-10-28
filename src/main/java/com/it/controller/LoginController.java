@@ -8,7 +8,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -24,9 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.it.po.LoginInfo;
 import com.it.po.Permission;
 import com.it.po.UserInfo;
-import com.it.service.LoginLogsService;
 import com.it.service.LoginService;
-import com.it.service.SystemMenuService;
+import com.it.service.logManagement.LoginLogsService;
+import com.it.service.systemManagement.SystemMenuService;
 import com.it.util.SysConstant;
 
 import eu.bitwalker.useragentutils.UserAgent;
@@ -37,7 +39,7 @@ import net.sf.json.JSONObject;
 @RequestMapping("/login")
 public class LoginController {
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
 	@Resource(name="loginService")
 	private LoginService service;
@@ -114,21 +116,6 @@ public class LoginController {
 	}
 	
 	/**
-	 * 初始化rsa公钥
-	 * @return
-	 */
-	/*@RequestMapping(value="/initModels")
-	@ResponseBody
-	public String initModels1(HttpServletRequest request){
-		String path = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/");
-		RSAUtils.setUrlPath(path);
-		RSAPublicKey publicKey = RSAUtils.getDefaultPublicKey();
-		publicKeyString = new String(Hex.encodeHex(publicKey.getModulus().toByteArray()));
-		request.getSession().setAttribute("model", publicKeyString);
-		return publicKeyString;
-	}*/
-	
-	/**
 	 * @throws Exception 
 	 * @Title: login  
 	 * @Description: TODO  此方法不处理登录成功,由shiro进行处理
@@ -161,8 +148,17 @@ public class LoginController {
         } catch (IncorrectCredentialsException e){
         	json.put("status", "failed");
         	json.put("msg", "用户名或密码错误！");
+        } catch (LockedAccountException e) {
+        	json.put("status", "failed");
+        	json.put("msg", "用户已锁定！");
+        } catch (DisabledAccountException e) {
+        	json.put("status", "failed");
+        	json.put("msg", "用户已注销！");
         }
-        recordLoginInfo(json.getString("status"), json.getString("msg"), req);
+        //记录登录日志
+        String status = json.getString("status");
+        String msg = json.getString("msg");
+        recordLoginInfo(status, msg, req);
 		return json;
 	}
 

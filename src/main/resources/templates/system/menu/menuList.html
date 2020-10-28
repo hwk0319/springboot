@@ -67,12 +67,10 @@ $(function() {
 //         height: tableHeight(),//高度调整
 		classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 		idField: "id",                     //指定主键列
-// 		pagination: true,
         showRefresh: true,//是否显示 刷新按钮
         toolbar: "#toolbar",//指定工具栏
         toolbarAlign: "left",//工具栏对齐方式
         columns: [
-//             {field: 'id', title: 'ID', width:'50'},
 		    {field: 'name', title: '菜单名称', width:'150'},
 		    {field: 'type', title: '类型', width:'100', formatter:function(value, row, index){
 		    	  if(value == "0"){

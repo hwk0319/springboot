@@ -8,6 +8,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -21,8 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.it.po.Permission;
 import com.it.po.RoleInfo;
 import com.it.po.UserInfo;
-import com.it.service.UserService;
+import com.it.service.systemManagement.UserService;
 import com.it.util.MD5;
+import com.it.util.SysConstant;
 
 /**
  * 
@@ -83,6 +86,14 @@ public class MyShiroRelam extends AuthorizingRealm {
         if(null == user) {
         	logger.error("-->用户不存在...");
         	throw new UnknownAccountException();
+        }
+        if(SysConstant.USER_CANCEL.equals(user.getStatus())) {
+        	logger.error("-->用户已注销...");
+        	throw new DisabledAccountException();
+        }
+        if(SysConstant.USER_LOCK.equals(user.getStatus())) {
+        	logger.error("-->用户已锁定...");
+        	throw new LockedAccountException();
         }
         //根据role查询权限
         Set<Permission> Permission = userService.findPermissionByRoleid(user.getRoleId());

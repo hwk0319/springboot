@@ -1,7 +1,5 @@
 package com.it.po;
 
-import java.util.Date;
-
 /**
  * 
  * @ClassName: Server  

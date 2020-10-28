@@ -24,11 +24,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import com.it.po.OperationLogs;
 import com.it.po.UserInfo;
-import com.it.service.OperationLogsService;
+import com.it.service.logManagement.OperationLogsService;
 
 /**
  * 
- * @ClassName: RequestAsprct  
+ * @ClassName: RequestAsprct  日志实现
  * @Description: TODO  发送请求的切面入口类,需要在Spring中注入
  * @author Administrator  
  * @date 2019年7月25日  
@@ -37,23 +37,30 @@ import com.it.service.OperationLogsService;
 @Component
 @Aspect
 public class RequestAsprct {
-	private Logger logger = LoggerFactory.getLogger(RequestAsprct.class);
+	private static final Logger logger = LoggerFactory.getLogger(RequestAsprct.class);
 	     
 	     @Resource(name = "operationLogsService")
 	     private OperationLogsService service;
 	     
 	     /**
 	      * 记录日志,定义切入点:指定那些业务(业务对应的方法)
-	      * @Title: log 
+	      * @Title: 切入点说明:在注解处进行切入
 	      * @date 2019年7月28日
 	      * @return void
 	      */
-	     //切入点说明:在注解处进行切入
 	     @Pointcut("@annotation(com.it.aspect.OperLogs)")
 	     public void OperLogs() {
 	         
 	     }
 	     
+	     /**
+	      * 
+	      * @Title: doBefore  
+	      * @Description: TODO  在切入点开始处(方法执行前)切入内容
+	      * @param @param joinPoint    参数  
+	      * @return void    返回类型  
+	      * @throws
+	      */
 	     @Before("OperLogs()")
 	     public void doBefore(JoinPoint joinPoint) {
 	    	 //从切面织入点处通过反射机制获取织入点处的方法
@@ -75,8 +82,6 @@ public class RequestAsprct {
 	         String className = joinPoint.getSignature().getDeclaringTypeName();//类名
 	         String methodName = joinPoint.getSignature().getName();//方法名
 	         
-//	         logger.info("--->在切入点开始处(方法执行前)切入内容...");
-	         
 	         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	         OperationLogs bean = new OperationLogs();
 	         bean.setUserName(username);
@@ -96,13 +101,29 @@ public class RequestAsprct {
 	         service.addOperationLogs(bean);
 	     }
 	     
+	     /**
+	      * 
+	      * @Title: doAfter  
+	      * @Description: TODO  在切入点结尾处(方法执行后)切入内容
+	      * @param @param joinPoint    参数  
+	      * @return void    返回类型  
+	      * @throws
+	      */
 	     @After("OperLogs()")
 	     public void doAfter(JoinPoint joinPoint) {
-//	         logger.info("--->在切入点结尾处(方法执行后)切入内容...");
+	    	 
 	     }
 	     
+	     /**
+	      * 
+	      * @Title: doAfterReturning  
+	      * @Description: TODO  在切入点return内容之后切入内容
+	      * @param @param result    参数  
+	      * @return void    返回类型  
+	      * @throws
+	      */
 	     @AfterReturning(returning = "result",pointcut = "OperLogs()")
 	     public void doAfterReturning(Object result) {
-//	         logger.info("--->在切入点return内容之后切入内容...");
+
 	     }
 }

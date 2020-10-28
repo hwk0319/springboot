@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.dao.ScheduleJobLogDao">
+<mapper namespace="com.it.dao.taskManagement.ScheduleJobLogDao">
   <resultMap id="BaseResultMap" type="ScheduleJobLog">
     <id column="ID" jdbcType="INTEGER" property="id" />
     <result column="JOB_ID" jdbcType="INTEGER" property="jobId" />

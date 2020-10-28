@@ -81,10 +81,9 @@
 	    });
 	
 	    $('#mytab').bootstrapTable({
-	        url: "role/search2",//数据源
-	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+	        url: "role/selectList",//数据源
+	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
 // 	        height: tableHeight(),//高度调整
-// 			striped: true,                      //是否显示行间隔色
 			classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 			idField: "id",                     //指定主键列
 			uniqueId: "id",                     //每一行的唯一标识，一般为主键列
@@ -114,8 +113,14 @@
 	        toolbar: "#toolbar",//指定工具栏
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
-	            {field: "select",title: "全选", checkbox: true, width: 20,align: "center", valign: "middle"},
-// 	            {field: 'id', title: '角色ID', sortable: true},
+	            {field: "select",title: "全选", checkbox: true, width: 10,align: "center", valign: "middle"},
+	        	{field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
 			    {field: 'role', title: '角色名称', sort:true},
 			    {field: 'note', title: '备注'},
 			    {field: 'status', title: '状态',formatter:function(value, row, index){

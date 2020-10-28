@@ -60,6 +60,7 @@ table tbody{
 /* user menu */
 .content {
 	width: 25%;
+	height: -webkit-fill-available;
     margin: 1% 0 1% 1%;
     background-color: #fff;
     border-radius: 5px;

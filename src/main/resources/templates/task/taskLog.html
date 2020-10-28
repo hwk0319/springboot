@@ -73,6 +73,13 @@
 	        toolbar: "#logtoolbar",//指定工具栏
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
+	        	{field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
 			    {field: 'name', title: '任务名称', width: 100},
 			    {field: 'beanName', title: 'Bean名称', width: 100},
 			    {field: 'methodName', title: '方法名称', width: 100},

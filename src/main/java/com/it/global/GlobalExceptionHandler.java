@@ -88,6 +88,14 @@ public class GlobalExceptionHandler {
 	public ModelAndView doException(HttpServletRequest request,
             HttpServletResponse response, Exception ex) {
 		log.error(ex.getMessage());
+		
+		
+//		if(ex instanceof AuthorizationException) {
+//			log.error(ex.getClass().toString());
+//		}else if(ex instanceof Exception) {
+//			log.error(ex.getClass().toString());
+//		}
+		
 		//判断是否是ajax请求
 		if(Util.isAjaxRequest(request)) {
 			JSONObject json = new JSONObject();

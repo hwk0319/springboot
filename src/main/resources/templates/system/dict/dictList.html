@@ -131,8 +131,15 @@
 	        toolbar: "#toolbar",//指定工具栏
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
-	            {field: "select",title: "全选",radio: true, width: 20,align: "center", valign: "middle"},
-			    {field: 'name', title: '名称'},
+	            {field: "select",title: "全选",radio: true, width: 10,align: "center", valign: "middle"},
+	            {field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
+	            {field: 'name', title: '名称'},
 			    {field: 'type', title: '类型'}
 	        ],
 	        onClickRow: function(row, $element) {
@@ -287,10 +294,17 @@
 	 	        toolbar: "#toolbar1",//指定工具栏
 	 	        toolbarAlign: "left",//工具栏对齐方式
 		        columns: [
-					{field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-				    {field: 'name', title: '字典项名称', width: '150'},
-				    {field: 'value', title: '字典项值', width: '150'},
-				    {field: 'sort', title: '排序', width: '140'},
+					{field: "select",title: "全选",checkbox: true, width: 10,align: "center", valign: "middle"},
+					{field: "number",title: '序号',align: 'center',width: 20,
+		        		  formatter:function(value,row,index){
+		        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+		        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+		        		  	  return (pageNumber-1) * pageSize+index+1;
+		        		  }
+		        	},
+					{field: 'name', title: '字典项名称', width: '150'},
+				    {field: 'value', title: '字典项值', width: '120'},
+				    {field: 'sort', title: '排序', width: '120'},
 	 			    {field: 'remark', title: '备注', width: '140'},
 	 		        {field: 'oper', title: '操作',formatter:function(value, row, index){
 	 		        	var html = "<button class='btn btn-info btn-xs' onClick='doEditDictInfo("+row.id+")'><span class='glyphicon glyphicon-edit'></span> 编辑</button> ";

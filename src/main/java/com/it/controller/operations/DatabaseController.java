@@ -56,7 +56,7 @@ public class DatabaseController {
 	public Result select(Database po) {
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
 		List<Database> list = service.select(po);
-		return Result.successTotal(list, String.valueOf(list.size()));
+		return Result.success(list, list.size());
 	}
 	
 	/**

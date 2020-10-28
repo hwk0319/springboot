@@ -19,7 +19,7 @@ public class Result {
 	//返回数据
 	private Object data;
 	//数据总记录数
-	private String total;
+	private Integer total;
 	
 	 /**
      * 自定义返回结果
@@ -96,7 +96,7 @@ public class Result {
      * @param data
      * @return
      */
-    public static Result successTotal(Object data, String total){
+    public static Result success(Object data, Integer total){
         Result Result = new Result();
         Result.setSuccess(true);
         Result.setCode(ReturnCode.SUCCESS.getCode());
@@ -131,11 +131,11 @@ public class Result {
 		this.data = data;
 	}
 
-	public String getTotal() {
+	public Integer getTotal() {
 		return total;
 	}
 
-	public void setTotal(String total) {
+	public void setTotal(Integer total) {
 		this.total = total;
 	}
 	

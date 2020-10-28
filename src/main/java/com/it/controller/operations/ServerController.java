@@ -56,7 +56,7 @@ public class ServerController {
 	public Result select(Server po) {
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
 		List<Server> list = service.select(po);
-		return Result.successTotal(list, String.valueOf(list.size()));
+		return Result.success(list, list.size());
 	}
 	
 	/**

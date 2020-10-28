@@ -6,9 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
-
-
 /**
  * 
  * @ClassName: Application  
@@ -18,8 +15,8 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
  *
  */
 @EnableScheduling
-@MapperScan("com.it.dao")
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class,DruidDataSourceAutoConfigure.class})
+@MapperScan("com.it.dao.*")
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Application {
 
 	public static void main(String[] args) {

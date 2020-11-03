@@ -11,9 +11,9 @@ package com.it.util;
  */
 public enum ReturnCode {
 	
-	SUCCESS("200","查询成功"),
-    NODATA("201","查询成功无记录"),
-    FEAILED("202","查询失败"),
+	SUCCESS("200","成功"),
+    NODATA("201","成功无记录"),
+    FEAILED("202","失败"),
     ACCOUNT_ERROR("1000", "账户不存在或被禁用"),
     API_NOT_EXISTS("1001", "请求的接口不存在"),
     API_NOT_PER("1002", "没有该接口的访问权限"),

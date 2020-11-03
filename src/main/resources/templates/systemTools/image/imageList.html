@@ -91,7 +91,7 @@
 	
 	    $('#mytab').bootstrapTable({
 	        url: "image/selectList",//数据源
-	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
 // 	        height: tableHeight(),//高度调整
 			striped: true,                      //是否显示行间隔色
 			clickToSelect: true,//点击勾选
@@ -126,7 +126,13 @@
 	        toolbarAlign: "left",//工具栏对齐方式
 	        columns: [
 	            {field: "select",title: "全选",checkbox: true, width: 20,align: "center", valign: "middle"},
-	            {field: 'id', title: 'ID', sortable: true, order: "desc"},
+				{field: "number",title: '序号',align: 'center',width: 20,
+	        		  formatter:function(value,row,index){
+	        		  	  var pageNumber = $('#mytab').bootstrapTable('getOptions').pageNumber;
+	        		  	  var pageSize = $('#mytab').bootstrapTable('getOptions').pageSize;
+	        		  	  return (pageNumber-1) * pageSize+index+1;
+	        		  }
+	        	},
 			    {field: 'name', title: '名称', width: 200},
 			    {field: 'url', title: '缩略图', formatter:function(value, row, index){
 			    	return "<a><img src='"+value+"' style='width:40px;height:40px;' class='bigImage'/></a>";

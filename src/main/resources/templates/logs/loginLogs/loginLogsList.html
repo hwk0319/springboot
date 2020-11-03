@@ -94,17 +94,23 @@
 	        	},
 			    {field: 'userName', title: '用户名'},
 			    {field: 'ip', title: 'IP'},
-			    {field: 'location', title: '位置'},
+// 			    {field: 'location', title: '位置'},
 			    {field: 'operatingSystem', title: '操作系统'},
 			    {field: 'browser', title: '浏览器'},
-			    {field: 'status', title: '状态'},
+			    {field: 'status', title: '状态', formatter:function(value, row, index){
+			    	  if(value == "success"){
+			    		  return "<span class='label label-success'>成功</span>";
+			    	  }else{
+			    		  return "<span class='label label-danger'>失败</span>";
+			    	  }
+			      }
+			    },
 			    {field: 'message', title: '信息'},
-			    {field: 'createdate', title: '时间'}
+			    {field: 'createdate', title: '时间',width: 150}
 	        ],
 	        onClickRow: function(row, $element) {
-	            //$element是当前tr的jquery对象
-// 	            $element.css("background-color", "#f5f5f5");
-	        },//单击row事件
+
+	        },
 	        locale: "zh-CN", //中文支持
 	    });
 	})

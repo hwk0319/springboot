@@ -32,6 +32,7 @@ import com.it.service.systemTools.ImageService;
 import com.it.util.FileUtil;
 import com.it.util.JsonDateValueProcessor;
 import com.it.util.JsonDefaultValueProcessor;
+import com.it.util.Result;
 import com.it.util.Util;
 
 import net.sf.json.JSONArray;
@@ -68,24 +69,10 @@ public class ImageController {
 	 * @return
 	 */
 	@RequestMapping(value="/selectList")
-	public JSONObject selectList(ImageInfo po, HttpServletRequest request){
-		
+	public Result selectList(ImageInfo po, HttpServletRequest request){
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
 		List<ImageInfo> list = service.selectList(po);
-		
-		PageInfo<ImageInfo> list1 = new PageInfo<ImageInfo>(list);
-
-		//转成JSONArray
-		JsonConfig config = new JsonConfig();
-		config.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());//时间格式转换
-		config.registerDefaultValueProcessor(Integer.class, new JsonDefaultValueProcessor());//数据格式转换
-		JSONArray json = JSONArray.fromObject(list,config); 
-		
-		JSONObject jsonObject = new JSONObject();  //创建Json对象
-		jsonObject.put("total", list1.getTotal());//总记录数
-		jsonObject.put("rows", json);//json数据
-		
-		return jsonObject;
+		return Result.success(list, list.size());
 	}
 	
 	/**

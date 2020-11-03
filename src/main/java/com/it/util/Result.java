@@ -68,7 +68,7 @@ public class Result {
              * 查询成功但无数据
      * @return
      */
-    public static Result successButNoData(){
+    public static Result success(){
         Result Result  = new Result();
         Result.setSuccess(true);
         Result.setCode(ReturnCode.NODATA.getCode());

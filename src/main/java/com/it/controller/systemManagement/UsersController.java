@@ -139,7 +139,7 @@ public class UsersController {
 	@RequiresPermissions(value = "userinfo:edit")
 	@OperLogs(value = "编辑用户")
 	public int update(UserInfo po,HttpServletRequest request) throws Exception{
-		int res = service.update(po, request);
+		int res = service.update(po);
 		return res;
 	}
 	
@@ -154,7 +154,7 @@ public class UsersController {
 	@RequiresPermissions(value = "userinfo:cancel")
 	@OperLogs(value = "注销用户")
 	public int cancel(UserInfo po,HttpServletRequest request) throws Exception{		
-		int res =  service.delete(po, request);
+		int res =  service.delete(po);
 		return res;
 	}
 	

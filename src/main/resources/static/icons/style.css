@@ -1,7 +1,7 @@
 
-/* @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic); */
-/* @import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700); */
-/* @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300); */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300);
 
 body {
 	background: #2C3B48;
@@ -189,6 +189,7 @@ hr {
     padding: 20px;
     float: left;
     width: 100%;
+	margin-bottom:30px;
 }
 
 .popover-content {
@@ -311,7 +312,7 @@ hr {
 }
 
 .custom-nav > li > a:hover, .custom-nav > li > a:active, .custom-nav > li > a:focus {
-	background-color: #5badff!important;
+	background-color: #353f4f !important;
 	color: #FFF;
 	border-radius: 0;
 	-webkit-border-radius: 0;
@@ -367,16 +368,17 @@ hr {
 	color: #fff;
 	font-size: 13px;
 	display: block;
-	padding: 10px 5px 10px 70px;
+	padding: 10px 5px 10px 50px;
 	-moz-transition: all 0.2s ease-out 0s;
 	-webkit-transition: all 0.2s ease-out 0s;
 	transition: all 0.2s ease-out 0s;
+	margin-left: 20px;
 }
 
 .custom-nav .sub-menu-list > li > a:hover, .custom-nav .sub-menu-list > li > a:active, .custom-nav .sub-menu-list > li > a:focus {
 	text-decoration: none;
 	color: #fff;
-	background: #5badff;
+	background: #2a323f;
 }
 
 .custom-nav .sub-menu-list > li .fa {
@@ -567,6 +569,7 @@ h5.left-nav-title {
 
 .menu-right {
 	float: right;
+	margin-right: 15px;
 }
 
 .notification-menu {
@@ -622,7 +625,7 @@ h5.left-nav-title {
 	border-radius: 2px 0 2px 2px;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
-	box-shadow: 0 5px 10px rgba(0, 0, 0, .175);
+	box-shadow: none;
 	padding: 5px;
 }
 
@@ -655,6 +658,7 @@ h5.left-nav-title {
 }
 
 .notification-menu .dropdown-menu li i {
+	font-size: 11px;
 	margin-right: 5px;
 }
 
@@ -930,16 +934,19 @@ h5.left-nav-title {
 
 .message-list span.subject {
 	display: block;
+	margin-left: 60px;
 	font-weight: 600;
 	font-size: 13px;
 }
 
 .message-list span.message {
 	display: block;
+	margin-left: 60px;
 	white-space: initial;
 }
 
 .message-list span.time {
+	margin-left: 60px;
 	color: #aeaaaa;
 	display: block;
 }
@@ -949,10 +956,29 @@ h5.left-nav-title {
 /*--------------------------------------------*/
 
 .sticky-header .header-section {
+	position: fixed;
 	top: 0;
+	left: 200px;
 	width: 100%;
 	z-index: 100;
 }
+
+.sticky-header .main-content {
+	padding-top: 50px;
+}
+
+.sticky-header .menu-right {
+	margin-right: 255px;
+}
+
+.sticky-header.left-side-collapsed .header-section {
+	left: 53px;
+}
+
+.sticky-header.left-side-collapsed .menu-right {
+	margin-right: 67px;
+}
+
 .dropdown-menu-head {
 	background: #fff
 }
@@ -1003,6 +1029,14 @@ h5.left-nav-title {
 /*--------------------------------------------*/
 /*  White Panel & Popover
 /*--------------------------------------------*/
+
+.white-box {
+    background: #FFF;
+    padding: 20px;
+    float: left;
+    width: 100%;
+	margin-bottom:30px;
+}
 
 .popover-content {
     display: inline-block;

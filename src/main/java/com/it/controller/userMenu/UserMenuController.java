@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.it.aspect.OperLogs;
 import com.it.po.UserInfo;
 import com.it.service.systemManagement.UserService;
 import com.it.util.Result;
@@ -71,6 +72,7 @@ public class UserMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/uploadImage")
+	@OperLogs("上传头像")
 	@ResponseBody
 	public Result uploadImage(@RequestParam("file_data") MultipartFile file) {
 		if(file.isEmpty()) {

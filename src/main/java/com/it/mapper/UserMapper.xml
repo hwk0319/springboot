@@ -109,7 +109,10 @@
 	    		email = #{po.email},
 	    	</if>
 	    	<if test="po.sex != null">
-	    		sex = #{po.sex}
+	    		sex = #{po.sex},
+	    	</if>
+	    	<if test="po.image != null and po.image != ''">
+	    		image = #{po.image}
 	    	</if>
 	    </set>
 	    where id =#{po.id}

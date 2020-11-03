@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<base th:href="@{/}">
-<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="css/login.css"/>
-<link href="icons/icons.css" rel="stylesheet">
-<script type="text/javascript" src="jquery-1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-<script type="text/javascript" src="layui/layer.js"></script>
-<script type="text/javascript" src="js/jQuery.md5.js"></script>
-<script type="text/javascript" src="js/login.js"></script>
+<link rel="stylesheet" th:href="@{bootstrap/css/bootstrap.css}"/>
+<link rel="stylesheet" th:href="@{css/login.css}"/>
+<link rel="stylesheet" th:href="@{icons/icons.css}"/>
+<script type="text/javascript" th:src="@{jquery-1.11.3/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{js/jQuery.md5.js}"></script>
+<script type="text/javascript" th:src="@{js/login.js}"></script>
 <title>用户登录</title>
 <style>
 .form-group .warn{

@@ -24,7 +24,7 @@ public class UserService {
 	}
 
 	// 注销用户
-	public int delete(@Param("po") UserInfo po, HttpServletRequest request) {
+	public int delete(@Param("po") UserInfo po) {
 		int res = dao.delete(po);
 		return res;
 	}
@@ -35,7 +35,7 @@ public class UserService {
 		return res;
 	}
 
-	public int update(@Param("po") UserInfo user, HttpServletRequest request) {
+	public int update(@Param("po") UserInfo user) {
 		int res = dao.update(user);
 		return res;
 	}

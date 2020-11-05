@@ -306,7 +306,7 @@ hr {
 
 .custom-nav > li > a {
 	color: #d8d4d4;
-	padding: 12px 20px;
+	padding: 12px 30px;
 	border-radius: 0;
 	-webkit-border-radius: 0;
 }
@@ -378,7 +378,7 @@ hr {
 .custom-nav .sub-menu-list > li > a:hover, .custom-nav .sub-menu-list > li > a:active, .custom-nav .sub-menu-list > li > a:focus {
 	text-decoration: none;
 	color: #fff;
-	background: #2a323f;
+/* 	background: #2a323f; */
 }
 
 .custom-nav .sub-menu-list > li .fa {
@@ -569,7 +569,6 @@ h5.left-nav-title {
 
 .menu-right {
 	float: right;
-	margin-right: 15px;
 }
 
 .notification-menu {
@@ -956,27 +955,9 @@ h5.left-nav-title {
 /*--------------------------------------------*/
 
 .sticky-header .header-section {
-	position: fixed;
 	top: 0;
-	left: 200px;
 	width: 100%;
 	z-index: 100;
-}
-
-.sticky-header .main-content {
-	padding-top: 50px;
-}
-
-.sticky-header .menu-right {
-	margin-right: 255px;
-}
-
-.sticky-header.left-side-collapsed .header-section {
-	left: 53px;
-}
-
-.sticky-header.left-side-collapsed .menu-right {
-	margin-right: 67px;
 }
 
 .dropdown-menu-head {

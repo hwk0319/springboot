@@ -13,7 +13,7 @@ public class Result {
 	//是否成功
 	private boolean success;
 	//状态码
-	private String code;
+	private int code;
 	//返回消息
 	private String msg;
 	//返回数据
@@ -30,7 +30,7 @@ public class Result {
      * @param data
      * @return
      */
-    public static Result custom(boolean success,String code,String msg,Object data){
+    public static Result custom(boolean success,int code,String msg,Object data){
     	Result Result = new Result();
         Result.setSuccess(success);
         Result.setCode(code);
@@ -112,10 +112,10 @@ public class Result {
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-	public String getCode() {
+	public int getCode() {
 		return code;
 	}
-	public void setCode(String code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 	public String getMsg() {

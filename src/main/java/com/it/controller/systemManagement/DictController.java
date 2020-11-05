@@ -1,14 +1,9 @@
 package com.it.controller.systemManagement;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
@@ -16,19 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.it.aspect.OperLogs;
 import com.it.po.Dict;
 import com.it.po.DictInfo;
 import com.it.service.systemManagement.DictService;
-import com.it.util.JsonDateValueProcessor;
-import com.it.util.JsonDefaultValueProcessor;
 import com.it.util.Result;
-import com.it.util.ReturnCode;
 
 @Controller
 @RequestMapping(value="dict")
@@ -42,6 +32,7 @@ public class DictController {
 	 * @return
 	 */
 	@RequestMapping(value="/dictList")
+	@RequiresPermissions("dictinfo:view")
 	public ModelAndView list(Model model) {
 		return new ModelAndView("system/dict/dictList");
 	}
@@ -53,33 +44,11 @@ public class DictController {
 	 * @return
 	 */
 	@RequestMapping(value="/search")
+	@RequiresPermissions("dictinfo:view")
 	@ResponseBody
-	public JSONObject search(Dict po, HttpServletRequest request){
-		
+	public Result search(Dict po, HttpServletRequest request){
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
 		List<Dict> list = service.search(po);
-		PageInfo<Dict> list1 = new PageInfo<Dict>(list);
-
-		//转成JSONArray
-		JsonConfig config = new JsonConfig();
-		config.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());//时间格式转换
-		config.registerDefaultValueProcessor(Integer.class, new JsonDefaultValueProcessor());//数据格式转换
-		JSONArray json = JSONArray.fromObject(list,config); 
-		
-		JSONObject jsonObject = new JSONObject();  //创建Json对象
-		jsonObject.put("total", list1.getTotal());//总记录数
-		jsonObject.put("rows", json);//json数据
-		
-		return jsonObject;
-	}
-	
-	@RequestMapping(value="/search1")
-	@ResponseBody
-	public Result search1(Dict po, HttpServletRequest request){
-		
-		PageHelper.startPage(po.getPageNo(), po.getLimit());
-		List<Dict> list = service.search(po);
-		
 		return Result.success(list);
 	}
 	
@@ -149,24 +118,12 @@ public class DictController {
 	 * @return
 	 */
 	@RequestMapping(value="/searchDictInfo")
+	@RequiresPermissions("dictinfo:view")
 	@ResponseBody
-	public JSONObject searchDictInfo(DictInfo po, HttpServletRequest request){
-		
+	public Result searchDictInfo(DictInfo po, HttpServletRequest request){
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
 		List<DictInfo> list = service.searchDictInfo(po);
-		PageInfo<DictInfo> list1 = new PageInfo<DictInfo>(list);
-
-		//转成JSONArray
-		JsonConfig config = new JsonConfig();
-		config.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());//时间格式转换
-		config.registerDefaultValueProcessor(Integer.class, new JsonDefaultValueProcessor());//数据格式转换
-		JSONArray json = JSONArray.fromObject(list,config); 
-		
-		JSONObject jsonObject = new JSONObject();  //创建Json对象
-		jsonObject.put("total", list1.getTotal());//总记录数
-		jsonObject.put("rows", json);//json数据
-		
-		return jsonObject;
+		return Result.success(list, list.size());
 	}
 	
 	/**
@@ -270,6 +227,7 @@ public class DictController {
 	 * @throws
 	 */
 	@RequestMapping(value="/searchDictById")
+	@RequiresPermissions("dictinfo:view")
 	@ResponseBody
 	public List<Dict> searchById(Dict po){
 		List<Dict> list = service.search(po);
@@ -286,6 +244,7 @@ public class DictController {
 	 * @throws
 	 */
 	@RequestMapping(value="/searchDictByType")
+	@RequiresPermissions("dictinfo:view")
 	@ResponseBody
 	public List<DictInfo> searchDictByType(Dict po){
 		List<DictInfo> list = service.searchDictByType(po);
@@ -305,6 +264,7 @@ public class DictController {
 	 * @throws
 	 */
 	@RequestMapping(value="/loadDictInfoPage")
+	@RequiresPermissions("dictinfo:view")
 	public ModelAndView loadDictInfoPage(@RequestParam("path") String path, @RequestParam("dictId") String dictId, @RequestParam("dictInfoId") String dictInfoId, Model model) {
 		model.addAttribute("dictId", dictId);
 		model.addAttribute("dictInfoId", dictInfoId);

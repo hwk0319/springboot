@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +25,7 @@ import com.it.po.UserInfo;
 import com.it.service.systemManagement.SystemMenuService;
 import com.it.util.JsonDateValueProcessor;
 import com.it.util.JsonDefaultValueProcessor;
+import com.it.util.Result;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -41,6 +43,7 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping("/menuList")
+	@RequiresPermissions("menuinfo:view")
 	public ModelAndView menuList(ModelAndView model) {
 		return new ModelAndView("system/menu/menuList");
 	}
@@ -55,6 +58,7 @@ public class SystemMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/menu")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public List<Permission> findMenuByUser(HttpServletRequest request) {
 		Object obj = SecurityUtils.getSubject().getPrincipal();
@@ -88,6 +92,7 @@ public class SystemMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/searchMenuById")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public List<Permission> searchMenuById(Permission po){
 		List<Permission> list = menuservice.searchMenuById(po);
@@ -105,6 +110,7 @@ public class SystemMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/findmenubyid")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public List<Permission> findMenuByid(int id, HttpServletRequest request) {
 		List<Permission> list = menuservice.findMenuByid(id);
@@ -118,22 +124,11 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping(value="/search")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
-	public JSONObject search1(Permission po, HttpServletRequest request){
-		
+	public Result search1(Permission po, HttpServletRequest request){
 		List<Permission> list = menuservice.search(po);
-
-		//转成JSONArray
-		JsonConfig config = new JsonConfig();
-		config.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());//时间格式转换
-		config.registerDefaultValueProcessor(Integer.class, new JsonDefaultValueProcessor());//数据格式转换
-		JSONArray json = JSONArray.fromObject(list,config); 
-		
-		JSONObject jsonObject = new JSONObject();  //创建Json对象
-		jsonObject.put("total", list.size());//总记录数
-		jsonObject.put("rows", json);//json数据
-		
-		return jsonObject;
+		return Result.success(list, list.size());
 	}
 	
 	/**
@@ -142,6 +137,7 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping("/menuAdd")
+	@RequiresPermissions("menuinfo:add")
 	@ResponseBody
 	public ModelAndView menuAdd(ModelAndView model) {
 		return new ModelAndView("system/menu/menuAdd");
@@ -154,6 +150,7 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping(value="/addMenu")	
+	@RequiresPermissions("menuinfo:add")
 	@OperLogs(value = "添加菜单")
 	@ResponseBody
 	public int addMenu(Permission po){
@@ -171,6 +168,7 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping(value="/updateMenu")
+	@RequiresPermissions("menuinfo:Edit")
 	@OperLogs(value = "编辑菜单")
 	@ResponseBody
 	public int updateMenu(Permission po){
@@ -183,6 +181,7 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping(value="/deleteMenu")
+	@RequiresPermissions("menuinfo:delete")
 	@OperLogs(value = "删除菜单")
 	@ResponseBody
 	public int deleteMenu(Permission po){
@@ -196,6 +195,7 @@ public class SystemMenuController {
 	 * @return
 	 */
 	@RequestMapping("/getMenu1")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public JSONObject getMenu1(Permission po, HttpServletRequest request){
 		List<Permission> list = menuservice.search(po);
@@ -257,6 +257,7 @@ public class SystemMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/getRolePermission")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public List<RolePermission> getRolePermission(RolePermission po){
 		List<RolePermission> list = menuservice.searchRolePermission(po);
@@ -273,6 +274,7 @@ public class SystemMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/getMenuTree")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public Map<String, Object> getMenuTree(Permission po){
 		List<Permission> list = menuservice.searchMenuTree(po);
@@ -291,6 +293,7 @@ public class SystemMenuController {
 	 * @throws
 	 */
 	@RequestMapping("/getMenuTree1")
+	@RequiresPermissions("menuinfo:view")
 	@ResponseBody
 	public Map<String, Object> getMenuTree1(Permission po){
 		List<Permission> list = menuservice.searchMenuTree1(po);

@@ -97,7 +97,7 @@
 	
 	    $('#mytab').bootstrapTable({
 	        url: "dict/search",//数据源
-	        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+	        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
 // 	        height: tableHeight(),//高度调整
 			striped: true,                      //是否显示行间隔色
 			clickToSelect: true,//点击勾选
@@ -262,7 +262,7 @@
 		$(function() {
 		    $('#dictData').bootstrapTable({
 		        url: "dict/searchDictInfo",//数据源
-		        dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+		        dataField: "data",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
 // 		        height: tableHeight(),//高度调整
 		        clickEdit: true,
 				striped: true,                      //是否显示行间隔色

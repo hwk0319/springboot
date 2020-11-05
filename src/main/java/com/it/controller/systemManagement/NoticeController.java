@@ -36,12 +36,13 @@ import com.it.util.Util;
 @RequestMapping("/notice")
 public class NoticeController {
 
-	private Logger log = LoggerFactory.getLogger(NoticeController.class);
+	private static final Logger log = LoggerFactory.getLogger(NoticeController.class);
 	
 	@Resource
 	private NoticeService service;
 	
 	@RequestMapping("/list")
+	@RequiresPermissions("notice:view")
 	public String noticeList() {
 		return "system/notice/noticeList";
 	}
@@ -57,6 +58,7 @@ public class NoticeController {
 	 * @throws
 	 */
 	@RequestMapping("/search")
+	@RequiresPermissions("notice:view")
 	@ResponseBody
 	public Result search(Notice po) {
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
@@ -74,8 +76,8 @@ public class NoticeController {
 	 * @throws
 	 */
 	@RequestMapping("/insert")
-	@OperLogs(value = "新增通知公告")
 	@RequiresPermissions(value="notice:insert")
+	@OperLogs(value = "新增通知公告")
 	@ResponseBody
 	public Result insert(Notice po) {
 		UserInfo user = (UserInfo) SecurityUtils.getSubject().getPrincipal();
@@ -125,6 +127,7 @@ public class NoticeController {
 	 * @throws
 	 */
 	@RequestMapping("/selectById")
+	@RequiresPermissions("notice:view")
 	@ResponseBody
 	public Result selectById(@RequestParam(name = "id") Integer id) {
 		Notice notice = service.selectById(id);
@@ -141,8 +144,8 @@ public class NoticeController {
 	 * @throws
 	 */
 	@RequestMapping("/delete")
-	@OperLogs(value = "删除通知公告")
 	@RequiresPermissions(value="notice:delete")
+	@OperLogs(value = "删除通知公告")
 	@ResponseBody
 	public Result delete(@RequestParam(name = "id") Integer id) {
 		int res = service.deleteById(id);
@@ -159,8 +162,8 @@ public class NoticeController {
 	 * @throws
 	 */
 	@RequestMapping(value="/batchDelete")
-	@OperLogs(value = "批量删除通知公告")
 	@RequiresPermissions(value="notice:delete")
+	@OperLogs(value = "批量删除通知公告")
 	@ResponseBody
 	public Result batchDelete(@RequestParam(name = "ids") String ids){	
 		String[] array = ids.split(",");

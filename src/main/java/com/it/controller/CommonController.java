@@ -13,8 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/common")
-public class CommonController {
-	
+public class CommonController extends BaseController{
 	/**
 	 * 通用加载页面，不带参数
 	 * @param path 跳转路径

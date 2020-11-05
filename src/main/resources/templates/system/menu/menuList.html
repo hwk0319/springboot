@@ -64,6 +64,7 @@ $(function() {
     var $table = $("#mytab");
     $table.bootstrapTable({
         url: "menu/search",//数据源
+        dataField: "data",
 //         height: tableHeight(),//高度调整
 		classes: 'table table-hover',      //表格的类名称。默认情况下，表格是有边框的，你可以添加 'table-no-bordered' 来删除表格的边框样式。
 		idField: "id",                     //指定主键列

@@ -1,12 +1,9 @@
 package com.it.controller.systemManagement;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -25,19 +22,19 @@ import com.it.po.Department;
 import com.it.service.systemManagement.DepartmentService;
 import com.it.util.JsonDateValueProcessor;
 import com.it.util.JsonDefaultValueProcessor;
+import com.it.util.Result;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 
 @RestController
 @RequestMapping(value="department")
 public class DepartmentController {
+	private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
+	
 	@Resource(name="departmentService")
 	private DepartmentService service;
-	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	/**
 	 * 跳转到department页面
@@ -45,6 +42,7 @@ public class DepartmentController {
 	 * @return
 	 */
 	@RequestMapping(value="/list")
+	@RequiresPermissions("department:view")
 	public ModelAndView list(Model model) {
 		return new ModelAndView("system/department/departmentList");
 	}
@@ -54,6 +52,7 @@ public class DepartmentController {
 	 * @return
 	 */
 	@RequestMapping(value="/departmentAdd")
+	@RequiresPermissions("department:add")
 	public ModelAndView Add(Model model) {
 		return new ModelAndView("system/department/departmentAdd");
 	}
@@ -64,6 +63,7 @@ public class DepartmentController {
 	 * @return
 	 */
 	@RequestMapping(value="/search")
+	@RequiresPermissions("department:view")
 	public List<Department> search(Department po){
 		List<Department> department = new ArrayList<Department>();
 		try {
@@ -83,6 +83,7 @@ public class DepartmentController {
 	 * @throws
 	 */
 	@RequestMapping(value="/findById")
+	@RequiresPermissions("department:view")
 	public Department findById(int id) {
 		Department department = null;
 		try {
@@ -103,6 +104,7 @@ public class DepartmentController {
 	 * @throws
 	 */
 	@RequestMapping(value="/findParentById")
+	@RequiresPermissions("department:view")
 	public Department findParentById(int id) {
 		Department department = null;
 		try {
@@ -122,30 +124,11 @@ public class DepartmentController {
 	 * @return
 	 */
 	@RequestMapping(value="/search2")
-	public JSONObject search1(Department po, HttpServletRequest request){
-		
+	@RequiresPermissions("department:view")
+	public Result search1(Department po, HttpServletRequest request){
 		List<Department> list = service.search(po);
-
-		//转成JSONArray
-		JsonConfig config = new JsonConfig();
-		config.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());//时间格式转换
-		config.registerDefaultValueProcessor(Integer.class, new JsonDefaultValueProcessor());//数据格式转换
-		JSONArray json = JSONArray.fromObject(list,config); 
-		
-		JSONObject jsonObject = new JSONObject();  //创建Json对象
-		jsonObject.put("total", list.size());//总记录数
-		jsonObject.put("rows", json);//json数据
-		
-		return jsonObject;
+		return Result.success(list, list.size());
 	}
-	
-	/*@RequestMapping(value="/search3")
-	public Result search3(Department po, HttpServletRequest request) {
-		PageHelper.startPage(po.getPageNo(), po.getLimit());
-		List<Department> list = service.search(po);
-		PageInfo<Department> list1 = new PageInfo<Department>(list);
-		return Result.markSuccessTotal(list, String.valueOf(list1.getTotal()));
-	}*/
 	
 	/**
 	 * 保存
@@ -215,6 +198,7 @@ public class DepartmentController {
 	 * @throws
 	 */
 	@RequestMapping(value="/getTree")
+	@RequiresPermissions("department:view")
 	public JSONArray getTree(Department po,HttpServletRequest request){
 		List<Department> list = service.search(po);
 		List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();

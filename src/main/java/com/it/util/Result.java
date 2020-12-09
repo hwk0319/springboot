@@ -106,6 +106,22 @@ public class Result {
         return  Result;
     }
 	
+    /**
+     * 
+     * @Title: repeatSubmit    
+     * @Description: TODO   重复提交
+     * @param @return
+     * @return Result
+     * @throws
+     */
+    public static Result repeatSubmit() {
+    	Result Result = new Result();
+        Result.setSuccess(false);
+        Result.setCode(ReturnCode.REPEATSUBMIT.getCode());
+        Result.setMsg(ReturnCode.REPEATSUBMIT.getMsg());
+        return  Result;
+    }
+    
 	public boolean isSuccess() {
 		return success;
 	}

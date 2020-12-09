@@ -15,6 +15,7 @@ public enum ReturnCode {
     NODATA(201,"成功无记录"),
     FEAILED(202,"失败"),
     FORBIDDEN(403, "权限失败"),
+    REPEATSUBMIT(450, "重复提交"),
     ACCOUNT_ERROR(1000, "账户不存在或被禁用"),
     API_NOT_EXISTS(1001, "请求的接口不存在"),
     API_NOT_PER(1002, "没有该接口的访问权限"),

@@ -204,6 +204,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>24.0-jre</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -230,7 +235,7 @@
                 <filtering>false</filtering>
             </resource>
             <!--配置打包时字体文件不被maven拷贝，导致字体文件破坏-->
-            <resource>
+            <!-- <resource>
 		        <directory>src/main/resources</directory>
 		        <filtering>true</filtering>
 		        <includes>
@@ -244,7 +249,7 @@
                     <exclude>**/*.woff</exclude>
                     <exclude>**/*.woff2</exclude>
                 </excludes>
-		    </resource>
+		    </resource> -->
         </resources>
 	</build>
 

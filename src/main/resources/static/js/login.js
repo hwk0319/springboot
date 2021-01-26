@@ -29,6 +29,7 @@ function login() {
 	var name = $("input[name='username']").val();
 	var pwd = $("input[name='pwd']").val();
 	var md5pwd = $.md5(pwd);
+	var rememberMe = $("input[name='rememberMe']").is(':checked');
 
 	$.ajax({
 		url : "login/login",
@@ -36,7 +37,8 @@ function login() {
 		dataType : "json",
 		data : {
 			"name" : name,
-			"pwd" : md5pwd
+			"pwd" : md5pwd,
+			"rememberMe" : rememberMe
 		},
 		success : function(result) {
 			var status = result.status;

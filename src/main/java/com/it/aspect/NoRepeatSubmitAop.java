@@ -54,7 +54,7 @@ public class NoRepeatSubmitAop {
 			}
 		} catch (Throwable e) {
 			log.error("验证重复提交时出现未知异常！");
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}

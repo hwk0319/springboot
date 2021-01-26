@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public Object exception(HttpServletRequest request,
             HttpServletResponse response, Exception ex) {
-		log.error(ex.getMessage());
+		log.error(ex.getMessage(), ex);
 		//判断是否是ajax请求
 		if(Util.isAjaxRequest(request)) {
 			JSONObject json = new JSONObject();
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
 	 */
 	public ModelAndView doException(HttpServletRequest request,
             HttpServletResponse response, Exception ex) {
-		log.error(ex.getMessage());
+		log.error(ex.getMessage(), ex);
 		
 		
 //		if(ex instanceof AuthorizationException) {

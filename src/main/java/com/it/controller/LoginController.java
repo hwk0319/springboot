@@ -124,14 +124,16 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject login(String name, String pwd, HttpServletRequest req) throws Exception {
+	public JSONObject login(String name, String pwd, boolean rememberMe, HttpServletRequest req) throws Exception {
 		// 1.获取Subject
         Subject subject = SecurityUtils.getSubject();
         JSONObject json = new JSONObject();
         //判断当前用户是否已被认证
-        if(!subject.isAuthenticated()) {
+//        if(!subject.isAuthenticated()) {
         	// 2.封装用户数据
-        	UsernamePasswordToken token = new UsernamePasswordToken(name, pwd);
+        	UsernamePasswordToken token = new UsernamePasswordToken(name, pwd, rememberMe);
+//        	UsernamePasswordToken token = new UsernamePasswordToken(name, pwd);
+//        	token.setRememberMe(true);
         	try{
         		// 3.执行登录方法
         		subject.login(token);
@@ -153,7 +155,7 @@ public class LoginController extends BaseController{
         		json.put("status", "failed");
         		json.put("msg", "用户已注销！");
         	}
-        }
+//        }
         //记录登录日志
         String status = json.getString("status");
         String msg = json.getString("msg");

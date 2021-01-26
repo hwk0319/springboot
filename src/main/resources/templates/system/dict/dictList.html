@@ -157,8 +157,8 @@
 	        },
 	        onLoadSuccess: function(data){
 	        	var dictId = "";
-	        	if(data.rows.length != 0){
-	        		dictId = data.rows[0].id;
+	        	if(data.data.length != 0){
+	        		dictId = data.data[0].id;
 		        	var param = {
 		            	url : 'dict/searchDictInfo?dictid='+dictId
 		            }

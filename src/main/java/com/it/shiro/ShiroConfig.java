@@ -10,8 +10,10 @@ import javax.servlet.Filter;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -38,7 +41,7 @@ import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
  */
 @Configuration
 public class ShiroConfig {
-	private Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 	
 	public ShiroConfig(){
 		logger.info("ShiroConfig init ....");
@@ -82,7 +85,7 @@ public class ShiroConfig {
        filterChainDefinitionMap.put("/login/signUp", "anon");
        filterChainDefinitionMap.put("/login/resetPwd", "anon");
        //所有url都必须认证通过才可以访问
-       filterChainDefinitionMap.put("/**", "authc,kickout");
+       filterChainDefinitionMap.put("/**", "user,kickout");
 //       filterChainDefinitionMap.put("/**", "authc");
        // 登录的路径
        shiroFilterFactoryBean.setLoginUrl("/login");
@@ -126,13 +129,14 @@ public class ShiroConfig {
        securityManager.setCacheManager(ehCacheManager());
        //配置自定义session管理，使用ehcache 或redis
        securityManager.setSessionManager(sessionManager());
+       //配置记住我cookie管理器
+       securityManager.setRememberMeManager(rememberManager());
        return securityManager;
    }
    
    /**
            * 开启@RequirePermission注解的配置，要结合DefaultAdvisorAutoProxyCreator一起使用，或者导入aop的依赖
     */
-   
    @Bean
    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
@@ -193,8 +197,40 @@ public class ShiroConfig {
    }
    
    /**
+    * 
+    * @Title: rememberMeCookie    
+    * @Description: TODO   记住我Cookie
+    * @param @return
+    * @return SimpleCookie
+    * @throws
+    */
+   public SimpleCookie rememberMeCookie() {
+	   //Cookie名称
+	   SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+	   //记住我cookie生效时间1天 ,单位秒;
+	   simpleCookie.setMaxAge(86400);
+	   simpleCookie.setHttpOnly(true);
+	   return simpleCookie;
+   }
+   
+   /**
+    * 
+    * @Title: rememberManager    
+    * @Description: TODO   将记住我cookie添加到CookieRememberMeManager
+    * @param @return
+    * @return CookieRememberMeManager
+    * @throws
+    */
+   public CookieRememberMeManager rememberManager() {
+	   CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+	   cookieRememberMeManager.setCookie(rememberMeCookie());
+	   //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)  
+	   cookieRememberMeManager.setCipherKey(Base64.decode("S6Dvc7SNl0Zkh2e2WsODxw=="));
+	   return cookieRememberMeManager;
+   }
+   
+   /**
           * 配置保存sessionId的cookie 
-          * 注意：这里的cookie 不是上面的记住我 cookie 记住我需要一个cookie session管理 也需要自己的cookie
     * @return
     */
    @Bean("sessionIdCookie")
@@ -237,7 +273,6 @@ public class ShiroConfig {
 	    sessionManager.setSessionIdCookie(sessionIdCookie());
 	    sessionManager.setSessionDAO(sessionDAO());
 	    sessionManager.setCacheManager(ehCacheManager());
-
 	    //全局会话超时时间（单位毫秒），默认30分钟，设置10分钟
 //	    sessionManager.setGlobalSessionTimeout(600000);
 	    //是否开启删除无效的session对象  默认为true

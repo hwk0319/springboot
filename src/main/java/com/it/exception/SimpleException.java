@@ -16,4 +16,11 @@ public class SimpleException extends Exception {
 		super(message);
 	}
 
+	public SimpleException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+
 }

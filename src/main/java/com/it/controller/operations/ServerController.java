@@ -6,8 +6,6 @@ import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
 import com.it.aspect.OperLogs;
+import com.it.controller.BaseController;
 import com.it.po.Server;
 import com.it.po.UserInfo;
 import com.it.service.operations.ServerService;
@@ -30,9 +29,8 @@ import com.it.util.SSHConnect;
  *
  */
 @Controller
-@RequestMapping(value="server")
-public class ServerController {
-	private static final Logger log = LoggerFactory.getLogger(ServerController.class);
+@RequestMapping(value="/server")
+public class ServerController extends BaseController{
 	
 	@Resource
 	private ServerService service;

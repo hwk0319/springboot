@@ -161,22 +161,8 @@
 	}
 	
 	function setDetailValue(id) {
-		var data = [];
-		var rs = load(id);//此方法为同步、阻塞式，异步实现方法见userManager.js
-		if (rs.length>0){
-			$("#username").val(rs[0].name);
-			$("#departmentName").val(rs[0].departmentName);
-			$("#depId").val(rs[0].departmentId);
-			$("#phone").val(rs[0].phone);
-			$("#email").val(rs[0].email);
-			$("#sex option[value='"+rs[0].sex+"']").attr("selected", true);
-	    }
-	} 
-	
-	function load(id) {
-		var resultvalue;
 		$.ajax({
-			url : "user/search",
+			url : "user/findUserById",
 			type : "post",
 			data : {
 				"id":id
@@ -184,17 +170,19 @@
 			async : false,
 			dataType : "json",
 			success : function(result) {
-				if(result.length<1){
-					resultvalue = result;
-				}else{
-					resultvalue = result;
+				if(result.data != null){
+					$("#username").val(result.data.name);
+					$("#departmentName").val(result.data.departmentName);
+					$("#depId").val(result.data.departmentId);
+					$("#phone").val(result.data.phone);
+					$("#email").val(result.data.email);
+					$("#sex option[value='"+result.data.sex+"']").attr("selected", true);
 				}
 			},
 			error : function() {
 				layer.msg("加载失败");
 			}
 		});
-		return resultvalue;
 	}
 	
 	//加载菜单树全部节点

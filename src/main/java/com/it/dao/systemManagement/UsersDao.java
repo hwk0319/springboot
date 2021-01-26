@@ -16,7 +16,7 @@ public interface UsersDao{
 	public List<UserInfo> search(@Param("po") UserInfo po);
 	public UserInfo findUserByName(String name);
 	public UserInfo findUserByStatus(String name);
-//	public UserInfo findUserByID(int id);
+	public UserInfo findUserById(int id);
 	public List<String> getPermissions(@Param("menucode") String menucode);
 
 	public int delete(@Param("po") UserInfo po);

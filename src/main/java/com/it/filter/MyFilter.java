@@ -26,7 +26,7 @@ import com.it.po.UserInfo;
  *
  */
 public class MyFilter implements Filter{
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+//	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// TODO Auto-generated method stub
@@ -36,10 +36,10 @@ public class MyFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
-		HttpServletRequest httpRequest = (HttpServletRequest) request;  
+//		HttpServletRequest httpRequest = (HttpServletRequest) request;  
 //        HttpServletResponse httpResponse = (HttpServletResponse) response;  
-        String url=httpRequest.getRequestURI();  
-        logger.info("request url :"+url);
+//        String url=httpRequest.getRequestURI();  
+//        logger.info("request url :"+url);
 
         chain.doFilter(request, response);
 	}

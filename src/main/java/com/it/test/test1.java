@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import com.it.exception.SimpleException;
+
 public class test1 {
 
 	public static void main(String[] args) {
@@ -59,5 +61,6 @@ public class test1 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
+		
 	}
 }

@@ -21,6 +21,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,23 +29,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.it.aspect.OperLogs;
+import com.it.controller.BaseController;
 import com.it.po.UserInfo;
 import com.it.po.UserRoleInfo;
 import com.it.service.systemManagement.UserService;
 import com.it.util.MD5;
+import com.it.util.RedisUtil;
 import com.it.util.Result;
 import com.it.util.SysConstant;
-import com.it.util.Util;
 
 @RestController
 @RequestMapping(value="user")
-public class UsersController {
+public class UsersController extends BaseController{
 	private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 	
 	@Resource(name="userService")
 	private UserService service;
+	
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	/**
 	 * 跳转到user页面
@@ -80,6 +84,34 @@ public class UsersController {
 		} catch (Exception e) {
 		}
 		return user;
+	}
+	
+	/**
+	 * 
+	 * @Title: findUserById    
+	 * @Description: TODO   根据id获取用户
+	 * @param @param id
+	 * @param @return
+	 * @return UserInfo
+	 * @throws
+	 */
+	@RequestMapping(value="/findUserById")
+	@RequiresPermissions("userInfo:view")
+	public Result findUserById(int id) {
+		UserInfo user;
+		String key = "user_"+id;
+		boolean hasKey = redisUtil.hasKey(key);
+		if(hasKey) {
+			user = (UserInfo) redisUtil.get(key);
+		}else {
+			user = service.findUserById(id);
+			redisUtil.set(key, user);
+			// 如果存储对象为空，则设置失效时间60s
+			if(user == null) {
+				redisUtil.expire(key, 60);
+			}
+		}
+		return Result.success(user);
 	}
 	
 	/**

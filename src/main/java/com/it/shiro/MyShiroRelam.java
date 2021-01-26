@@ -37,7 +37,7 @@ import com.it.util.SysConstant;
  */
 public class MyShiroRelam extends AuthorizingRealm {
 	
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(MyShiroRelam.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(MyShiroRelam.class);
 	
 	@Autowired
     private UserService userService;
@@ -47,7 +47,6 @@ public class MyShiroRelam extends AuthorizingRealm {
 	 */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-//    	logger.info("-->用户权限配置...");
     	Subject subject = SecurityUtils.getSubject();
         UserInfo user = (UserInfo)subject.getPrincipal();
         if(user != null){

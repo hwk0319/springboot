@@ -77,8 +77,8 @@ public class UserService {
 		return dao.bacthDeleteUser(array);
 	}
 	
-//	public UserInfo findUserByID(int id) {
-//		return dao.findUserByID(id);
-//	}
+	public UserInfo findUserById(int id) {
+		return dao.findUserById(id);
+	}
 
 }

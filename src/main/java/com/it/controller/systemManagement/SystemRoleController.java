@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
+import com.it.aspect.NoRepeatSubmit;
 import com.it.aspect.OperLogs;
 import com.it.po.RoleInfo;
 import com.it.po.RolePermission;
@@ -24,7 +25,7 @@ import com.it.service.systemManagement.SystemRoleService;
 import com.it.util.Result;
 
 @Controller
-@RequestMapping(value="role")
+@RequestMapping(value="/role")
 public class SystemRoleController{
 	
 	private static final Logger logger = LoggerFactory.getLogger(SystemRoleController.class);
@@ -64,9 +65,9 @@ public class SystemRoleController{
 	@RequiresPermissions(value="roleinfo:add")
 	@OperLogs(value = "增加角色")
 	@Transactional
-	public int addRole(RoleInfo po, HttpServletRequest request) throws Exception{
+	@NoRepeatSubmit
+	public Result addRole(RoleInfo po, HttpServletRequest request) throws Exception{
 		int res = service.addRole(po);
-		
 		String idArr = request.getParameter("idArr");
 		String []arr = idArr == "" ? null : idArr.split(",");
 		if(arr != null && arr.length > 0) {
@@ -77,7 +78,7 @@ public class SystemRoleController{
 				res = service.addRolePermission(rp);
 			}
 		}
-		return res;
+		return Result.success(res);
 	}
 	/**
 	 * 修改角色信息

@@ -1,18 +1,11 @@
 package com.it.controller.taskManagemet;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,15 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.it.aspect.OperLogs;
+import com.it.controller.BaseController;
 import com.it.po.ScheduleJob;
 import com.it.po.ScheduleJobLog;
 import com.it.quartz.Constant;
 import com.it.service.taskManagement.ScheduleJobLogService;
 import com.it.service.taskManagement.ScheduleJobService;
-import com.it.util.JsonDateValueProcessor;
-import com.it.util.JsonDefaultValueProcessor;
 import com.it.util.Result;
 
 /**
@@ -41,10 +32,8 @@ import com.it.util.Result;
  *
  */
 @Controller
-@RequestMapping(value="/task")
-public class ScheduleJobController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ScheduleJobController.class);
+@RequestMapping(value="/schedule")
+public class ScheduleJobController extends BaseController{
 	
 	@Resource(name="scheduleJobService")
 	private ScheduleJobService service;
@@ -57,9 +46,9 @@ public class ScheduleJobController {
 	 * @return
 	 */
 	@RequestMapping(value="/taskList")
-	@RequiresPermissions("task:taskList")
+	@RequiresPermissions("schedule:taskList")
 	public ModelAndView list(Model model) {
-		return new ModelAndView("task/taskList");
+		return new ModelAndView("task/schedule/scheduleList");
 	}
 	
 	/**
@@ -85,24 +74,12 @@ public class ScheduleJobController {
 	 * @return
 	 */
 	@RequestMapping(value="/selectList")
+	@RequiresPermissions("schedule:selectList")
 	@ResponseBody
-	public JSONObject selectList(ScheduleJob po, HttpServletRequest request){
-		
+	public Result selectList(ScheduleJob po, HttpServletRequest request){
 		PageHelper.startPage(po.getPageNo(), po.getLimit());
 		List<ScheduleJob> list = service.selectList(po);
-		PageInfo<ScheduleJob> list1 = new PageInfo<ScheduleJob>(list);
-
-		//转成JSONArray
-		JsonConfig config = new JsonConfig();
-		config.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());//时间格式转换
-		config.registerDefaultValueProcessor(Integer.class, new JsonDefaultValueProcessor());//数据格式转换
-		JSONArray json = JSONArray.fromObject(list,config); 
-		
-		JSONObject jsonObject = new JSONObject();  //创建Json对象
-		jsonObject.put("total", list1.getTotal());//总记录数
-		jsonObject.put("rows", json);//json数据
-		
-		return jsonObject;
+		return Result.success(list, list.size());
 	}
 	
 	/**
@@ -117,7 +94,7 @@ public class ScheduleJobController {
 	 * @throws
 	 */
 	@RequestMapping(value="/insert")
-	@RequiresPermissions("task:insert")
+	@RequiresPermissions("schedule:insert")
 	@OperLogs(value = "新增定时任务")
 	@ResponseBody
 	public int insert(ScheduleJob po,HttpServletRequest request) throws Exception{		
@@ -137,7 +114,7 @@ public class ScheduleJobController {
 	 * @throws
 	 */
 	@RequestMapping(value="/update")
-	@RequiresPermissions(value = "task:update")
+	@RequiresPermissions(value = "schedule:update")
 	@OperLogs(value = "编辑定时任务")
 	@ResponseBody
 	public int update(ScheduleJob po,HttpServletRequest request) throws Exception{
@@ -156,7 +133,7 @@ public class ScheduleJobController {
 	 * @throws
 	 */
 	@RequestMapping(value="/delete")
-	@RequiresPermissions(value = "task:delete")
+	@RequiresPermissions(value = "schedule:delete")
 	@OperLogs(value = "删除定时任务")
 	@ResponseBody
 	public int delete(ScheduleJob po, HttpServletRequest request) throws Exception{		
@@ -176,7 +153,7 @@ public class ScheduleJobController {
 	 * @throws
 	 */
 	@RequestMapping(value="/pause")
-	@RequiresPermissions(value = "task:pause")
+	@RequiresPermissions(value = "schedule:pause")
 	@OperLogs(value = "暂停定时任务")
 	@ResponseBody
 	public Result pause(ScheduleJob po, HttpServletRequest request) throws Exception{		
@@ -203,7 +180,7 @@ public class ScheduleJobController {
 	 * @throws
 	 */
 	@RequestMapping(value="/execute")
-	@RequiresPermissions(value = "task:execute")
+	@RequiresPermissions(value = "schedule:execute")
 	@OperLogs(value = "执行定时任务")
 	@ResponseBody
 	public Result execute(ScheduleJob po, HttpServletRequest request) throws Exception{		
@@ -275,7 +252,7 @@ public class ScheduleJobController {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 		}
 		return Result.success(res);
 	}

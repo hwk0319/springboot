@@ -1,6 +1,7 @@
 package com.it.dao.systemManagement;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,6 +23,8 @@ public interface SystemRoleDao {
 	public int deleteRolePermission(@Param("po") RoleInfo po);
 	//增加角色权限关联表
 	public int addRolePermission(@Param("po") RolePermission rp);
+	//批量添加角色权限关联数据
+	public int addRolePermissions(String[] array, int role_id);
 	//批量删除角色
 	public int batchDeleteRole(@Param("array") String[] array);
 	

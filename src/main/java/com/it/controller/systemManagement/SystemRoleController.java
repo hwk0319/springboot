@@ -20,7 +20,6 @@ import com.github.pagehelper.PageHelper;
 import com.it.aspect.NoRepeatSubmit;
 import com.it.aspect.OperLogs;
 import com.it.po.RoleInfo;
-import com.it.po.RolePermission;
 import com.it.service.systemManagement.SystemRoleService;
 import com.it.util.Result;
 
@@ -71,12 +70,7 @@ public class SystemRoleController{
 		String idArr = request.getParameter("idArr");
 		String []arr = idArr == "" ? null : idArr.split(",");
 		if(arr != null && arr.length > 0) {
-			RolePermission rp = new RolePermission();
-			for (int i = 0; i < arr.length; i++) {
-				rp.setRole_id(po.getId());
-				rp.setPermission_id(Integer.parseInt(arr[i]));
-				res = service.addRolePermission(rp);
-			}
+			res = service.addRolePermissions(arr, po.getId());
 		}
 		return Result.success(res);
 	}
@@ -98,12 +92,7 @@ public class SystemRoleController{
 		String idArr = request.getParameter("idArr");
 		String []arr = idArr == "" ? null : idArr.split(",");
 		if(arr != null && arr.length > 0) {
-			RolePermission rp = new RolePermission();
-			for (int i = 0; i < arr.length; i++) {
-				rp.setRole_id(po.getId());
-				rp.setPermission_id(Integer.parseInt(arr[i]));
-				res = service.addRolePermission(rp);
-			}
+			res = service.addRolePermissions(arr, po.getId());
 		}
 		return res;
 	}
@@ -130,12 +119,7 @@ public class SystemRoleController{
 		String idArr = request.getParameter("idArr");
 		String []arr = idArr == "" ? null : idArr.split(",");
 		if(arr != null && arr.length > 0) {
-			RolePermission rp = new RolePermission();
-			for (int i = 0; i < arr.length; i++) {
-				rp.setRole_id(po.getId());
-				rp.setPermission_id(Integer.parseInt(arr[i]));
-				res = service.addRolePermission(rp);
-			}
+			res = service.addRolePermissions(arr, po.getId());
 		}
 		return res;
 	}

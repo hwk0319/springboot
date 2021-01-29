@@ -27,6 +27,15 @@
              SELECT role_permission_id_seq.NEXTVAL-1 from DUAL
         </selectKey> 
 	</insert>
+	<!-- 批量添加角色权限关联数据 -->
+	<insert id="addRolePermissions">
+		insert all
+		<foreach collection="array" item="permission_id" separator="">
+			into role_permission(role_id, permission_id) values(#{role_id}, #{permission_id})
+		</foreach>
+		select 1 from dual
+	</insert>
+	
 	<!-- 编辑角色 -->
 	<update id="updateRole" parameterType="RoleInfo">
 		update role_info 

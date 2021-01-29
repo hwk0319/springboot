@@ -1,6 +1,7 @@
 package com.it.service.systemManagement;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import org.apache.ibatis.annotations.Param;
@@ -48,6 +49,10 @@ public class SystemRoleService {
 
 	public int batchDeleteRole(String[] array) {
 		return systemRoleDao.batchDeleteRole(array);
+	}
+
+	public int addRolePermissions(String[] arr, int role_id) {
+		return systemRoleDao.addRolePermissions(arr, role_id);
 	}
 
 }
